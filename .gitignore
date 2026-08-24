@@ -26,3 +26,6 @@ analyze/
 
 # TypeScript incremental cache
 tsconfig.tsbuildinfo
+
+# Next.js generated types
+next-env.d.ts
