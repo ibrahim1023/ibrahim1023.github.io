@@ -1,0 +1,28 @@
+# Local-only product specification (never commit)
+product-spec.md
+
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Test artifacts
+coverage/
+playwright-report/
+test-results/
+
+# Bundle analysis
+analyze/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# System
+.DS_Store
+
+# TypeScript incremental cache
+tsconfig.tsbuildinfo

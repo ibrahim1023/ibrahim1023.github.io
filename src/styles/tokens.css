@@ -1,0 +1,42 @@
+:root {
+  /* Color */
+  --color-canvas: #0a0a0b;
+  --color-text-primary: #f2efe9;
+  --color-text-secondary: #9b968c;
+  --color-accent: #7ea8c9;
+  --color-line: #2a2a2d;
+
+  /* Typography */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --type-display: clamp(2.5rem, 6vw, 4.5rem);
+  --type-body: clamp(1rem, 1.125vw, 1.125rem);
+  --type-label: 0.75rem;
+
+  /* Spacing (8px rhythm) */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-6: 3rem;
+  --space-8: 4rem;
+
+  /* Layout */
+  --gutter: 48px;
+  --content-max: 80rem;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --gutter: 20px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1279px) {
+  :root {
+    --gutter: 32px;
+  }
+}
