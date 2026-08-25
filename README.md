@@ -1,8 +1,8 @@
 # Ibrahim Arshad — Portfolio
 
-Phase 1 prototype: a cinematic, scroll-directed narrative that follows one
-SettleDiff incident from transaction to `UNVERIFIABLE` verdict and transforms
-continuously into a minimal Vault Steward arrival frame.
+Phase 1 prototype: an Apple-like, scroll-directed narrative that follows one
+source-backed SettleDiff incident from request to `UNVERIFIABLE` verdict and
+transforms continuously into a minimal Vault Steward approval-preview arrival.
 
 Built with Next.js (App Router, static export), TypeScript, and GSAP
 ScrollTrigger. No server features, no CMS, no external assets at runtime.
@@ -67,4 +67,16 @@ For a root (`username.github.io`) or custom-domain deployment, set
 Only the Intro, the SettleDiff cinematic sequence, and the SettleDiff →
 Vault Steward transition with a minimal arrival frame exist in this phase.
 Factual copy comes from the `failed-broadcast` regression fixture and the
-public project READMEs; see `docs/BUILD_SPEC.md` and `docs/STORYBOARD.md`.
+public project repositories. The story uses a sanitized fixture identity and
+never claims that the failed attempt settled.
+
+## Documentation
+
+Codex agents should start with [`docs/AGENT_GUIDE.md`](docs/AGENT_GUIDE.md).
+
+- [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md) — authoritative Phase 1 target
+- [`docs/DECISIONS.md`](docs/DECISIONS.md) — approved factual and creative decisions
+- [`docs/STORYBOARD.md`](docs/STORYBOARD.md) — scroll states and choreography
+- [`docs/BUILD_SPEC.md`](docs/BUILD_SPEC.md) — current and target architecture
+- [`docs/IMPLEMENTATION_STATUS.md`](docs/IMPLEMENTATION_STATUS.md) — completed and missing work
+- [`docs/ACCEPTANCE_RUNBOOK.md`](docs/ACCEPTANCE_RUNBOOK.md) — release evidence ledger

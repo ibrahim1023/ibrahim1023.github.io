@@ -1,85 +1,176 @@
-# Storyboard — Phase 1
+# Storyboard — Phase 1 Target
 
-Progress ranges are normalized through the pinned SettleDiff master timeline
-(±0.02 tunable; order and holds are fixed). All states must read as stills
-before they are animated. Reverse scroll reconstructs every state.
+The narrative is one reversible, Apple-like scroll-controlled composition. Each
+state must work as a still before animation is added. State boundaries may be
+tuned by `±0.02`; order, causal meaning, deliberate holds, and object continuity
+are fixed.
 
-## Frame 0 — Intro (~120vh)
+## Frame 0 — Intro (`100–140vh`)
 
-- Ibrahim Arshad / AI Systems Engineer / "I build and evaluate reliable
-  agentic systems." / "Selected work" cue.
-- Motion: opacity, slight vertical translation, restrained line reveal only.
-- Handoff: intro copy recedes while a single line grows from the same visual
-  axis into the SettleDiff transaction path. No blank cut.
+- `Ibrahim Arshad`
+- `AI Systems Engineer`
+- `I build and evaluate reliable agentic systems.`
+- `Selected work`
 
-## Frame 1 — project-established (0.00–0.10)
+Motion is limited to opacity, slight vertical translation, restrained line
+reveal, and subtle letter-spacing changes. As the intro recedes, its cue line
+extends into the SettleDiff transaction path. There is no blank cut.
 
-- `SettleDiff` title + descriptor dominate; `AGENT` and `SERVICE` at opposite
-  ends of the transaction path; diagnostics faint or absent; settled hold.
+## Frame 1 — Project established (`0.00–0.10`)
 
-## Frame 2 — request-in-flight (0.10–0.24)
+- SettleDiff title and source link become dominant.
+- Descriptor: `Transaction forensics for agent purchases.`
+- `AGENT` and `SERVICE` anchor opposite ends of one transaction path.
+- Diagnostics remain absent or extremely faint.
+- Hold before movement begins.
 
-- `0.01 USDC` request token travels agent → service; path draws in the travel
-  direction; lower-weight acknowledgement returns; amount stays readable.
+## Frame 2 — Request in flight (`0.10–0.24`)
 
-## Frame 3 — attempt-recorded (0.24–0.34)
+- `0.01 USDC` travels from agent to service.
+- `0.02 USDC MAX` remains visible as the authorization boundary.
+- The path draws in the direction of travel.
+- The service returns `HTTP 402`, with less visual weight than the request.
+- Do not say the service acknowledged or accepted payment.
 
-- Crisp state change to `ACTIVITY RECORDED` — a record exists, settlement is
-  NOT claimed. Hold long enough to register. No success green.
+## Frame 3 — Attempt recorded (`0.24–0.36`)
 
-## Frame 4 — evidence-expanded (0.34–0.52)
+- Crisp state change to `ACTIVITY RECORDED`.
+- Supporting status: `broadcast_failed`.
+- Qualifier: `attempt found — settlement not established`.
+- Hold long enough to register.
+- No success green and no claim that payment resolved.
 
-- The transaction expands into six lineage-connected objects, not cards:
-  REQUEST (`0.02 USDC` max), PAYMENT (`0.01 USDC` quoted, settlement neutral),
-  VENDOR (`synthetic-search`), CHAIN (staged), RESPONSE (`HTTP 402`),
-  RECEIPT (no transaction hash / activity exists). Connectors preserve lineage.
+## Frame 4 — Evidence expanded (`0.36–0.52`)
 
-## Frame 5 — comparison-visible (0.52–0.68)
+The transaction physically expands into six lineage-connected objects:
 
-- Same objects reorganize around aligned EXPECTED / OBSERVED anchors:
-  chain `base` vs `tempo`; quoted `0.01 USDC` vs charge `unknown`;
-  protocol `mpp` vs `mpp`; vendor matches; HTTP 402 + `broadcast_failed`;
-  no transaction hash. Differences begin subtly; no error flash.
+| Object | Primary datum | Supporting datum |
+|---|---|---|
+| `REQUEST` | `0.01 USDC` | `0.02 USDC max` |
+| `PAYMENT` | `charge unknown` | `settlement not established` |
+| `VENDOR` | `synthetic-search` | `sanitized fixture identity` |
+| `CHAIN` | `base → tempo` | `advertised vs executed` |
+| `RESPONSE` | `HTTP 402` | `Payment Required` |
+| `ACTIVITY` | `broadcast_failed` | `no transaction hash` |
 
-## Frame 6 — mismatch-isolated (0.68–0.80)
+These are evidence objects, not unrelated cards. Connectors preserve their
+origin in the request.
 
-- `base` and `tempo` dominant via alignment + explicit not-equal connector
-  (amber reinforces, never alone). 402 / broadcast_failed / unknown charge /
-  absent hash stay visible at lower contrast. Hold after legible.
+## Frame 5 — Comparison visible (`0.52–0.68`)
 
-## Frame 7 — unverifiable (0.80–0.90)
+The same objects align around `EXPECTED` and `OBSERVED`:
 
-- `UNVERIFIABLE` is the visual peak: settlement could not be established; no
-  confirmed charge or transaction hash. Controlled scale/contrast/mask/
-  isolation only — no shake, strobe, glitch, or alarm motion.
+| Aspect | Expected | Observed | Classification |
+|---|---|---|---|
+| Chain | `base` | `tempo` | `DIFF` |
+| Charge | confirmed evidence | `unknown` | `UNKNOWN` |
+| Protocol | `mpp` | `mpp` | `PASS` |
+| Vendor | `synthetic-search` | `synthetic-search` | `PASS` |
+| Service | successful response | `HTTP 402` | `FAIL` |
+| Transaction hash | present | absent | `UNKNOWN` |
 
-## Frame 8 — reasoning-chain (0.90–1.00)
+Alignment and text labels carry meaning; color only reinforces it.
 
-- Existing evidence physically reorganizes into
-  `CLAIM → EVIDENCE → FINDING → VERDICT`. SettleDiff title recedes; objects
-  remain as the bridge.
+## Frame 6 — Conflict isolated (`0.68–0.80`)
 
-## Frame 9 — Vault Steward transformation and arrival (~120vh after release)
+- `base ≠ tempo` becomes the strongest contradiction.
+- `HTTP 402`, `broadcast_failed`, `charge unknown`, and `hash absent` remain
+  visible at lower contrast.
+- Copy must not imply that chain drift alone determines the final verdict.
+- Hold after the conflict becomes legible.
 
-- Chain straightens into `PROPOSE → SIMULATE → CHECK → APPROVE`.
-- Object mapping: REQUEST → NOTE; PAYMENT → PROPOSED CHANGE; VENDOR → CHECK
-  SOURCE; CHAIN → POLICY; RESPONSE → CURRENT/AFTER PREVIEW; RECEIPT → AUDIT
-  RECORD. Connectors become policy boundaries and approval gates.
-- Accent shifts without a palette reset; `Vault Steward` + "Keep your vault
-  trustworthy" appear only after the transformation reads; subtle
-  "Case study continues" cue; pin releases without a jump.
+## Frame 7 — Unverifiable (`0.80–0.90`)
 
-## Mobile
+- `UNVERIFIABLE` is the visual peak.
+- Reason: `Settlement could not be established: no confirmed charge, no transaction hash.`
+- The surrounding evidence recedes but remains spatially intact.
+- Use controlled scale, contrast, mask, and isolation—no shake, strobe, glitch,
+  or alarm motion.
 
-Purpose-built vertical evidence rail (~450–500vh SettleDiff runway), compact
-aligned comparison, selective/no pinning, ≥16px body, no horizontal overflow
-at 320px, safe-area aware of dynamic browser chrome. All nine states, same
-causal order.
+Reverse scrolling reconstructs the conflict and evidence without orphaned
+objects.
 
-## Reduced motion
+## Frame 8 — Reasoning chain (`0.90–0.96`)
 
-Normal-flow static panels (no pin, travel, parallax, scale, reorganization):
-request → activity recorded → six evidence objects → expected vs observed →
-base ≠ tempo → UNVERIFIABLE → CLAIM → EVIDENCE → FINDING → VERDICT → Vault
-Steward transformation → arrival. Complete without JavaScript; animated branch
-`display: none`.
+Existing evidence reorganizes into:
+
+```text
+CLAIM → EVIDENCE → FINDING → VERDICT
+```
+
+- Claim: a paid request was attempted and recorded.
+- Evidence: contract, execution, Activity, and service artifacts.
+- Finding: chain drift, HTTP 402, failed broadcast, and missing settlement
+  proof.
+- Verdict: `UNVERIFIABLE`.
+
+SettleDiff loses title dominance while the visual objects remain available for
+the project transition.
+
+## Frame 9 — Vault transformation (`0.96–1.00`)
+
+The reasoning chain compresses and straightens into:
+
+```text
+FIND → PREVIEW → APPROVE → VERIFY
+```
+
+Visible roles cross-transform:
+
+```text
+REQUEST   → NOTE
+PAYMENT   → PROPOSED CHANGE
+VENDOR    → EVIDENCE SOURCE
+CHAIN     → POLICY
+RESPONSE  → CURRENT / AFTER
+ACTIVITY  → AUDIT / RECHECK
+```
+
+Connectors become evidence boundaries, approval gates, and recheck lineage.
+The accent shifts gradually toward restrained Vault Steward green. The Vault
+Steward title appears only after the new workflow is understandable.
+
+## Frame 10 — Stable Vault Steward arrival (`100–140vh`, normal flow)
+
+- Vault Steward title and source link.
+- `Keep your vault trustworthy`.
+- `Local-first, evidence-backed vault maintenance with explicit approval before every edit.`
+- A compact abstract Current/After preview.
+- `FIND → PREVIEW → APPROVE → VERIFY`.
+- `Case study continues`.
+
+The pinned stage releases without a jump. The frame is stable, legible, and
+clearly incomplete by design; do not build the full case study.
+
+## Mobile storyboard
+
+Use the same causal order in a purpose-built `400–550vh` composition:
+
+1. transaction anchors stack vertically;
+2. evidence expands into a vertical lineage rail;
+3. expected/observed values use a compact two-column layout;
+4. `DIFF`, `FAIL`, and `UNKNOWN` retain text labels;
+5. the verdict occupies a stable usable viewport;
+6. evidence rows relabel in place into Vault Steward roles;
+7. the stable arrival returns to normal flow.
+
+Selective pinning is allowed only when the usable dynamic viewport contains the
+scene. Do not scale the desktop evidence map down until it becomes unreadable.
+
+## Reduced-motion storyboard
+
+Render normal-flow panels with no long pin or spatial animation:
+
+```text
+Request
+→ HTTP 402 / Activity recorded
+→ Six evidence objects
+→ Expected vs observed
+→ DIFF / FAIL / UNKNOWN distinctions
+→ UNVERIFIABLE
+→ Claim / Evidence / Finding / Verdict
+→ Source-backed object mapping
+→ Vault Steward approval preview and arrival
+```
+
+The story must remain complete without JavaScript.
