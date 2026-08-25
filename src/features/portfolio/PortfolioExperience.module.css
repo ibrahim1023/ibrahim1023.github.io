@@ -1,3 +1,23 @@
 .root {
   min-height: 100dvh;
 }
+
+.narrative {
+  position: relative;
+  min-height: 100dvh;
+}
+
+.sceneLayer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sceneLayer > [data-vault-arrival] {
+  min-height: 100%;
+}
+
+.sceneLayer[data-scene-layer="vault"] {
+  opacity: 0;
+}

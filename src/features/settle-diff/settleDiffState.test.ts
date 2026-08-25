@@ -8,13 +8,13 @@ describe("progressToSettleDiffState", () => {
     const starts: Array<[number, string]> = [
       [0, "project-established"],
       [0.1, "request-in-flight"],
-      [0.24, "attempt-recorded"],
-      [0.34, "evidence-expanded"],
-      [0.52, "comparison-visible"],
-      [0.68, "mismatch-isolated"],
-      [0.8, "unverifiable"],
-      [0.9, "reasoning-chain"],
-      [1, "vault-steward-arrival"],
+      [0.22, "attempt-recorded"],
+      [0.36, "evidence-expanded"],
+      [0.5, "comparison-visible"],
+      [0.63, "mismatch-isolated"],
+      [0.76, "unverifiable"],
+      [0.86, "reasoning-chain"],
+      [0.92, "vault-steward-arrival"],
     ];
 
     for (const [progress, state] of starts) {
@@ -25,8 +25,8 @@ describe("progressToSettleDiffState", () => {
   test("keeps mid-range progress inside its state", () => {
     expect(progressToSettleDiffState(0.17)).toBe("request-in-flight");
     expect(progressToSettleDiffState(0.43)).toBe("evidence-expanded");
-    expect(progressToSettleDiffState(0.85)).toBe("unverifiable");
-    expect(progressToSettleDiffState(0.999)).toBe("reasoning-chain");
+    expect(progressToSettleDiffState(0.8)).toBe("unverifiable");
+    expect(progressToSettleDiffState(0.999)).toBe("vault-steward-arrival");
   });
 
   test("clamps out-of-range progress to the boundary states", () => {

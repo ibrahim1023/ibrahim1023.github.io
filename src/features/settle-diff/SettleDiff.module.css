@@ -76,7 +76,6 @@
 }
 
 .stage[data-state="unverifiable"] {
-  --header-opacity: 0.25;
   --transaction-opacity: 0.05;
   --attempt-opacity: 0.06;
   --evidence-opacity: 0.1;
@@ -86,11 +85,23 @@
 }
 
 .stage[data-state="reasoning-chain"] {
-  --header-opacity: 0.15;
   --transaction-opacity: 0.05;
-  --evidence-opacity: 0.08;
+  --evidence-opacity: 0.4;
   --verdict-opacity: 0.08;
   --chain-opacity: 1;
+}
+
+.stage[data-state="vault-steward-arrival"] {
+  --header-opacity: 1;
+  --transaction-opacity: 0;
+  --token-opacity: 0;
+  --ack-opacity: 0;
+  --attempt-opacity: 0;
+  --evidence-opacity: 0;
+  --comparison-opacity: 0;
+  --mismatch-opacity: 0;
+  --verdict-opacity: 0;
+  --chain-opacity: 0;
 }
 
 .stageHeader {

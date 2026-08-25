@@ -11,8 +11,7 @@ import { VaultStewardArrival } from "@/features/vault-steward/VaultStewardArriva
 import { progressToSettleDiffState } from "@/features/settle-diff/settleDiffState";
 import {
   buildIntroTimeline,
-  buildSettleDiffTimeline,
-  buildVaultTimeline,
+  buildNarrativeTimeline,
   queryTimelineElements,
 } from "@/lib/animation/timeline";
 
@@ -39,18 +38,17 @@ export function PortfolioExperience() {
       root.dataset.animated = "ready";
       const elements = queryTimelineElements(root);
 
-      const settleTimeline = buildSettleDiffTimeline(elements.settle);
+      const narrativeTimeline = buildNarrativeTimeline(elements);
       const introTimeline = buildIntroTimeline(elements.intro);
-      const vaultTimeline = buildVaultTimeline(elements.vault);
 
       ScrollTrigger.create({
-        trigger: elements.settle.stage,
+        trigger: elements.narrative,
         start: "top top",
-        end: "+=150vh",
+        end: "+=240vh",
         pin: true,
         pinSpacing: true,
         scrub: 0.5,
-        animation: settleTimeline,
+        animation: narrativeTimeline,
         onUpdate: (self) => {
           const state = progressToSettleDiffState(self.progress);
           if (elements.settle.stage) {
@@ -66,14 +64,6 @@ export function PortfolioExperience() {
         scrub: true,
         animation: introTimeline,
       });
-
-      ScrollTrigger.create({
-        trigger: elements.vault.section,
-        start: "top 90%",
-        end: "top 40%",
-        scrub: true,
-        animation: vaultTimeline,
-      });
     }, root);
 
     return () => {
@@ -84,8 +74,14 @@ export function PortfolioExperience() {
   return (
     <div className={styles.root} data-portfolio-experience ref={rootRef}>
       <IntroSection />
-      <SettleDiffSection />
-      <VaultStewardArrival />
+      <div className={styles.narrative} data-narrative>
+        <div className={styles.sceneLayer} data-scene-layer="settle">
+          <SettleDiffSection />
+        </div>
+        <div className={styles.sceneLayer} data-scene-layer="vault">
+          <VaultStewardArrival />
+        </div>
+      </div>
     </div>
   );
 }

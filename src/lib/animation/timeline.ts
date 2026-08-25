@@ -1,5 +1,8 @@
 import { gsap } from "gsap";
 
+import { STATE_RANGES } from "@/features/settle-diff/settleDiffState";
+import type { SettleDiffState } from "@/features/settle-diff/settleDiffTypes";
+
 export interface PortfolioTimelineElements {
   intro: {
     section: HTMLElement | null;
@@ -10,10 +13,7 @@ export interface PortfolioTimelineElements {
     cue: HTMLElement | null;
     cueLine: HTMLElement | null;
   };
-  handoff: {
-    line: HTMLElement | null;
-    arrow: HTMLElement | null;
-  };
+  narrative: HTMLElement | null;
   settle: SettleDiffTimelineElements;
   vault: VaultTimelineElements;
 }
@@ -36,6 +36,7 @@ export interface SettleDiffTimelineElements {
 }
 
 export interface VaultTimelineElements {
+  layer: HTMLElement | null;
   section: HTMLElement | null;
   title: HTMLElement | null;
   descriptor: HTMLElement | null;
@@ -60,48 +61,80 @@ export function queryTimelineElements(root: HTMLElement): PortfolioTimelineEleme
       cue: root.querySelector('[data-intro] [data-intro-cue]') as HTMLElement | null,
       cueLine: root.querySelector('[data-intro] [data-intro-cue-line]') as HTMLElement | null,
     },
-    handoff: {
-      line: root.querySelector('[data-handoff-line]') as HTMLElement | null,
-      arrow: root.querySelector('[data-handoff-arrow]') as HTMLElement | null,
-    },
+    narrative: root.querySelector('[data-narrative]') as HTMLElement | null,
     settle: {
-      stage: root.querySelector('[data-stage]') as HTMLElement | null,
-      header: root.querySelector('[data-stage] [data-stage-header]') as HTMLElement | null,
-      transaction: root.querySelector('[data-transaction]') as HTMLElement | null,
-      pathLine: root.querySelector('[data-path-line]') as SVGPathElement | null,
-      token: root.querySelector('[data-token]') as HTMLElement | null,
-      ack: root.querySelector('[data-ack]') as HTMLElement | null,
-      attempt: root.querySelector('[data-attempt]') as HTMLElement | null,
-      evidence: root.querySelector('[data-evidence]') as HTMLElement | null,
-      evidenceItems: toArray('[data-evidence-item]'),
-      comparison: root.querySelector('[data-comparison]') as HTMLElement | null,
-      mismatch: root.querySelector('[data-mismatch]') as HTMLElement | null,
-      verdict: root.querySelector('[data-verdict]') as HTMLElement | null,
-      chain: root.querySelector('[data-chain]') as HTMLElement | null,
-      chainItems: toArray('[data-chain-item]'),
+      stage: root.querySelector('[data-scene-layer="settle"] [data-stage]') as HTMLElement | null,
+      header: root.querySelector('[data-scene-layer="settle"] [data-stage-header]') as HTMLElement | null,
+      transaction: root.querySelector('[data-scene-layer="settle"] [data-transaction]') as HTMLElement | null,
+      pathLine: root.querySelector('[data-scene-layer="settle"] [data-path-line]') as SVGPathElement | null,
+      token: root.querySelector('[data-scene-layer="settle"] [data-token]') as HTMLElement | null,
+      ack: root.querySelector('[data-scene-layer="settle"] [data-ack]') as HTMLElement | null,
+      attempt: root.querySelector('[data-scene-layer="settle"] [data-attempt]') as HTMLElement | null,
+      evidence: root.querySelector('[data-scene-layer="settle"] [data-evidence]') as HTMLElement | null,
+      evidenceItems: toArray('[data-scene-layer="settle"] [data-evidence-item]'),
+      comparison: root.querySelector('[data-scene-layer="settle"] [data-comparison]') as HTMLElement | null,
+      mismatch: root.querySelector('[data-scene-layer="settle"] [data-mismatch]') as HTMLElement | null,
+      verdict: root.querySelector('[data-scene-layer="settle"] [data-verdict]') as HTMLElement | null,
+      chain: root.querySelector('[data-scene-layer="settle"] [data-chain]') as HTMLElement | null,
+      chainItems: toArray('[data-scene-layer="settle"] [data-chain-item]'),
     },
     vault: {
-      section: root.querySelector('[data-vault-arrival]') as HTMLElement | null,
-      title: root.querySelector('[data-vault-arrival] h2') as HTMLElement | null,
-      descriptor: root.querySelector('[data-vault-arrival] [data-vault-descriptor]') as HTMLElement | null,
-      rail: root.querySelector('[data-vault-rail]') as HTMLElement | null,
-      railItems: toArray('[data-vault-rail-item]'),
-      cue: root.querySelector('[data-vault-arrival] [data-vault-cue]') as HTMLElement | null,
+      layer: root.querySelector('[data-scene-layer="vault"]') as HTMLElement | null,
+      section: root.querySelector('[data-scene-layer="vault"] [data-vault-arrival]') as HTMLElement | null,
+      title: root.querySelector('[data-scene-layer="vault"] h2') as HTMLElement | null,
+      descriptor: root.querySelector('[data-scene-layer="vault"] [data-vault-descriptor]') as HTMLElement | null,
+      rail: root.querySelector('[data-scene-layer="vault"] [data-vault-rail]') as HTMLElement | null,
+      railItems: toArray('[data-scene-layer="vault"] [data-vault-rail-item]'),
+      cue: root.querySelector('[data-scene-layer="vault"] [data-vault-cue]') as HTMLElement | null,
     },
   };
 }
 
 const RUNWAY_SECONDS = 12;
 
-const sec = (progress: number) => progress * RUNWAY_SECONDS;
+export const seconds = (progress: number) => progress * RUNWAY_SECONDS;
+
+export const stateTime = (
+  state: SettleDiffState,
+): readonly [number, number] => STATE_RANGES[state].map(seconds) as unknown as readonly [number, number];
+
+export function buildNarrativeTimeline(
+  elements: PortfolioTimelineElements,
+): gsap.core.Timeline {
+  const master = gsap.timeline({
+    defaults: { ease: "none" },
+    paused: true,
+  });
+
+  appendSettleDiffTweens(master, elements.settle);
+
+  const [vaultStart] = stateTime("vault-steward-arrival");
+  appendVaultRevealTweens(master, elements.settle, elements.vault, vaultStart);
+
+  return master;
+}
 
 export function buildSettleDiffTimeline(
   elements: SettleDiffTimelineElements,
 ): gsap.core.Timeline {
   const tl = gsap.timeline({ defaults: { ease: "none" }, paused: true });
+  appendSettleDiffTweens(tl, elements);
+  return tl;
+}
 
-  tl.addLabel("project-established", sec(0));
-  tl.addLabel("request-in-flight", sec(0.1));
+function appendSettleDiffTweens(
+  tl: gsap.core.Timeline,
+  elements: SettleDiffTimelineElements,
+) {
+  const addStateLabel = (state: SettleDiffState) => {
+    const [start] = stateTime(state);
+    tl.addLabel(state, start);
+    return [start, stateTime(state)[1]] as const;
+  };
+
+  addStateLabel("project-established");
+
+  const [reqStart, reqEnd] = addStateLabel("request-in-flight");
 
   if (elements.pathLine && typeof elements.pathLine.getTotalLength === "function") {
     const length = elements.pathLine.getTotalLength();
@@ -111,8 +144,8 @@ export function buildSettleDiffTimeline(
     });
     tl.to(
       elements.pathLine,
-      { strokeDashoffset: 0, duration: sec(0.24) - sec(0.1) },
-      sec(0.1),
+      { strokeDashoffset: 0, duration: reqEnd - reqStart },
+      reqStart,
     );
   }
 
@@ -121,13 +154,14 @@ export function buildSettleDiffTimeline(
     tl.fromTo(
       elements.token,
       { left: "8%" },
-      { left: "86%", duration: sec(0.24) - sec(0.1) },
-      sec(0.1),
+      { left: "86%", duration: reqEnd - reqStart },
+      reqStart,
     );
   }
 
-  tl.addLabel("attempt-recorded", sec(0.24));
-  tl.addLabel("evidence-expanded", sec(0.34));
+  addStateLabel("attempt-recorded");
+
+  const [evStart] = addStateLabel("evidence-expanded");
 
   if (elements.evidenceItems) {
     tl.fromTo(
@@ -140,51 +174,69 @@ export function buildSettleDiffTimeline(
         stagger: 0.04,
         duration: 0.4,
       },
-      sec(0.34),
+      evStart,
     );
   }
 
-  tl.addLabel("comparison-visible", sec(0.52));
+  const [cmpStart, cmpEnd] = addStateLabel("comparison-visible");
 
   if (elements.comparison) {
     tl.fromTo(
       elements.comparison,
       { y: 30, xPercent: -50, yPercent: -50 },
-      { y: 0, xPercent: -50, yPercent: -50, duration: sec(0.68) - sec(0.52) },
-      sec(0.52),
+      { y: 0, xPercent: -50, yPercent: -50, duration: cmpEnd - cmpStart },
+      cmpStart,
     );
   }
 
-  tl.addLabel("mismatch-isolated", sec(0.68));
+  const [mmStart, mmEnd] = addStateLabel("mismatch-isolated");
 
   if (elements.mismatch) {
     tl.fromTo(
       elements.mismatch,
       { scale: 0.88, xPercent: -50, yPercent: -50 },
-      { scale: 1, xPercent: -50, yPercent: -50, duration: sec(0.8) - sec(0.68) },
-      sec(0.68),
+      { scale: 1, xPercent: -50, yPercent: -50, duration: mmEnd - mmStart },
+      mmStart,
     );
   }
 
-  tl.addLabel("unverifiable", sec(0.8));
+  const [uvStart, uvEnd] = addStateLabel("unverifiable");
 
   if (elements.verdict) {
     tl.fromTo(
       elements.verdict,
       { scale: 0.85, xPercent: -50, yPercent: -50 },
-      { scale: 1, xPercent: -50, yPercent: -50, duration: sec(0.9) - sec(0.8) },
-      sec(0.8),
+      { scale: 1, xPercent: -50, yPercent: -50, duration: uvEnd - uvStart },
+      uvStart,
     );
   }
 
-  tl.addLabel("reasoning-chain", sec(0.9));
+  const [rcStart, rcEnd] = addStateLabel("reasoning-chain");
+
+  if (elements.evidence) {
+    tl.fromTo(
+      elements.evidence,
+      { y: 0, scale: 1 },
+      { y: -40, scale: 0.85, duration: rcEnd - rcStart },
+      rcStart,
+    );
+  }
+
+  if (elements.evidenceItems) {
+    tl.fromTo(
+      elements.evidenceItems,
+      { opacity: 1, y: 0 },
+      { opacity: 0, y: -24, stagger: 0.02, duration: 0.35 },
+      rcStart,
+    );
+  }
 
   if (elements.chain) {
     tl.fromTo(
       elements.chain,
       { y: 40, xPercent: -50, yPercent: -50 },
-      { y: 0, xPercent: -50, yPercent: -50, duration: sec(1.0) - sec(0.9) },
-      sec(0.9),
+      { y: 0, xPercent: -50, yPercent: -50, duration: rcEnd - rcStart },
+      rcStart,
     );
   }
 
@@ -193,22 +245,77 @@ export function buildSettleDiffTimeline(
       elements.chainItems,
       { opacity: 0, y: 20 },
       { opacity: 1, y: 0, stagger: 0.03, duration: 0.25 },
-      sec(0.92),
+      rcStart + 0.1,
     );
   }
 
-  tl.addLabel("vault-steward-arrival", sec(1.0));
+  addStateLabel("vault-steward-arrival");
+}
 
-  if (elements.stage) {
+function appendVaultRevealTweens(
+  tl: gsap.core.Timeline,
+  settle: SettleDiffTimelineElements,
+  vault: VaultTimelineElements,
+  startTime: number,
+) {
+  const [, endTime] = stateTime("vault-steward-arrival");
+  const available = endTime - startTime;
+
+  if (vault.layer) {
     tl.fromTo(
-      elements.stage,
-      { opacity: 1, y: 0 },
-      { opacity: 0.25, y: -20, duration: 0.4 },
-      sec(1.0),
+      vault.layer,
+      { opacity: 0 },
+      { opacity: 1, duration: available * 0.25 },
+      startTime,
     );
   }
 
-  return tl;
+  if (vault.railItems) {
+    tl.fromTo(
+      vault.railItems,
+      { opacity: 0, x: -24 },
+      {
+        opacity: 1,
+        x: 0,
+        stagger: 0.04,
+        duration: 0.3,
+      },
+      startTime + available * 0.15,
+    );
+  }
+
+  if (settle.chainItems) {
+    tl.to(
+      settle.chainItems,
+      {
+        opacity: 0,
+        x: 24,
+        stagger: 0.02,
+        duration: 0.3,
+      },
+      startTime + available * 0.15,
+    );
+  }
+
+  if (settle.chain) {
+    tl.to(
+      settle.chain,
+      { opacity: 0, duration: available * 0.2 },
+      startTime + available * 0.2,
+    );
+  }
+
+  const headlineTargets = [vault.title, vault.descriptor, vault.cue].filter(
+    (t): t is HTMLElement => t !== null,
+  );
+  if (headlineTargets.length) {
+    tl.fromTo(
+      headlineTargets,
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, stagger: 0.05, duration: 0.3 },
+      startTime + available * 0.45,
+    );
+  }
 }
 
 export function buildIntroTimeline(
@@ -235,36 +342,6 @@ export function buildIntroTimeline(
       { scaleX: 1, transformOrigin: "left center" },
       { scaleX: 0, duration: 0.6 },
       0,
-    );
-  }
-
-  return tl;
-}
-
-export function buildVaultTimeline(
-  elements: VaultTimelineElements,
-): gsap.core.Timeline {
-  const tl = gsap.timeline({ defaults: { ease: "none" }, paused: true });
-
-  const sectionTargets = [elements.title, elements.descriptor, elements.rail, elements.cue].filter(
-    (t): t is HTMLElement => t !== null,
-  );
-
-  if (sectionTargets.length) {
-    tl.fromTo(
-      sectionTargets,
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, stagger: 0.06, duration: 0.5 },
-      0,
-    );
-  }
-
-  if (elements.railItems) {
-    tl.fromTo(
-      elements.railItems,
-      { opacity: 0, x: -16 },
-      { opacity: 1, x: 0, stagger: 0.05, duration: 0.35 },
-      0.2,
     );
   }
 
