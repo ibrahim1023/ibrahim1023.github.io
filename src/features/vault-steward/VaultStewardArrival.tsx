@@ -10,7 +10,7 @@ export function VaultStewardArrival() {
       data-vault-arrival
     >
       <h2 className={styles.title}>{vaultSteward.title}</h2>
-      <p className={styles.descriptor}>{vaultSteward.descriptor}</p>
+      <p className={styles.descriptor} data-vault-descriptor>{vaultSteward.descriptor}</p>
       <ol className={styles.rail} data-vault-rail>
         {vaultSteward.rail.map((step) => (
           <li key={step} className={styles.railItem} data-vault-rail-item>
@@ -18,7 +18,7 @@ export function VaultStewardArrival() {
           </li>
         ))}
       </ol>
-      <p className={styles.cue}>{vaultSteward.continuationCue}</p>
+      <p className={styles.cue} data-vault-cue>{vaultSteward.continuationCue}</p>
     </section>
   );
 }

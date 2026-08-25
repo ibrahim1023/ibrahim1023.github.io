@@ -15,7 +15,7 @@ export function TransactionPath() {
         aria-hidden="true"
         data-path
       >
-        <path className={styles.pathLine} d="M 20 46 L 980 46" />
+        <path className={styles.pathLine} d="M 20 46 L 980 46" data-path-line />
         <path className={styles.pathReturn} d="M 980 86 L 20 86" />
       </svg>
       <span className={styles.token} data-token>

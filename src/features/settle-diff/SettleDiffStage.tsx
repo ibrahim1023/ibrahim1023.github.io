@@ -13,7 +13,7 @@ export function SettleDiffStage({
 }) {
   return (
     <div className={styles.stage} data-state={state} data-stage>
-      <header className={styles.stageHeader}>
+      <header className={styles.stageHeader} data-stage-header>
         <h2 className={styles.stageTitle}>{settleDiff.title}</h2>
         <p className={styles.stageDescriptor}>{settleDiff.descriptor}</p>
       </header>
