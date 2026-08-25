@@ -5,6 +5,8 @@
   --color-text-secondary: #9b968c;
   --color-accent: #7ea8c9;
   --color-line: #2a2a2d;
+  --color-mismatch: #c9a25a;
+  --color-verdict: #c96a5a;
 
   /* Typography */
   --font-sans:

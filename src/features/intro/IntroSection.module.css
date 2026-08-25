@@ -1,0 +1,57 @@
+.section {
+  min-height: 120dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-4);
+  padding-inline: var(--gutter);
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+.role {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.name {
+  font-size: var(--type-display);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+}
+
+.rule {
+  width: 96px;
+  height: 1px;
+  background: var(--color-line);
+}
+
+.framing {
+  font-size: var(--type-body);
+  line-height: 1.6;
+  max-width: 62ch;
+  color: var(--color-text-secondary);
+}
+
+.cue {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.cueLine {
+  width: 48px;
+  height: 1px;
+  background: var(--color-accent);
+  opacity: 0.6;
+}

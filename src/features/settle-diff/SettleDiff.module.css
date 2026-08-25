@@ -1,0 +1,467 @@
+.section {
+  padding-inline: var(--gutter);
+}
+
+/* Branch contract: exactly one branch participates in layout and the
+   accessibility tree, selected before hydration. */
+.animatedBranch {
+  display: block;
+}
+
+.reducedBranch {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animatedBranch {
+    display: none;
+  }
+
+  .reducedBranch {
+    display: block;
+    max-width: var(--content-max);
+    margin-inline: auto;
+  }
+}
+
+/* ---------------------------------------------------------------- stage */
+
+.stage {
+  --header-opacity: 1;
+  --transaction-opacity: 1;
+  --token-opacity: 0;
+  --ack-opacity: 0;
+  --attempt-opacity: 0;
+  --evidence-opacity: 0;
+  --comparison-opacity: 0;
+  --mismatch-opacity: 0;
+  --verdict-opacity: 0;
+  --chain-opacity: 0;
+
+  position: relative;
+  min-height: 100dvh;
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+.stage[data-state="request-in-flight"] {
+  --token-opacity: 1;
+}
+
+.stage[data-state="attempt-recorded"] {
+  --token-opacity: 1;
+  --ack-opacity: 1;
+  --attempt-opacity: 1;
+}
+
+.stage[data-state="evidence-expanded"] {
+  --transaction-opacity: 0.15;
+  --attempt-opacity: 0.2;
+  --evidence-opacity: 1;
+}
+
+.stage[data-state="comparison-visible"] {
+  --transaction-opacity: 0.1;
+  --attempt-opacity: 0.15;
+  --evidence-opacity: 0.3;
+  --comparison-opacity: 1;
+}
+
+.stage[data-state="mismatch-isolated"] {
+  --transaction-opacity: 0.08;
+  --attempt-opacity: 0.06;
+  --evidence-opacity: 0.25;
+  --comparison-opacity: 0.3;
+  --mismatch-opacity: 1;
+}
+
+.stage[data-state="unverifiable"] {
+  --header-opacity: 0.25;
+  --transaction-opacity: 0.05;
+  --attempt-opacity: 0.06;
+  --evidence-opacity: 0.1;
+  --comparison-opacity: 0.06;
+  --mismatch-opacity: 0.08;
+  --verdict-opacity: 1;
+}
+
+.stage[data-state="reasoning-chain"] {
+  --header-opacity: 0.15;
+  --transaction-opacity: 0.05;
+  --evidence-opacity: 0.08;
+  --verdict-opacity: 0.08;
+  --chain-opacity: 1;
+}
+
+.stageHeader {
+  position: absolute;
+  top: var(--space-6);
+  left: 0;
+  opacity: var(--header-opacity);
+}
+
+.stageTitle {
+  font-size: var(--type-display);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.stageDescriptor {
+  margin-top: var(--space-1);
+  color: var(--color-text-secondary);
+  font-size: var(--type-body);
+}
+
+/* ------------------------------------------------------------ transaction */
+
+.transaction {
+  position: absolute;
+  top: 38%;
+  left: 0;
+  right: 0;
+  height: 120px;
+  opacity: var(--transaction-opacity);
+}
+
+.pathSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.pathLine,
+.pathReturn {
+  fill: none;
+  stroke: var(--color-line);
+  stroke-width: 2;
+}
+
+.pathReturn {
+  stroke-dasharray: 4 8;
+  opacity: 0.6;
+}
+
+.anchor {
+  position: absolute;
+  top: 0;
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: 0.14em;
+  color: var(--color-text-secondary);
+}
+
+.anchor[data-agent] {
+  left: 0;
+}
+
+.anchor[data-service] {
+  right: 0;
+}
+
+.token {
+  position: absolute;
+  top: 24px;
+  left: 8%;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-accent);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-body);
+  color: var(--color-text-primary);
+  opacity: var(--token-opacity);
+}
+
+.ack {
+  position: absolute;
+  bottom: 0;
+  right: 12%;
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  color: var(--color-text-secondary);
+  opacity: var(--ack-opacity);
+}
+
+/* --------------------------------------------------------------- attempt */
+
+.attemptBadge {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  text-align: center;
+  opacity: var(--attempt-opacity);
+}
+
+.attemptBadge strong {
+  font-family: var(--font-mono);
+  font-size: var(--type-body);
+  letter-spacing: 0.14em;
+  color: var(--color-accent);
+}
+
+.attemptBadge span {
+  font-size: var(--type-label);
+  color: var(--color-text-secondary);
+}
+
+/* -------------------------------------------------------------- evidence */
+
+.evidence {
+  position: absolute;
+  inset: 0;
+  opacity: var(--evidence-opacity);
+}
+
+.connectors {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.connectors path {
+  fill: none;
+  stroke: var(--color-line);
+  stroke-width: 0.25;
+}
+
+.evidenceList {
+  list-style: none;
+  padding: 0;
+  position: absolute;
+  inset: 0;
+}
+
+.evidenceItem {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-line);
+  background: var(--color-canvas);
+  min-width: 150px;
+}
+
+.evidenceLabel {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: 0.14em;
+  color: var(--color-text-secondary);
+}
+
+.evidencePrimary {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+
+.evidenceDetail {
+  font-size: var(--type-label);
+  color: var(--color-text-secondary);
+}
+
+.evidenceItem[data-evidence-item="request"] { left: 8%; top: 18%; }
+.evidenceItem[data-evidence-item="payment"] { left: 8%; top: 66%; }
+.evidenceItem[data-evidence-item="vendor"] { left: 38%; top: 12%; }
+.evidenceItem[data-evidence-item="chain"] { left: 38%; top: 72%; }
+.evidenceItem[data-evidence-item="response"] { left: 66%; top: 18%; }
+.evidenceItem[data-evidence-item="receipt"] { left: 66%; top: 66%; }
+
+/* ------------------------------------------------------------ comparison */
+
+.comparison {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(640px, 92%);
+  opacity: var(--comparison-opacity);
+}
+
+.comparisonTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.comparisonCaption {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  padding-bottom: var(--space-2);
+}
+
+.comparisonTable th,
+.comparisonTable td {
+  text-align: left;
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--color-line);
+  font-weight: normal;
+}
+
+.comparisonTable thead th {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: 0.14em;
+  color: var(--color-text-secondary);
+}
+
+.comparisonTable tbody th {
+  color: var(--color-text-primary);
+}
+
+.comparisonTable td {
+  color: var(--color-text-secondary);
+}
+
+.comparisonMismatch {
+  color: var(--color-mismatch) !important;
+}
+
+/* -------------------------------------------------------------- mismatch */
+
+.mismatch {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: var(--mismatch-opacity);
+}
+
+.mismatchValues {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--space-3);
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+
+.mismatchOperator {
+  color: var(--color-mismatch);
+  font-size: 0.6em;
+}
+
+.mismatchExplanation {
+  margin-top: var(--space-2);
+  color: var(--color-text-secondary);
+}
+
+/* --------------------------------------------------------------- verdict */
+
+.verdict {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: min(92vw, 42rem);
+  opacity: var(--verdict-opacity);
+}
+
+.verdictLabel {
+  font-size: clamp(2.25rem, 7vw, 4.75rem);
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--color-verdict);
+}
+
+.verdictReason {
+  margin-top: var(--space-3);
+  margin-inline: auto;
+  max-width: 30rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* ----------------------------------------------------------------- chain */
+
+.chain {
+  list-style: none;
+  padding: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: min(480px, 92%);
+  opacity: var(--chain-opacity);
+}
+
+.chainItem {
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.chainLabel {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: 0.14em;
+  color: var(--color-accent);
+}
+
+.chainText {
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* ---------------------------------------------------------------- mobile */
+
+@media (max-width: 768px) {
+  .stage {
+    min-height: 100dvh;
+    padding-top: var(--space-6);
+  }
+
+  .stageHeader,
+  .transaction,
+  .attemptBadge,
+  .evidence,
+  .comparison,
+  .mismatch,
+  .verdict,
+  .chain {
+    position: static;
+    transform: none;
+    width: auto;
+    max-width: none;
+  }
+
+  .stage {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .transaction {
+    height: 96px;
+    position: relative;
+  }
+
+  .connectors {
+    display: none;
+  }
+
+  .evidenceList {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .evidenceItem {
+    position: static;
+  }
+}
