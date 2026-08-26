@@ -29,14 +29,14 @@
 .stage {
   --header-opacity: 1;
   --transaction-opacity: 1;
-  --token-opacity: 0;
-  --ack-opacity: 0;
-  --attempt-opacity: 0;
-  --evidence-opacity: 0;
-  --comparison-opacity: 0;
-  --mismatch-opacity: 0;
-  --verdict-opacity: 0;
-  --chain-opacity: 0;
+  --token-opacity: 1;
+  --return-opacity: 1;
+  --attempt-opacity: 1;
+  --evidence-opacity: 1;
+  --comparison-opacity: 1;
+  --mismatch-opacity: 1;
+  --verdict-opacity: 1;
+  --chain-opacity: 1;
 
   position: relative;
   min-height: 100dvh;
@@ -44,30 +44,30 @@
   margin-inline: auto;
 }
 
-.stage[data-state="request-in-flight"] {
+[data-animated="ready"] .stage[data-state="request-in-flight"] {
   --token-opacity: 1;
 }
 
-.stage[data-state="attempt-recorded"] {
+[data-animated="ready"] .stage[data-state="attempt-recorded"] {
   --token-opacity: 1;
-  --ack-opacity: 1;
+  --return-opacity: 1;
   --attempt-opacity: 1;
 }
 
-.stage[data-state="evidence-expanded"] {
+[data-animated="ready"] .stage[data-state="evidence-expanded"] {
   --transaction-opacity: 0.15;
   --attempt-opacity: 0.2;
   --evidence-opacity: 1;
 }
 
-.stage[data-state="comparison-visible"] {
+[data-animated="ready"] .stage[data-state="comparison-visible"] {
   --transaction-opacity: 0.1;
   --attempt-opacity: 0.15;
   --evidence-opacity: 0.3;
   --comparison-opacity: 1;
 }
 
-.stage[data-state="mismatch-isolated"] {
+[data-animated="ready"] .stage[data-state="mismatch-isolated"] {
   --transaction-opacity: 0.08;
   --attempt-opacity: 0.06;
   --evidence-opacity: 0.25;
@@ -75,7 +75,7 @@
   --mismatch-opacity: 1;
 }
 
-.stage[data-state="unverifiable"] {
+[data-animated="ready"] .stage[data-state="unverifiable"] {
   --transaction-opacity: 0.05;
   --attempt-opacity: 0.06;
   --evidence-opacity: 0.1;
@@ -84,18 +84,18 @@
   --verdict-opacity: 1;
 }
 
-.stage[data-state="reasoning-chain"] {
+[data-animated="ready"] .stage[data-state="reasoning-chain"] {
   --transaction-opacity: 0.05;
   --evidence-opacity: 0.4;
   --verdict-opacity: 0.08;
   --chain-opacity: 1;
 }
 
-.stage[data-state="vault-steward-arrival"] {
+[data-animated="ready"] .stage[data-state="vault-steward-arrival"] {
   --header-opacity: 1;
   --transaction-opacity: 0;
   --token-opacity: 0;
-  --ack-opacity: 0;
+  --return-opacity: 0;
   --attempt-opacity: 0;
   --evidence-opacity: 0;
   --comparison-opacity: 0;
@@ -115,6 +115,12 @@
   font-size: var(--type-display);
   line-height: 1.05;
   letter-spacing: -0.02em;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
 }
 
 .stageDescriptor {
@@ -182,14 +188,32 @@
   opacity: var(--token-opacity);
 }
 
-.ack {
+.budget,
+.return {
   position: absolute;
-  bottom: 0;
-  right: 12%;
   font-family: var(--font-mono);
   font-size: var(--type-label);
   color: var(--color-text-secondary);
-  opacity: var(--ack-opacity);
+}
+
+.budget {
+  top: 62px;
+  left: 8%;
+  opacity: var(--token-opacity);
+}
+
+.return {
+  right: 12%;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  opacity: var(--return-opacity);
+}
+
+.return strong {
+  color: var(--color-text-primary);
 }
 
 /* --------------------------------------------------------------- attempt */
@@ -275,12 +299,12 @@
   color: var(--color-text-secondary);
 }
 
-.evidenceItem[data-evidence-item="request"] { left: 8%; top: 18%; }
-.evidenceItem[data-evidence-item="payment"] { left: 8%; top: 66%; }
-.evidenceItem[data-evidence-item="vendor"] { left: 38%; top: 12%; }
-.evidenceItem[data-evidence-item="chain"] { left: 38%; top: 72%; }
-.evidenceItem[data-evidence-item="response"] { left: 66%; top: 18%; }
-.evidenceItem[data-evidence-item="receipt"] { left: 66%; top: 66%; }
+[data-animated="ready"] .evidenceItem[data-evidence-item="request"] { left: 8%; top: 18%; }
+[data-animated="ready"] .evidenceItem[data-evidence-item="payment"] { left: 8%; top: 66%; }
+[data-animated="ready"] .evidenceItem[data-evidence-item="vendor"] { left: 38%; top: 12%; }
+[data-animated="ready"] .evidenceItem[data-evidence-item="chain"] { left: 38%; top: 72%; }
+[data-animated="ready"] .evidenceItem[data-evidence-item="response"] { left: 66%; top: 18%; }
+[data-animated="ready"] .evidenceItem[data-evidence-item="activity"] { left: 66%; top: 66%; }
 
 /* ------------------------------------------------------------ comparison */
 
@@ -332,8 +356,20 @@
   color: var(--color-text-secondary);
 }
 
-.comparisonMismatch {
-  color: var(--color-mismatch) !important;
+.pass {
+  color: var(--color-pass) !important;
+}
+
+.diff {
+  color: var(--color-diff) !important;
+}
+
+.fail {
+  color: var(--color-fail) !important;
+}
+
+.unknown {
+  color: var(--color-unknown) !important;
 }
 
 /* -------------------------------------------------------------- mismatch */
@@ -355,6 +391,15 @@
   font-size: clamp(2.5rem, 7vw, 5rem);
   font-variant-numeric: tabular-nums;
   color: var(--color-text-primary);
+}
+
+.mismatchHeading {
+  margin-bottom: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-diff);
 }
 
 .mismatchOperator {
@@ -475,4 +520,148 @@
   .evidenceItem {
     position: static;
   }
+}
+
+/* The unenhanced story remains legible in normal document flow. Animation
+   geometry is enabled only after the runtime marks its setup as ready. */
+.stage {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding-block: var(--space-6);
+}
+
+.stageHeader,
+.transaction,
+.attemptBadge,
+.evidence,
+.comparison,
+.mismatch,
+.verdict,
+.chain {
+  position: static;
+  inset: auto;
+  width: auto;
+  max-width: none;
+  transform: none;
+  opacity: 1;
+}
+
+.transaction {
+  height: 120px;
+  position: relative;
+}
+
+.attemptBadge {
+  align-self: flex-start;
+  text-align: left;
+}
+
+.connectors {
+  display: none;
+}
+
+.evidenceList {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.evidenceItem {
+  position: static;
+}
+
+[data-animated="ready"] .stage {
+  --token-opacity: 0;
+  --return-opacity: 0;
+  --attempt-opacity: 0;
+  --evidence-opacity: 0;
+  --comparison-opacity: 0;
+  --mismatch-opacity: 0;
+  --verdict-opacity: 0;
+  --chain-opacity: 0;
+
+  display: block;
+  position: relative;
+  min-height: 100dvh;
+  padding-block: 0;
+}
+
+[data-animated="ready"] .stageHeader {
+  position: absolute;
+  top: var(--space-6);
+  left: 0;
+  opacity: var(--header-opacity);
+}
+
+[data-animated="ready"] .transaction {
+  position: absolute;
+  top: 38%;
+  left: 0;
+  right: 0;
+  height: 120px;
+  opacity: var(--transaction-opacity);
+}
+
+[data-animated="ready"] .attemptBadge {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+  text-align: center;
+  opacity: var(--attempt-opacity);
+}
+
+[data-animated="ready"] .evidence {
+  position: absolute;
+  inset: 0;
+  opacity: var(--evidence-opacity);
+}
+
+[data-animated="ready"] .connectors {
+  display: block;
+  position: absolute;
+  inset: 0;
+}
+
+[data-animated="ready"] .evidenceList {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+[data-animated="ready"] .evidenceItem {
+  position: absolute;
+}
+
+[data-animated="ready"] .comparison,
+[data-animated="ready"] .mismatch,
+[data-animated="ready"] .verdict,
+[data-animated="ready"] .chain {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(640px, 92%);
+  transform: translate(-50%, -50%);
+}
+
+[data-animated="ready"] .comparison {
+  opacity: var(--comparison-opacity);
+}
+
+[data-animated="ready"] .mismatch {
+  opacity: var(--mismatch-opacity);
+}
+
+[data-animated="ready"] .verdict {
+  width: min(92vw, 42rem);
+  opacity: var(--verdict-opacity);
+}
+
+[data-animated="ready"] .chain {
+  width: min(480px, 92%);
+  opacity: var(--chain-opacity);
 }

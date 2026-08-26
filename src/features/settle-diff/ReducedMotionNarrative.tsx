@@ -2,10 +2,12 @@ import {
   comparisonRows,
   evidenceObjects,
   mismatch,
+  projectLinks,
   reasoningChain,
   settleDiff,
   vaultSteward,
 } from "@/content/portfolioContent";
+import { ProjectSourceLink } from "@/components/projects/ProjectSourceLink";
 
 import styles from "./ReducedMotionNarrative.module.css";
 
@@ -25,8 +27,8 @@ export function ReducedMotionNarrative() {
       <section className={styles.panel}>
         <h3>Activity recorded</h3>
         <p>
-          An activity record exists for the attempt. A record is not proof of
-          settlement.
+          <strong>{settleDiff.attemptLabel}</strong> — {settleDiff.activityStatus}. An
+          activity record exists for the attempt; it is not proof of settlement.
         </p>
       </section>
 
@@ -51,6 +53,11 @@ export function ReducedMotionNarrative() {
                 <th scope="row">{row.aspect}</th>
                 <td>{row.expected}</td>
                 <td>{row.observed}</td>
+                <td>
+                  <span data-classification={row.classification}>
+                    {row.classification}
+                  </span>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -58,10 +65,11 @@ export function ReducedMotionNarrative() {
       </section>
 
       <section className={styles.panel}>
-        <h3>Chain mismatch</h3>
+        <h3>Chain conflict</h3>
         <p>
           <strong>{mismatch.expected}</strong> ≠ <strong>{mismatch.observed}</strong> —{" "}
-          {mismatch.explanation}
+          {mismatch.explanation} Missing settlement proof remains visible: no
+          confirmed charge and no transaction hash.
         </p>
       </section>
 
@@ -83,14 +91,28 @@ export function ReducedMotionNarrative() {
 
       <section className={styles.panel}>
         <h3>Vault Steward transformation</h3>
+        <p className={styles.vaultHeadline}>{vaultSteward.headline}</p>
+        <p>{vaultSteward.descriptor}</p>
         <ul className={styles.mapping}>
           {vaultSteward.objectMapping.map((entry) => (
             <li key={entry.from}>
-              {entry.from} → {entry.to}
+              <span>{entry.from}</span> → <span>{entry.to}</span>
             </li>
           ))}
         </ul>
+        <dl className={styles.preview}>
+          <div>
+            <dt>Current</dt>
+            <dd>{vaultSteward.preview.current}</dd>
+          </div>
+          <div>
+            <dt>After</dt>
+            <dd>{vaultSteward.preview.after}</dd>
+          </div>
+        </dl>
+        <p>{vaultSteward.preview.expectedResult}</p>
         <p className={styles.rail}>{vaultSteward.rail.join(" → ")}</p>
+        <ProjectSourceLink href={projectLinks.vaultSteward} project={vaultSteward.title} />
       </section>
     </div>
   );

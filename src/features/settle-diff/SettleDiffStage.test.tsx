@@ -1,7 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
 
-import { evidenceObjects, reasoningChain } from "@/content/portfolioContent";
+import {
+  evidenceObjects,
+  projectLinks,
+  reasoningChain,
+} from "@/content/portfolioContent";
 
 import { SettleDiffStage } from "./SettleDiffStage";
 
@@ -37,6 +41,26 @@ describe("SettleDiffStage", () => {
     expect(screen.getByText("AGENT")).toBeInTheDocument();
     expect(screen.getByText("SERVICE")).toBeInTheDocument();
     expect(screen.getAllByText("0.01 USDC").length).toBeGreaterThan(0);
+  });
+
+  test("renders the source, return, activity, and evidence truthfully", () => {
+    const { container } = render(<SettleDiffStage />);
+
+    expect(
+      screen.getByRole("link", { name: "View SettleDiff source on GitHub" }),
+    ).toHaveAttribute("href", projectLinks.settleDiff);
+    expect(screen.getAllByText("HTTP 402").length).toBeGreaterThan(0);
+    expect(screen.getByText("broadcast_failed")).toBeInTheDocument();
+    expect(screen.queryByText("acknowledged")).not.toBeInTheDocument();
+    expect(
+      container.querySelector('[data-evidence-item="activity"]'),
+    ).not.toBeNull();
+    expect(
+      container.querySelector('[data-evidence-item="receipt"]'),
+    ).toBeNull();
+    expect(
+      container.querySelector('[data-classification="UNKNOWN"]'),
+    ).not.toBeNull();
   });
 
   test("exposes the current narrative state for styling and tests", () => {

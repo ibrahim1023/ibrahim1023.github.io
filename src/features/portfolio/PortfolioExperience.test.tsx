@@ -25,11 +25,13 @@ describe("PortfolioExperience shell", () => {
     expect(
       screen.getByText("Transaction forensics for agent purchases."),
     ).toBeInTheDocument();
-    expect(screen.getByText("Keep your vault trustworthy")).toBeInTheDocument();
     expect(
-      screen.getByText(
+      screen.getAllByText("Keep your vault trustworthy").length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(
         "Local-first, evidence-backed vault maintenance with explicit approval before every edit.",
-      ),
-    ).toBeInTheDocument();
+      ).length,
+    ).toBeGreaterThan(0);
   });
 });

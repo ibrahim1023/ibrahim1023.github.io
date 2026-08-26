@@ -7,6 +7,11 @@
   --color-line: #2a2a2d;
   --color-mismatch: #c9a25a;
   --color-verdict: #c96a5a;
+  --color-pass: #7aa88b;
+  --color-diff: #c9a25a;
+  --color-fail: #c96a5a;
+  --color-unknown: #9b968c;
+  --color-vault: #6fa889;
 
   /* Typography */
   --font-sans:

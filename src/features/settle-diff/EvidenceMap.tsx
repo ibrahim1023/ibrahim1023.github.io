@@ -9,7 +9,7 @@ import styles from "./SettleDiff.module.css";
 export function EvidenceMap() {
   return (
     <>
-      <div className={styles.evidence} data-evidence>
+      <div className={styles.evidence} data-evidence data-animatable>
         <svg
           className={styles.connectors}
           viewBox="0 0 100 100"
@@ -29,15 +29,18 @@ export function EvidenceMap() {
               key={object.id}
               className={styles.evidenceItem}
               data-evidence-item={object.id}
+              data-animatable
             >
-              <span className={styles.evidenceLabel}>{object.label}</span>
+              <span className={styles.evidenceLabel} data-object-label="settle">
+                {object.label}
+              </span>
               <span className={styles.evidencePrimary}>{object.primary}</span>
               <span className={styles.evidenceDetail}>{object.detail}</span>
             </li>
           ))}
         </ul>
       </div>
-      <div className={styles.comparison} data-comparison>
+      <div className={styles.comparison} data-comparison data-animatable>
         <table className={styles.comparisonTable}>
           <caption className={styles.comparisonCaption}>
             Expected versus observed evidence
@@ -47,6 +50,7 @@ export function EvidenceMap() {
               <th scope="col">Aspect</th>
               <th scope="col">EXPECTED</th>
               <th scope="col">OBSERVED</th>
+              <th scope="col">CLASSIFICATION</th>
             </tr>
           </thead>
           <tbody>
@@ -54,19 +58,19 @@ export function EvidenceMap() {
               <tr key={row.id} data-comparison-row={row.id}>
                 <th scope="row">{row.aspect}</th>
                 <td>{row.expected}</td>
-                <td
-                  className={
-                    row.matches ? undefined : styles.comparisonMismatch
-                  }
-                >
-                  {row.observed}
+                <td>{row.observed}</td>
+                <td className={styles[row.classification.toLowerCase()]}>
+                  <span data-classification={row.classification}>
+                    {row.classification}
+                  </span>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <div className={styles.mismatch} data-mismatch>
+      <div className={styles.mismatch} data-mismatch data-animatable>
+        <h3 className={styles.mismatchHeading}>Chain conflict</h3>
         <p className={styles.mismatchValues}>
           <span>{mismatch.expected}</span>
           <span className={styles.mismatchOperator} aria-label="does not equal">
@@ -74,7 +78,10 @@ export function EvidenceMap() {
           </span>
           <span>{mismatch.observed}</span>
         </p>
-        <p className={styles.mismatchExplanation}>{mismatch.explanation}</p>
+        <p className={styles.mismatchExplanation}>
+          {mismatch.explanation} Missing settlement proof remains visible: no
+          confirmed charge and no transaction hash.
+        </p>
       </div>
     </>
   );

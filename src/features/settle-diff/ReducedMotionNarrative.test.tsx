@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
 
 import { ReducedMotionNarrative } from "./ReducedMotionNarrative";
@@ -16,7 +16,7 @@ describe("ReducedMotionNarrative", () => {
       "Activity recorded",
       "Evidence",
       "Expected vs observed",
-      "Chain mismatch",
+      "Chain conflict",
       "UNVERIFIABLE",
       "Reasoning",
       "Vault Steward transformation",
@@ -32,5 +32,24 @@ describe("ReducedMotionNarrative", () => {
     expect(getAllByText("tempo").length).toBeGreaterThan(0);
     expect(getByText(/settlement could not be established/i)).toBeInTheDocument();
     expect(queryByText("PAID")).not.toBeInTheDocument();
+  });
+
+  test("renders classifications and every Vault role in the static story", () => {
+    render(<ReducedMotionNarrative />);
+
+    for (const classification of ["PASS", "DIFF", "FAIL", "UNKNOWN"]) {
+      expect(screen.getAllByText(classification).length).toBeGreaterThan(0);
+    }
+
+    for (const role of [
+      "NOTE",
+      "PROPOSED CHANGE",
+      "EVIDENCE SOURCE",
+      "POLICY",
+      "CURRENT / AFTER",
+      "AUDIT / RECHECK",
+    ]) {
+      expect(screen.getByText(role)).toBeInTheDocument();
+    }
   });
 });
