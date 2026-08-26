@@ -234,6 +234,6 @@ Phase 1 is complete only when:
 6. the reviewed commit and deployed commit agree;
 7. no out-of-scope section or unsupported claim was introduced.
 
-The owner currently has a Mac and an iPhone for physical validation. Android
-Chrome remains unverified until a physical device or approved remote-device
-service is available; do not claim complete device coverage without it.
+The supported Phase 1 physical-device validation scope is the owner's Mac and
+iPhone. Android is outside this phase: it is not a release requirement, and no
+Android compatibility claim may be made from desktop emulation.

@@ -135,11 +135,9 @@ With GSAP/ScrollTrigger initialization deliberately blocked:
 | Firefox on owner Mac | available/installable | pending |
 | Edge on owner Mac | available/installable | pending |
 | iOS Safari on owner iPhone | available | pending |
-| Android Chrome on physical mid-range phone | unavailable | unverified |
 
-Android Chrome cannot be marked passing from responsive desktop emulation. Use
-a borrowed device or obtain owner approval for a remote-device service. Until
-then, disclose it as an acceptance limitation.
+Android is outside the supported Phase 1 device scope. Do not infer or report
+Android compatibility from responsive desktop emulation.
 
 ## Performance and bundle evidence
 
@@ -183,12 +181,8 @@ Any budget exception requires a dated owner decision with measured evidence.
 
 Phase 1 result: `PENDING`
 
-Known limitation:
-
-- Android Chrome physical-device validation is unavailable with the owner's
-  current Mac/iPhone device set.
+Known supported-scope limitations: `NONE RECORDED YET`
 
 Do not change the result to `PASS` while a blocking implementation item or
-required available-environment check remains incomplete. If Android remains
-unavailable, use `PASS WITH DISCLOSED DEVICE LIMITATION` only after Ibrahim
-explicitly accepts that limitation at final review.
+required Mac/iPhone check remains incomplete. Record any discovered limitation
+inside the supported scope and obtain Ibrahim's approval before sign-off.

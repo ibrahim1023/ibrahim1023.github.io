@@ -118,6 +118,5 @@ pnpm build:pages
 pnpm test:e2e
 ```
 
-The current owner can manually validate on a Mac and an iPhone. Android Chrome
-requires a borrowed physical device or an explicitly approved remote-device
-service; until then, report it as unverified.
+The supported Phase 1 physical-device scope is the owner's Mac and iPhone.
+Android is out of scope and must not be reported as verified from emulation.

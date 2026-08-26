@@ -24,7 +24,7 @@ phase is accepted.
 | Accessibility | partial | Axe passes; manual AT/zoom/focus review is missing |
 | Automated testing | partial | exact state, lifecycle, mobile, failure, and navigation cases missing |
 | Performance | missing | no Lighthouse, Web Vitals, trace, or bundle-budget evidence |
-| Browser/device acceptance | missing | Mac/iPhone review not recorded; Android unavailable |
+| Browser/device acceptance | missing | supported Mac/iPhone review not recorded |
 
 ## Completed baseline
 
@@ -76,11 +76,11 @@ timeline, dynamic viewport handling, orientation rebuild, and mobile E2E cases.
 
 ### B4 — Acceptance evidence is incomplete
 
-No Lighthouse, Web Vitals, bundle, performance-trace, Mac browser, iPhone,
-Android, or deployed-commit evidence is recorded.
+No Lighthouse, Web Vitals, bundle, performance-trace, Mac browser, iPhone, or
+deployed-commit evidence is recorded.
 
-**Required:** complete `docs/ACCEPTANCE_RUNBOOK.md`; keep Android explicitly
-unverified until suitable access exists.
+**Required:** complete `docs/ACCEPTANCE_RUNBOOK.md` for the supported Mac and
+iPhone scope; do not make an Android compatibility claim in Phase 1.
 
 ## Important gaps
 

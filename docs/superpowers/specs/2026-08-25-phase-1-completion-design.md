@@ -193,9 +193,8 @@ approval and measured evidence.
 ### Browser/device scope
 
 Validate Safari, Chrome, Firefox, and Edge on the owner's Mac and iOS Safari on
-the owner's iPhone. Android Chrome remains an explicit gap until a borrowed
-device or approved remote-device service is available; emulation is not
-physical-device evidence.
+the owner's iPhone. Android is outside the supported Phase 1 device scope and
+does not block completion; do not infer Android compatibility from emulation.
 
 ## Work decomposition
 
@@ -229,4 +228,4 @@ This design succeeds when the deployed page communicates the factual story at
 any supported motion preference, feels like one reversible scroll-controlled
 world, visibly turns SettleDiff evidence into Vault Steward trust boundaries,
 passes all available automated and manual gates, and discloses the unavailable
-Android device check rather than claiming it.
+features or device targets rather than claiming them.

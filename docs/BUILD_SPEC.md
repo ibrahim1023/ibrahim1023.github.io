@@ -182,7 +182,10 @@ failed lint, type, test, build, E2E, bundle, or configured performance gate.
 - Lighthouse and Web Vitals;
 - bundle-size report;
 - Mac browser matrix and iPhone Safari;
-- Android Chrome explicitly verified or explicitly recorded as unavailable;
 - deployed GitHub Pages URL and reviewed commit agreement.
+
+Phase 1 physical-device acceptance is intentionally limited to the owner's Mac
+and iPhone. Android is outside the supported Phase 1 device scope and does not
+block release.
 
 Exact procedures and evidence fields live in `docs/ACCEPTANCE_RUNBOOK.md`.

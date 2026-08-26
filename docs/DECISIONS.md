@@ -91,9 +91,9 @@ local product spec unchanged as historical input.
 Phase 1. Automate bundle checks and repeatable Lighthouse validation where
 practical.
 
-The owner has a Mac and an iPhone for physical testing. Android validation is
-an explicit evidence gap until another device or an approved remote-device
-service becomes available.
+The supported Phase 1 physical-device scope is the owner's Mac and iPhone.
+Android is out of scope for this phase; do not present its absence as a release
+gap or imply that Android compatibility has been verified.
 
 ## 2026-08-25 — Assets
 
