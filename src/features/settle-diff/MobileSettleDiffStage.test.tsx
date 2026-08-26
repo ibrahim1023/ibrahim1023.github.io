@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
 
-import { evidenceObjects } from "@/content/portfolioContent";
+import { evidenceObjects, vaultSteward } from "@/content/portfolioContent";
 
 import { MobileSettleDiffStage } from "./MobileSettleDiffStage";
 
@@ -17,7 +17,26 @@ describe("MobileSettleDiffStage", () => {
     );
 
     for (const object of evidenceObjects) {
-      expect(screen.getByText(object.label)).toBeInTheDocument();
+      expect(
+        container.querySelector(`[data-mobile-evidence-item="${object.id}"]`),
+      ).toHaveTextContent(object.label);
+    }
+  });
+
+  test("renders the approved Vault Steward approval rail", () => {
+    render(<MobileSettleDiffStage />);
+
+    expect(screen.getByText(vaultSteward.rail.join(" → "))).toBeInTheDocument();
+  });
+
+  test("maps every evidence object to its Vault Steward role", () => {
+    const { container } = render(<MobileSettleDiffStage />);
+    const mapping = container.querySelector("[data-mobile-object-mapping]");
+
+    expect(mapping).not.toBeNull();
+    for (const entry of vaultSteward.objectMapping) {
+      expect(mapping).toHaveTextContent(entry.from);
+      expect(mapping).toHaveTextContent(entry.to);
     }
   });
 });

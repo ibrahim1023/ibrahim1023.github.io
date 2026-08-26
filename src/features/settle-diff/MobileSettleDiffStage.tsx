@@ -84,7 +84,17 @@ export function MobileSettleDiffStage() {
             <dd>{vaultSteward.preview.after}</dd>
           </div>
         </dl>
+        <ul className={styles.mapping} data-mobile-object-mapping>
+          {vaultSteward.objectMapping.map((entry) => (
+            <li key={entry.from}>
+              <span>{entry.from}</span>
+              <span aria-hidden="true">→</span>
+              <strong>{entry.to}</strong>
+            </li>
+          ))}
+        </ul>
         <p>{vaultSteward.preview.expectedResult}</p>
+        <p className={styles.rail}>{vaultSteward.rail.join(" → ")}</p>
       </section>
     </div>
   );
