@@ -17,6 +17,9 @@ import {
 
 import styles from "./PortfolioExperience.module.css";
 
+const MOBILE_LAYOUT_QUERY =
+  "(width < 768px), (orientation: portrait) and (max-width: 1024px)";
+
 export function PortfolioExperience() {
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +28,7 @@ export function PortfolioExperience() {
       typeof window === "undefined" ||
       typeof window.matchMedia !== "function" ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-      window.matchMedia("(max-width: 768px)").matches
+      window.matchMedia(MOBILE_LAYOUT_QUERY).matches
     ) {
       return;
     }

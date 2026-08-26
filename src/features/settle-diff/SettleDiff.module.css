@@ -4,16 +4,32 @@
 
 /* Branch contract: exactly one branch participates in layout and the
    accessibility tree, selected before hydration. */
-.animatedBranch {
+.desktopBranch {
   display: block;
 }
 
+.mobileBranch,
 .reducedBranch {
   display: none;
 }
 
+@media (width < 768px), (orientation: portrait) and (max-width: 1024px) {
+  .section {
+    padding-inline: 0;
+  }
+
+  .desktopBranch {
+    display: none;
+  }
+
+  .mobileBranch {
+    display: block;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animatedBranch {
+  .desktopBranch,
+  .mobileBranch {
     display: none;
   }
 
@@ -573,7 +589,7 @@
   position: static;
 }
 
-@media (min-width: 769px) {
+@media (min-width: 768px) {
   [data-animated="ready"] .stage {
     --token-opacity: 0;
     --return-opacity: 0;

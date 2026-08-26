@@ -14,12 +14,15 @@ afterEach(() => {
 
 describe("PortfolioExperience shell", () => {
   test("renders the three Phase 1 semantic sections exactly once", () => {
-    render(<PortfolioExperience />);
+    const { container } = render(<PortfolioExperience />);
 
     expect(screen.getByRole("region", { name: "Intro" })).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "SettleDiff" })).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "Vault Steward" })).toBeInTheDocument();
     expect(screen.getAllByRole("region")).toHaveLength(3);
+    expect(container.querySelectorAll('[data-layout="desktop"]')).toHaveLength(1);
+    expect(container.querySelectorAll('[data-layout="mobile"]')).toHaveLength(1);
+    expect(container.querySelectorAll('[data-branch="reduced"]')).toHaveLength(1);
   });
 
   test("renders the approved identity and project copy", () => {
@@ -32,8 +35,8 @@ describe("PortfolioExperience shell", () => {
       screen.getByText("I build and evaluate reliable agentic systems."),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Transaction forensics for agent purchases."),
-    ).toBeInTheDocument();
+      screen.getAllByText("Transaction forensics for agent purchases.").length,
+    ).toBeGreaterThan(0);
     expect(
       screen.getAllByText("Keep your vault trustworthy").length,
     ).toBeGreaterThan(0);
@@ -48,7 +51,9 @@ describe("PortfolioExperience shell", () => {
     Object.defineProperty(window, "matchMedia", {
       configurable: true,
       value: vi.fn().mockImplementation((query: string) => ({
-        matches: query === "(max-width: 768px)",
+        matches:
+          query ===
+          "(width < 768px), (orientation: portrait) and (max-width: 1024px)",
         addEventListener: vi.fn(),
         removeEventListener: vi.fn(),
       })),
