@@ -16,6 +16,9 @@ test-results/
 # Bundle analysis
 analyze/
 
+# Local isolated implementation worktrees
+.worktrees/
+
 # Environment files
 .env
 .env.*
