@@ -24,7 +24,6 @@ export interface SettleDiffTimelineElements {
   transaction: HTMLElement | null;
   pathLine: SVGPathElement | null;
   token: HTMLElement | null;
-  ack: HTMLElement | null;
   attempt: HTMLElement | null;
   evidence: HTMLElement | null;
   evidenceItems: Element[] | null;
@@ -68,7 +67,6 @@ export function queryTimelineElements(root: HTMLElement): PortfolioTimelineEleme
       transaction: root.querySelector('[data-scene-layer="settle"] [data-transaction]') as HTMLElement | null,
       pathLine: root.querySelector('[data-scene-layer="settle"] [data-path-line]') as SVGPathElement | null,
       token: root.querySelector('[data-scene-layer="settle"] [data-token]') as HTMLElement | null,
-      ack: root.querySelector('[data-scene-layer="settle"] [data-ack]') as HTMLElement | null,
       attempt: root.querySelector('[data-scene-layer="settle"] [data-attempt]') as HTMLElement | null,
       evidence: root.querySelector('[data-scene-layer="settle"] [data-evidence]') as HTMLElement | null,
       evidenceItems: toArray('[data-scene-layer="settle"] [data-evidence-item]'),

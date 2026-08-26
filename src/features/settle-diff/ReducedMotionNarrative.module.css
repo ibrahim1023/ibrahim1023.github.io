@@ -11,6 +11,12 @@
   letter-spacing: -0.02em;
 }
 
+.projectHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
 .panel {
   display: flex;
   flex-direction: column;

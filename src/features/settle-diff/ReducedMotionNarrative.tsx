@@ -14,7 +14,10 @@ import styles from "./ReducedMotionNarrative.module.css";
 export function ReducedMotionNarrative() {
   return (
     <div className={styles.narrative}>
-      <h2 className={styles.projectTitle}>{settleDiff.title}</h2>
+      <div className={styles.projectHeader}>
+        <h2 className={styles.projectTitle}>{settleDiff.title}</h2>
+        <ProjectSourceLink href={projectLinks.settleDiff} project={settleDiff.title} />
+      </div>
 
       <section className={styles.panel}>
         <h3>Request</h3>

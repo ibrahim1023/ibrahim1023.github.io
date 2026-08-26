@@ -21,3 +21,9 @@
 .sceneLayer[data-scene-layer="vault"] {
   opacity: 0;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .sceneLayer[data-scene-layer="vault"] {
+    display: none;
+  }
+}

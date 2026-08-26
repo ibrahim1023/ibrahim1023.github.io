@@ -24,7 +24,8 @@ export function PortfolioExperience() {
     if (
       typeof window === "undefined" ||
       typeof window.matchMedia !== "function" ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(max-width: 768px)").matches
     ) {
       return;
     }

@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
 
+import { projectLinks } from "@/content/portfolioContent";
+
 import { ReducedMotionNarrative } from "./ReducedMotionNarrative";
 
 describe("ReducedMotionNarrative", () => {
@@ -51,5 +53,13 @@ describe("ReducedMotionNarrative", () => {
     ]) {
       expect(screen.getByText(role)).toBeInTheDocument();
     }
+  });
+
+  test("keeps the SettleDiff source reachable in the static story", () => {
+    render(<ReducedMotionNarrative />);
+
+    expect(
+      screen.getByRole("link", { name: "View SettleDiff source on GitHub" }),
+    ).toHaveAttribute("href", projectLinks.settleDiff);
   });
 });

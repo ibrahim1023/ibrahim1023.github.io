@@ -36,7 +36,6 @@ describe("animation timeline builders", () => {
                 <path data-path-line d="M 20 46 L 980 46" />
               </svg>
               <span data-token>0.01 USDC</span>
-              <span data-ack>acknowledged</span>
               <div data-attempt>ACTIVITY RECORDED</div>
             </div>
             <div data-evidence>
@@ -45,7 +44,7 @@ describe("animation timeline builders", () => {
               <div data-evidence-item="vendor">VENDOR</div>
               <div data-evidence-item="chain">CHAIN</div>
               <div data-evidence-item="response">RESPONSE</div>
-              <div data-evidence-item="receipt">RECEIPT</div>
+              <div data-evidence-item="activity">ACTIVITY</div>
             </div>
             <div data-comparison>comparison</div>
             <div data-mismatch>mismatch</div>
@@ -82,6 +81,7 @@ describe("animation timeline builders", () => {
     expect(elements.settle.token).not.toBeNull();
     expect(elements.settle.pathLine).not.toBeNull();
     expect(elements.settle.evidenceItems).toHaveLength(6);
+    expect("ack" in elements.settle).toBe(false);
     expect(elements.vault.section).not.toBeNull();
     expect(elements.vault.railItems).toHaveLength(2);
   });
