@@ -1,18 +1,21 @@
-import type { SettleDiffState } from "./settleDiffTypes";
+import {
+  SETTLE_DIFF_STATES,
+  type SettleDiffState,
+} from "./settleDiffTypes";
 
 export const STATE_RANGES: Record<SettleDiffState, readonly [number, number]> = {
   "project-established": [0, 0.1],
-  "request-in-flight": [0.1, 0.22],
-  "attempt-recorded": [0.22, 0.36],
-  "evidence-expanded": [0.36, 0.5],
-  "comparison-visible": [0.5, 0.63],
-  "mismatch-isolated": [0.63, 0.76],
-  unverifiable: [0.76, 0.86],
-  "reasoning-chain": [0.86, 0.92],
-  "vault-steward-arrival": [0.92, 1],
+  "request-in-flight": [0.1, 0.24],
+  "attempt-recorded": [0.24, 0.36],
+  "evidence-expanded": [0.36, 0.52],
+  "comparison-visible": [0.52, 0.68],
+  "mismatch-isolated": [0.68, 0.8],
+  unverifiable: [0.8, 0.9],
+  "reasoning-chain": [0.9, 0.96],
+  "vault-steward-arrival": [0.96, 1],
 } as const;
 
-const ORDERED_STATES = Object.keys(STATE_RANGES) as SettleDiffState[];
+export const ORDERED_STATES = [...SETTLE_DIFF_STATES] as const;
 
 export function progressToSettleDiffState(progress: number): SettleDiffState {
   if (Number.isNaN(progress) || progress < 0) {

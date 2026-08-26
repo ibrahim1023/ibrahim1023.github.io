@@ -4,13 +4,18 @@ import { describe, expect, test } from "vitest";
 import { VaultStewardArrival } from "./VaultStewardArrival";
 
 describe("VaultStewardArrival", () => {
-  test("renders the title, descriptor, and continuation cue", () => {
+  test("renders the title, approved copy, and continuation cue", () => {
     render(<VaultStewardArrival />);
 
     expect(
       screen.getByRole("heading", { name: "Vault Steward" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Keep your vault trustworthy")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Local-first, evidence-backed vault maintenance with explicit approval before every edit.",
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByText("Case study continues")).toBeInTheDocument();
   });
 
@@ -21,7 +26,7 @@ describe("VaultStewardArrival", () => {
       container.querySelectorAll("[data-vault-rail-item]"),
     ).map((item) => item.textContent);
 
-    expect(rail).toEqual(["PROPOSE", "SIMULATE", "CHECK", "APPROVE"]);
+    expect(rail).toEqual(["FIND", "PREVIEW", "APPROVE", "VERIFY"]);
   });
 
   test("exposes a labelled semantic region", () => {

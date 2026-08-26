@@ -10,6 +10,7 @@ export function VaultStewardArrival() {
       data-vault-arrival
     >
       <h2 className={styles.title}>{vaultSteward.title}</h2>
+      <p className={styles.descriptor} data-vault-headline>{vaultSteward.headline}</p>
       <p className={styles.descriptor} data-vault-descriptor>{vaultSteward.descriptor}</p>
       <ol className={styles.rail} data-vault-rail>
         {vaultSteward.rail.map((step) => (

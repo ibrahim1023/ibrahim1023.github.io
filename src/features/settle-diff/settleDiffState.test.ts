@@ -1,20 +1,39 @@
 import { describe, expect, test } from "vitest";
 
-import { progressToSettleDiffState, STATE_RANGES } from "./settleDiffState";
+import {
+  ORDERED_STATES,
+  progressToSettleDiffState,
+  STATE_RANGES,
+} from "./settleDiffState";
 import { SETTLE_DIFF_STATES } from "./settleDiffTypes";
 
 describe("progressToSettleDiffState", () => {
+  test("uses the approved storyboard timing contract", () => {
+    expect(STATE_RANGES).toEqual({
+      "project-established": [0, 0.1],
+      "request-in-flight": [0.1, 0.24],
+      "attempt-recorded": [0.24, 0.36],
+      "evidence-expanded": [0.36, 0.52],
+      "comparison-visible": [0.52, 0.68],
+      "mismatch-isolated": [0.68, 0.8],
+      unverifiable: [0.8, 0.9],
+      "reasoning-chain": [0.9, 0.96],
+      "vault-steward-arrival": [0.96, 1],
+    });
+    expect(ORDERED_STATES).toEqual(SETTLE_DIFF_STATES);
+  });
+
   test("maps range starts to the required states in narrative order", () => {
     const starts: Array<[number, string]> = [
       [0, "project-established"],
       [0.1, "request-in-flight"],
-      [0.22, "attempt-recorded"],
+      [0.24, "attempt-recorded"],
       [0.36, "evidence-expanded"],
-      [0.5, "comparison-visible"],
-      [0.63, "mismatch-isolated"],
-      [0.76, "unverifiable"],
-      [0.86, "reasoning-chain"],
-      [0.92, "vault-steward-arrival"],
+      [0.52, "comparison-visible"],
+      [0.68, "mismatch-isolated"],
+      [0.8, "unverifiable"],
+      [0.9, "reasoning-chain"],
+      [0.96, "vault-steward-arrival"],
     ];
 
     for (const [progress, state] of starts) {
@@ -27,6 +46,8 @@ describe("progressToSettleDiffState", () => {
     expect(progressToSettleDiffState(0.43)).toBe("evidence-expanded");
     expect(progressToSettleDiffState(0.8)).toBe("unverifiable");
     expect(progressToSettleDiffState(0.999)).toBe("vault-steward-arrival");
+    expect(progressToSettleDiffState(0.24)).toBe("attempt-recorded");
+    expect(progressToSettleDiffState(0.96)).toBe("vault-steward-arrival");
   });
 
   test("clamps out-of-range progress to the boundary states", () => {
