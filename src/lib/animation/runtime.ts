@@ -35,6 +35,13 @@ export function initializePortfolioAnimations(
   const { root, gsapApi, scrollTriggerApi, viewportHeight, exposeState } = options;
   let cleanedUp = false;
   let media: ReturnType<typeof gsap.matchMedia> | undefined;
+  let warnedForInitialization = false;
+
+  const warnAnimationFailureOnce = () => {
+    if (process.env.NODE_ENV !== "development" || warnedForInitialization) return;
+    warnedForInitialization = true;
+    console.warn("Portfolio animation disabled; using readable fallback.");
+  };
 
   const resetReadableContent = (stageStates = new Map<HTMLElement, string | null>()) => {
     gsapApi.set(root.querySelectorAll("[data-animatable]"), { clearProps: "all" });
@@ -122,9 +129,7 @@ export function initializePortfolioAnimations(
       };
     } catch {
       cleanupBranch(timelines, triggers, stageStates);
-      if (process.env.NODE_ENV === "development") {
-        console.warn("Portfolio animation disabled; using readable fallback.");
-      }
+      warnAnimationFailureOnce();
       return () => undefined;
     }
   };
@@ -144,9 +149,7 @@ export function initializePortfolioAnimations(
   } catch {
     media?.revert();
     resetReadableContent();
-    if (process.env.NODE_ENV === "development") {
-      console.warn("Portfolio animation disabled; using readable fallback.");
-    }
+    warnAnimationFailureOnce();
     return () => undefined;
   }
 }

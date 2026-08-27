@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { waitForAnimationFrames } from "./helpers/narrative";
+
 test.use({ viewport: { width: 390, height: 844 } });
 
 async function expectOnlyLayout(page: Page, layout: "mobile" | "desktop") {
@@ -99,7 +101,7 @@ test("mobile Vault transition connectors keep bounded stroked geometry", async (
   await expectRuntimeLayout(page, "mobile");
 
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  await page.waitForTimeout(300);
+  await waitForAnimationFrames(page);
 
   const geometry = await page
     .locator('[data-layout="mobile"] [data-vault-transition-connectors]')

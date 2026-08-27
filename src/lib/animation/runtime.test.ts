@@ -377,4 +377,33 @@ describe("portfolio animation runtime", () => {
     expect(animatableTargets.every((target) => !target.hasAttribute("style"))).toBe(true);
     expect(Array.from(root.querySelectorAll("[data-animatable]"))).toEqual(animatableTargets);
   });
+
+  test("warns once per initialization when development animation setup fails", () => {
+    vi.stubEnv("NODE_ENV", "development");
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const root = buildRoot();
+      const failingPath = root.querySelector('[data-layout="desktop"] [data-path-line]') as SVGPathElement;
+      Object.defineProperty(failingPath, "getTotalLength", {
+        value: () => {
+          throw new Error("path unavailable");
+        },
+      });
+      const apis = animationApis({ throwOnMobileAdd: true });
+
+      initializePortfolioAnimations({
+        root,
+        gsapApi: apis.gsapApi,
+        scrollTriggerApi: apis.scrollTriggerApi,
+        viewportHeight: () => 800,
+        exposeState: false,
+      });
+
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn).toHaveBeenCalledWith("Portfolio animation disabled; using readable fallback.");
+    } finally {
+      warn.mockRestore();
+      vi.unstubAllEnvs();
+    }
+  });
 });

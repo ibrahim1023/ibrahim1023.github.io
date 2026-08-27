@@ -12,6 +12,7 @@ export default defineConfig({
   reporter: [["list"], ["html", { outputFolder: "playwright-report", open: "never" }]],
   use: {
     baseURL,
+    viewport: { width: 1440, height: 900 },
   },
   webServer: {
     command: `node scripts/serve-export.mjs --root out --base-path /portfolio --port ${port}`,
