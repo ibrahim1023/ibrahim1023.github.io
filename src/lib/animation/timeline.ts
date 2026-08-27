@@ -34,6 +34,8 @@ export interface SettleDiffTimelineElements {
   attemptStatus: HTMLElement | null;
   evidence: HTMLElement | null;
   evidenceItems: Element[] | null;
+  settleLabels: Element[] | null;
+  vaultLabels: Element[] | null;
   connectors: SVGPathElement[] | null;
   comparison: HTMLElement | null;
   mismatch: HTMLElement | null;
@@ -43,13 +45,10 @@ export interface SettleDiffTimelineElements {
 }
 
 export interface VaultTimelineElements {
-  layer: HTMLElement | null;
-  section: HTMLElement | null;
+  transition: HTMLElement | null;
   title: HTMLElement | null;
-  descriptor: HTMLElement | null;
   rail: HTMLElement | null;
   railItems: Element[] | null;
-  cue: HTMLElement | null;
 }
 
 export function queryTimelineElements(
@@ -63,11 +62,6 @@ export function queryTimelineElements(
     const found = root.querySelectorAll(`${layoutScope} ${selector}`);
     return found.length ? Array.from(found) : null;
   };
-  const toRootArray = (selector: string): Element[] | null => {
-    const found = root.querySelectorAll(selector);
-    return found.length ? Array.from(found) : null;
-  };
-
   return {
     intro: {
       section: root.querySelector('[data-intro]') as HTMLElement | null,
@@ -91,6 +85,8 @@ export function queryTimelineElements(
       attemptStatus: query<HTMLElement>('[data-attempt-status]'),
       evidence: query<HTMLElement>('[data-evidence]'),
       evidenceItems: toArray('[data-evidence-item]'),
+      settleLabels: toArray('[data-object-label="settle"]'),
+      vaultLabels: toArray('[data-object-label="vault"]'),
       connectors: toArray('[data-evidence-connector]') as SVGPathElement[] | null,
       comparison: query<HTMLElement>('[data-comparison]'),
       mismatch: query<HTMLElement>('[data-mismatch]'),
@@ -99,13 +95,10 @@ export function queryTimelineElements(
       chainItems: toArray('[data-chain-item]'),
     },
     vault: {
-      layer: root.querySelector('[data-scene-layer="vault"]') as HTMLElement | null,
-      section: root.querySelector('[data-scene-layer="vault"] [data-vault-arrival]') as HTMLElement | null,
-      title: root.querySelector('[data-scene-layer="vault"] h2') as HTMLElement | null,
-      descriptor: root.querySelector('[data-scene-layer="vault"] [data-vault-descriptor]') as HTMLElement | null,
-      rail: root.querySelector('[data-scene-layer="vault"] [data-vault-rail]') as HTMLElement | null,
-      railItems: toRootArray('[data-scene-layer="vault"] [data-vault-rail-item]'),
-      cue: root.querySelector('[data-scene-layer="vault"] [data-vault-cue]') as HTMLElement | null,
+      transition: query<HTMLElement>('[data-vault-transition]'),
+      title: query<HTMLElement>('[data-vault-transition-title]'),
+      rail: query<HTMLElement>('[data-vault-transition-rail]'),
+      railItems: toArray('[data-vault-transition-step]'),
     },
   };
 }
@@ -130,7 +123,7 @@ export function buildNarrativeTimeline(
   appendSettleDiffTweens(master, elements.settle, layout);
 
   const [vaultStart] = stateTime("vault-steward-arrival");
-  appendVaultRevealTweens(master, elements.settle, elements.vault, vaultStart, layout);
+  appendVaultTransitionTweens(master, elements.settle, elements.vault, vaultStart, layout);
 
   return master;
 }
@@ -454,7 +447,7 @@ export function appendReasoningSegment(
   }
 }
 
-function appendVaultRevealTweens(
+function appendVaultTransitionTweens(
   tl: gsap.core.Timeline,
   settle: SettleDiffTimelineElements,
   vault: VaultTimelineElements,
@@ -465,36 +458,98 @@ function appendVaultRevealTweens(
   const available = endTime - startTime;
   const finalStateEnd = startTime + available;
 
-  if (vault.layer) {
+  if (settle.evidenceItems) {
     tl.fromTo(
-      vault.layer,
-      { opacity: 0 },
-      { opacity: 1, duration: available * 0.25 },
+      settle.evidenceItems,
+      layout === "desktop"
+        ? { opacity: 0.78 }
+        : { opacity: 0.78, yPercent: 0 },
+      layout === "desktop"
+        ? {
+          "--evidence-left": (index: number) => `${20 + (index % 3) * 30}%`,
+          "--evidence-top": (index: number) => `${42 + Math.floor(index / 3) * 20}%`,
+          opacity: 1,
+          scale: 0.84,
+          x: 0,
+          y: 0,
+          xPercent: -50,
+          duration: available * 0.42,
+          ease: "power1.out",
+        }
+        : {
+          opacity: 1,
+          yPercent: 0,
+          duration: available * 0.3,
+          ease: "power1.out",
+        },
       startTime,
     );
   }
 
+  if (settle.settleLabels) {
+    tl.to(
+      settle.settleLabels,
+      { opacity: 0, duration: available * 0.24, ease: "power1.out" },
+      startTime + available * 0.12,
+    );
+  }
+
+  if (settle.vaultLabels) {
+    tl.fromTo(
+      settle.vaultLabels,
+      layout === "desktop" ? { opacity: 0, y: 8 } : { opacity: 0, yPercent: 8 },
+      layout === "desktop"
+        ? { opacity: 1, y: 0, duration: available * 0.28, ease: "power1.out" }
+        : { opacity: 1, yPercent: 0, duration: available * 0.28, ease: "power1.out" },
+      startTime + available * 0.18,
+    );
+  }
+
+  if (settle.stage) {
+    tl.to(
+      settle.stage,
+      {
+        "--stage-accent": "var(--color-vault)",
+        "--stage-line": "var(--color-vault)",
+        duration: available * 0.38,
+        ease: "power1.out",
+      },
+      startTime + available * 0.1,
+    );
+  }
+
+  if (vault.transition) {
+    tl.fromTo(
+      vault.transition,
+      layout === "desktop" ? { opacity: 0, y: 14 } : { opacity: 0, yPercent: 8 },
+      layout === "desktop"
+        ? { opacity: 1, y: 0, duration: available * 0.3, ease: "power1.out" }
+        : { opacity: 1, yPercent: 0, duration: available * 0.3, ease: "power1.out" },
+      startTime + available * 0.38,
+    );
+  }
+
   if (vault.railItems) {
-    const railStart = startTime + available * 0.15;
+    const railStart = startTime + available * 0.46;
     const railTiming = staggerTiming(railStart, finalStateEnd, vault.railItems.length);
     tl.fromTo(
       vault.railItems,
-      layout === "desktop" ? { opacity: 0, x: -24 } : { opacity: 0 },
+      layout === "desktop" ? { opacity: 0, x: -16 } : { opacity: 0, yPercent: 8 },
       layout === "desktop"
         ? { opacity: 1, x: 0, stagger: railTiming.stagger, duration: railTiming.duration }
-        : { opacity: 1, stagger: railTiming.stagger, duration: railTiming.duration },
+        : { opacity: 1, yPercent: 0, stagger: railTiming.stagger, duration: railTiming.duration },
       railStart,
     );
   }
 
   if (settle.chainItems) {
-    const chainStart = startTime + available * 0.15;
+    const chainStart = startTime + available * 0.28;
     const chainTiming = staggerTiming(chainStart, finalStateEnd, settle.chainItems.length);
     tl.to(
       settle.chainItems,
       layout === "desktop"
-        ? { opacity: 0, x: 24, stagger: chainTiming.stagger, duration: chainTiming.duration }
-        : { opacity: 0, stagger: chainTiming.stagger, duration: chainTiming.duration },
+        ? { opacity: 0.16, x: 16, stagger: chainTiming.stagger, duration: chainTiming.duration }
+        : { opacity: 0.16, yPercent: -6, stagger: chainTiming.stagger, duration: chainTiming.duration },
       chainStart,
     );
   }
@@ -502,16 +557,16 @@ function appendVaultRevealTweens(
   if (settle.chain) {
     tl.to(
       settle.chain,
-      { opacity: 0, duration: available * 0.2 },
-      startTime + available * 0.2,
+      { opacity: 0.16, duration: available * 0.2 },
+      startTime + available * 0.3,
     );
   }
 
-  const headlineTargets = [vault.title, vault.descriptor, vault.cue].filter(
+  const headlineTargets = [vault.title].filter(
     (t): t is HTMLElement => t !== null,
   );
   if (headlineTargets.length) {
-    const headlineStart = startTime + available * 0.45;
+    const headlineStart = startTime + available * 0.68;
     const headlineTiming = staggerTiming(headlineStart, finalStateEnd, headlineTargets.length);
     tl.fromTo(
       headlineTargets,

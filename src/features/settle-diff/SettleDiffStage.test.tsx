@@ -29,7 +29,12 @@ describe("SettleDiffStage", () => {
         `[data-evidence-item="${object.id}"]`,
       );
       expect(item).not.toBeNull();
-      expect(item).toHaveTextContent(object.label);
+      expect(item?.querySelector('[data-object-label="settle"]')).toHaveTextContent(
+        object.label,
+      );
+      expect(item?.querySelector('[data-object-label="vault"]')).toHaveTextContent(
+        object.vaultRole,
+      );
       expect(item).toHaveTextContent(object.primary);
       expect(item).toHaveTextContent(object.detail);
     }

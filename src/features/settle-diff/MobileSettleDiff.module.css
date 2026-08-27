@@ -1,4 +1,6 @@
 .stage {
+  --stage-accent: var(--color-accent);
+  --stage-line: var(--color-line);
   display: flex;
   box-sizing: border-box;
   inline-size: 100%;
@@ -84,7 +86,7 @@
   font-size: var(--type-label);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--stage-accent);
 }
 
 .requestPath > p:first-of-type,
@@ -109,11 +111,11 @@
   inset-inline-start: 0;
   inline-size: 2px;
   content: "";
-  background: linear-gradient(var(--color-accent), var(--color-line));
+  background: linear-gradient(var(--stage-accent), var(--stage-line));
 }
 
 .activity > p:first-of-type strong {
-  color: var(--color-accent);
+  color: var(--stage-accent);
 }
 
 .evidenceRail,
@@ -137,7 +139,7 @@
   overflow-wrap: anywhere;
 }
 
-.evidenceRail span,
+.evidenceRail [data-object-label="settle"],
 .reasoning li strong,
 .comparison dt,
 .comparison dd span,
@@ -147,6 +149,15 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-text-secondary);
+}
+
+.evidenceRail [data-object-label="vault"] {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stage-accent);
+  opacity: 0;
 }
 
 .evidenceRail strong {
@@ -250,6 +261,53 @@
   gap: var(--space-1);
   padding-block-end: var(--space-2);
   border-bottom: 1px solid var(--color-line);
+}
+
+.transition {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-block-start: var(--space-4);
+  border-top: 1px solid var(--stage-line);
+  text-align: center;
+}
+
+.transition h3,
+.transition p,
+.transition ol {
+  margin: 0;
+}
+
+.transition h3 {
+  font-size: clamp(1.75rem, 9vw, 2.5rem);
+  letter-spacing: -0.02em;
+}
+
+.transition p {
+  color: var(--color-text-secondary);
+}
+
+.transition ol {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: 0.08em;
+  color: var(--stage-accent);
+}
+
+.transition li + li::before {
+  margin-right: var(--space-1);
+  content: "→";
+  color: var(--color-text-secondary);
+}
+
+[data-animated="ready"] .transition {
+  opacity: 0;
 }
 
 .reasoning li span {

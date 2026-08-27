@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
 
+import { projectLinks, vaultSteward } from "@/content/portfolioContent";
+
 import { VaultStewardArrival } from "./VaultStewardArrival";
 
 describe("VaultStewardArrival", () => {
@@ -17,6 +19,9 @@ describe("VaultStewardArrival", () => {
       ),
     ).toBeInTheDocument();
     expect(screen.getByText("Case study continues")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "View Vault Steward source on GitHub" }),
+    ).toHaveAttribute("href", projectLinks.vaultSteward);
   });
 
   test("renders the decision rail in order", () => {
@@ -26,7 +31,17 @@ describe("VaultStewardArrival", () => {
       container.querySelectorAll("[data-vault-rail-item]"),
     ).map((item) => item.textContent);
 
-    expect(rail).toEqual(["FIND", "PREVIEW", "APPROVE", "VERIFY"]);
+    expect(rail).toEqual(vaultSteward.rail);
+  });
+
+  test("renders an approval preview with the expected result", () => {
+    render(<VaultStewardArrival />);
+
+    expect(screen.getByText("Current")).toBeInTheDocument();
+    expect(screen.getByText(vaultSteward.preview.current)).toBeInTheDocument();
+    expect(screen.getByText("After")).toBeInTheDocument();
+    expect(screen.getByText(vaultSteward.preview.after)).toBeInTheDocument();
+    expect(screen.getByText(vaultSteward.preview.expectedResult)).toBeInTheDocument();
   });
 
   test("exposes a labelled semantic region", () => {
@@ -37,18 +52,9 @@ describe("VaultStewardArrival", () => {
     ).toBeInTheDocument();
   });
 
-  test("marks every arrival tween target for runtime cleanup", () => {
+  test("is stable normal-flow content rather than a scrub timeline target", () => {
     const { container } = render(<VaultStewardArrival />);
 
-    [
-      "h2",
-      "[data-vault-descriptor]",
-      "[data-vault-cue]",
-      "[data-vault-rail-item]",
-    ].forEach((selector) => {
-      const targets = container.querySelectorAll(selector);
-      expect(targets.length).toBeGreaterThan(0);
-      targets.forEach((target) => expect(target).toHaveAttribute("data-animatable"));
-    });
+    expect(container.querySelectorAll("[data-animatable]")).toHaveLength(0);
   });
 });

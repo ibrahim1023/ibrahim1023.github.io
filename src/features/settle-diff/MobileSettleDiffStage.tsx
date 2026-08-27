@@ -3,9 +3,9 @@ import {
   projectLinks,
   reasoningChain,
   settleDiff,
-  vaultSteward,
 } from "@/content/portfolioContent";
 import { ProjectSourceLink } from "@/components/projects/ProjectSourceLink";
+import { VaultTransitionOverlay } from "../vault-steward/VaultTransitionOverlay";
 
 import { MobileEvidenceRail } from "./MobileEvidenceRail";
 import styles from "./MobileSettleDiff.module.css";
@@ -71,31 +71,7 @@ export function MobileSettleDiffStage() {
         </ol>
       </section>
 
-      <section className={styles.transformation} data-mobile-transformation>
-        <h3>{vaultSteward.title} transformation</h3>
-        <p>{vaultSteward.headline}</p>
-        <dl>
-          <div>
-            <dt>Current</dt>
-            <dd>{vaultSteward.preview.current}</dd>
-          </div>
-          <div>
-            <dt>After</dt>
-            <dd>{vaultSteward.preview.after}</dd>
-          </div>
-        </dl>
-        <ul className={styles.mapping} data-mobile-object-mapping>
-          {vaultSteward.objectMapping.map((entry) => (
-            <li key={entry.from}>
-              <span>{entry.from}</span>
-              <span aria-hidden="true">→</span>
-              <strong>{entry.to}</strong>
-            </li>
-          ))}
-        </ul>
-        <p>{vaultSteward.preview.expectedResult}</p>
-        <p className={styles.rail}>{vaultSteward.rail.join(" → ")}</p>
-      </section>
+      <VaultTransitionOverlay className={styles.transition} />
     </div>
   );
 }

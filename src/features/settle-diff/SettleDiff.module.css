@@ -43,6 +43,8 @@
 /* ---------------------------------------------------------------- stage */
 
 .stage {
+  --stage-accent: var(--color-accent);
+  --stage-line: var(--color-line);
   --header-opacity: 1;
   --transaction-opacity: 1;
   --token-opacity: 1;
@@ -106,7 +108,7 @@
 .pathLine,
 .pathReturn {
   fill: none;
-  stroke: var(--color-line);
+  stroke: var(--stage-line);
   stroke-width: 2;
 }
 
@@ -138,7 +140,7 @@
   top: 24px;
   left: var(--token-progress);
   padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--color-accent);
+  border: 1px solid var(--stage-accent);
   font-variant-numeric: tabular-nums;
   font-size: var(--type-body);
   color: var(--color-text-primary);
@@ -151,7 +153,7 @@
   left: 0;
   width: 48px;
   height: 2px;
-  background: var(--color-accent);
+  background: var(--stage-accent);
   transform-origin: left center;
   opacity: 0.65;
 }
@@ -203,7 +205,7 @@
   font-family: var(--font-mono);
   font-size: var(--type-body);
   letter-spacing: 0.14em;
-  color: var(--color-accent);
+  color: var(--stage-accent);
 }
 
 .attemptBadge span {
@@ -234,7 +236,7 @@
 
 .connectors path {
   fill: none;
-  stroke: var(--color-line);
+  stroke: var(--stage-line);
   stroke-width: 0.25;
 }
 
@@ -261,6 +263,11 @@
   font-size: var(--type-label);
   letter-spacing: 0.14em;
   color: var(--color-text-secondary);
+}
+
+.evidenceLabel[data-object-label="vault"] {
+  color: var(--stage-accent);
+  opacity: 0;
 }
 
 .evidencePrimary {
@@ -432,19 +439,64 @@
 
 .chainItem {
   padding: var(--space-2) 0;
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--stage-line);
 }
 
 .chainLabel {
   font-family: var(--font-mono);
   font-size: var(--type-label);
   letter-spacing: 0.14em;
-  color: var(--color-accent);
+  color: var(--stage-accent);
 }
 
 .chainText {
   color: var(--color-text-secondary);
   line-height: 1.5;
+}
+
+/* ------------------------------------------------------- vault transition */
+
+.transition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+  color: var(--color-text-primary);
+}
+
+.transition h3,
+.transition p,
+.transition ol {
+  margin: 0;
+}
+
+.transition h3 {
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  letter-spacing: -0.02em;
+}
+
+.transition p {
+  color: var(--color-text-secondary);
+}
+
+.transition ol {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: 0.12em;
+  color: var(--stage-accent);
+}
+
+.transition li + li::before {
+  margin-right: var(--space-2);
+  content: "→";
+  color: var(--color-text-secondary);
 }
 
 /* ---------------------------------------------------------------- mobile */
@@ -562,6 +614,14 @@
     position: relative;
     min-height: 100dvh;
     padding-block: 0;
+  }
+
+  [data-animated="ready"] .transition {
+    position: absolute;
+    right: 0;
+    bottom: var(--space-6);
+    left: 0;
+    opacity: 0;
   }
 
   [data-animated="ready"] .stageHeader {

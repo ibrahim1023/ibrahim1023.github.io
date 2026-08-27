@@ -6,6 +6,7 @@ import { ReasoningRail } from "./ReasoningRail";
 import styles from "./SettleDiff.module.css";
 import type { SettleDiffState } from "./settleDiffTypes";
 import { TransactionPath } from "./TransactionPath";
+import { VaultTransitionOverlay } from "../vault-steward/VaultTransitionOverlay";
 
 export function SettleDiffStage({
   state = "project-established",
@@ -35,6 +36,7 @@ export function SettleDiffStage({
         <p className={styles.verdictReason}>{settleDiff.verdictReason}</p>
       </div>
       <ReasoningRail />
+      <VaultTransitionOverlay className={styles.transition} />
     </div>
   );
 }

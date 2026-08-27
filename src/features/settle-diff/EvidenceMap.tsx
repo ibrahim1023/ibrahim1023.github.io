@@ -31,8 +31,20 @@ export function EvidenceMap() {
               data-evidence-item={object.id}
               data-animatable
             >
-              <span className={styles.evidenceLabel} data-object-label="settle">
+              <span
+                className={styles.evidenceLabel}
+                data-animatable
+                data-object-label="settle"
+              >
                 {object.label}
+              </span>
+              <span
+                className={styles.evidenceLabel}
+                data-animatable
+                data-object-label="vault"
+                aria-hidden="true"
+              >
+                {object.vaultRole}
               </span>
               <span className={styles.evidencePrimary}>{object.primary}</span>
               <span className={styles.evidenceDetail}>{object.detail}</span>

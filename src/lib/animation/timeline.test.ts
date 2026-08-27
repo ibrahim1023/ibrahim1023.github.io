@@ -43,12 +43,12 @@ describe("animation timeline builders", () => {
               <div data-attempt>ACTIVITY RECORDED</div>
             </div>
             <div data-evidence>
-              <div data-evidence-item="request">REQUEST</div>
-              <div data-evidence-item="payment">PAYMENT</div>
-              <div data-evidence-item="vendor">VENDOR</div>
-              <div data-evidence-item="chain">CHAIN</div>
-              <div data-evidence-item="response">RESPONSE</div>
-              <div data-evidence-item="activity">ACTIVITY</div>
+              <div data-evidence-item="request"><span data-object-label="settle">REQUEST</span><span data-object-label="vault">NOTE</span></div>
+              <div data-evidence-item="payment"><span data-object-label="settle">PAYMENT</span><span data-object-label="vault">PROPOSED CHANGE</span></div>
+              <div data-evidence-item="vendor"><span data-object-label="settle">VENDOR</span><span data-object-label="vault">EVIDENCE SOURCE</span></div>
+              <div data-evidence-item="chain"><span data-object-label="settle">CHAIN</span><span data-object-label="vault">POLICY</span></div>
+              <div data-evidence-item="response"><span data-object-label="settle">RESPONSE</span><span data-object-label="vault">CURRENT / AFTER</span></div>
+              <div data-evidence-item="activity"><span data-object-label="settle">ACTIVITY</span><span data-object-label="vault">AUDIT / RECHECK</span></div>
             </div>
             <div data-comparison>comparison</div>
             <div data-mismatch>mismatch</div>
@@ -60,7 +60,7 @@ describe("animation timeline builders", () => {
             <div data-stage data-layout="mobile">
               <div data-transaction><span data-token>mobile token</span></div>
               <div data-attempt>mobile attempt</div>
-              <div data-evidence><div data-evidence-item="request">MOBILE REQUEST</div></div>
+              <div data-evidence><div data-evidence-item="request"><span data-object-label="settle">MOBILE REQUEST</span><span data-object-label="vault">MOBILE NOTE</span></div></div>
               <div data-comparison>mobile comparison</div>
               <div data-mismatch>mobile mismatch</div>
               <div data-verdict>mobile verdict</div>
@@ -68,14 +68,13 @@ describe("animation timeline builders", () => {
             </div>
           </div>
         </div>
-        <div data-scene-layer="vault">
-          <section data-vault-arrival>
-            <h2>Vault Steward</h2>
-            <p data-vault-descriptor>Keep your vault trustworthy</p>
-            <ol data-vault-rail><li data-vault-rail-item>PROPOSE</li><li data-vault-rail-item>SIMULATE</li></ol>
-            <p data-vault-cue>continues</p>
+        <div data-animated-layout="desktop">
+          <section data-vault-transition>
+            <h2 data-vault-transition-title>Vault Steward</h2>
+            <ol data-vault-transition-rail><li data-vault-transition-step>FIND</li><li data-vault-transition-step>PREVIEW</li></ol>
           </section>
         </div>
+        <section data-vault-arrival><h2>Vault Steward</h2></section>
       </div>
     `;
     const path = root.querySelector('[data-path-line]') as SVGPathElement & {
@@ -99,8 +98,11 @@ describe("animation timeline builders", () => {
     expect(desktop.settle.pathLine).not.toBeNull();
     expect(desktop.settle.evidenceItems).toHaveLength(6);
     expect("ack" in desktop.settle).toBe(false);
-    expect(desktop.vault.section).not.toBeNull();
+    expect(desktop.vault.transition).not.toBeNull();
     expect(desktop.vault.railItems).toHaveLength(2);
+    expect(Object.values(desktop.vault)).not.toContain(
+      root.querySelector("[data-vault-arrival]"),
+    );
     expect(mobile.settle.stage).toHaveAttribute("data-layout", "mobile");
     expect(mobile.settle.token).toHaveTextContent("mobile token");
     expect(mobile.settle.evidenceItems).toHaveLength(1);
@@ -188,6 +190,26 @@ describe("animation timeline builders", () => {
     expect(railTween!.vars.xPercent).toBe(-50);
     expect(railTween!.vars["--evidence-top"](0)).toBe("20%");
     expect(railTween!.vars["--evidence-top"](5)).toBe("70%");
+  });
+
+  test("targets each persistent label once and excludes the stable arrival from the scrub timeline", () => {
+    const root = buildRoot();
+    const elements = queryTimelineElements(root, "desktop");
+    const timeline = buildNarrativeTimeline(elements, "desktop");
+    const children = timeline.getChildren(true, true, true);
+
+    expect(elements.settle.settleLabels).toHaveLength(6);
+    expect(elements.settle.vaultLabels).toHaveLength(6);
+    expect(Object.values(elements.vault)).not.toContain(
+      root.querySelector("[data-vault-arrival]"),
+    );
+
+    for (const label of elements.settle.settleLabels!) {
+      expect(children.filter((child) => child.targets().includes(label))).toHaveLength(1);
+    }
+    for (const label of elements.settle.vaultLabels!) {
+      expect(children.filter((child) => child.targets().includes(label))).toHaveLength(1);
+    }
   });
 
   test("buildNarrativeTimeline and buildIntroTimeline are non-empty", () => {

@@ -16,7 +16,10 @@ export function MobileEvidenceRail() {
             data-evidence-item={object.id}
             data-animatable
           >
-            <span>{object.label}</span>
+            <span data-animatable data-object-label="settle">{object.label}</span>
+            <span data-animatable data-object-label="vault" aria-hidden="true">
+              {object.vaultRole}
+            </span>
             <strong>{object.primary}</strong>
             <small>{object.detail}</small>
           </li>

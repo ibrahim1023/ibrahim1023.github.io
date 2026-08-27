@@ -34,13 +34,9 @@ export function PortfolioExperience() {
     <div className={styles.root} data-portfolio-experience ref={rootRef}>
       <IntroSection />
       <div className={styles.narrative} data-narrative>
-        <div className={styles.sceneLayer} data-scene-layer="settle">
-          <SettleDiffSection />
-        </div>
-        <div className={styles.sceneLayer} data-scene-layer="vault" data-animatable>
-          <VaultStewardArrival />
-        </div>
+        <SettleDiffSection />
       </div>
+      <VaultStewardArrival />
     </div>
   );
 }
