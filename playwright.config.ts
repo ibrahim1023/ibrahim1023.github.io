@@ -1,5 +1,8 @@
 import { defineConfig } from "@playwright/test";
 
+const port = Number(process.env.E2E_PORT ?? "4173");
+const baseURL = `http://127.0.0.1:${port}`;
+
 export default defineConfig({
   testDir: "./tests/e2e",
   outputDir: "./test-results",
@@ -8,12 +11,12 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [["list"], ["html", { outputFolder: "playwright-report", open: "never" }]],
   use: {
-    baseURL: "http://127.0.0.1:4173",
+    baseURL,
   },
   webServer: {
-    command: "node scripts/serve-export.mjs --root out --base-path /portfolio --port 4173",
-    url: "http://127.0.0.1:4173/portfolio/",
-    reuseExistingServer: !process.env.CI,
+    command: `node scripts/serve-export.mjs --root out --base-path /portfolio --port ${port}`,
+    url: `${baseURL}/portfolio/`,
+    reuseExistingServer: false,
     timeout: 120_000,
   },
   projects: [

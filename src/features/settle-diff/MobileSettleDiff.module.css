@@ -10,7 +10,6 @@
   padding-block: var(--space-6);
   padding-inline: var(--gutter);
   font-size: max(1rem, var(--type-body));
-  overflow-x: clip;
 }
 
 .stage > *,

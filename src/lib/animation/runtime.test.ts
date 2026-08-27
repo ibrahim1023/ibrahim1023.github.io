@@ -125,6 +125,42 @@ describe("portfolio animation runtime", () => {
     expect(root).not.toHaveAttribute("data-animated");
   });
 
+  test("pins the desktop scene but keeps the tall mobile narrative in normal scroll flow", () => {
+    const root = buildRoot();
+    const { callbacks, create, gsapApi, scrollTriggerApi } = animationApis({
+      activeQueries: [],
+    });
+
+    const cleanup = initializePortfolioAnimations({
+      root,
+      gsapApi,
+      scrollTriggerApi,
+      viewportHeight: () => 844,
+      exposeState: false,
+    });
+    const desktopCleanup = callbacks.get(NARRATIVE_MEDIA.desktop)!();
+    const desktopNarrativeTrigger = create.mock.calls[0]![0] as {
+      pin: boolean;
+      pinSpacing: boolean;
+      scrub: boolean | number;
+    };
+
+    expect(desktopNarrativeTrigger).toMatchObject({ pin: true, pinSpacing: true, scrub: 0.5 });
+
+    desktopCleanup?.();
+    const mobileCleanup = callbacks.get(NARRATIVE_MEDIA.mobile)!();
+    const mobileNarrativeTrigger = create.mock.calls[2]![0] as {
+      pin: boolean;
+      pinSpacing: boolean;
+      scrub: boolean | number;
+    };
+
+    expect(mobileNarrativeTrigger).toMatchObject({ pin: false, pinSpacing: false, scrub: true });
+
+    mobileCleanup?.();
+    cleanup();
+  });
+
   test("exposes timeline state only when debug state is enabled", () => {
     const hiddenRoot = buildRoot();
     const hiddenApis = animationApis();

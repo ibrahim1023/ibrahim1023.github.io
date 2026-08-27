@@ -72,9 +72,9 @@ export function initializePortfolioAnimations(
           trigger: elements.narrative,
           start: "top top",
           end: () => `+=${runwayPixels(layout, viewportHeight())}`,
-          pin: true,
-          pinSpacing: true,
-          scrub: layout === "mobile" ? 0.25 : 0.5,
+          pin: layout === "desktop",
+          pinSpacing: layout === "desktop",
+          scrub: layout === "mobile" ? true : 0.5,
           animation: narrativeTimeline,
           onUpdate: (self) => {
             if (exposeState && elements.settle.stage) {
