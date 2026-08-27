@@ -2,6 +2,7 @@ import { gsap } from "gsap";
 
 import { STATE_RANGES } from "@/features/settle-diff/settleDiffState";
 import type { SettleDiffState } from "@/features/settle-diff/settleDiffTypes";
+import type { NarrativeLayout } from "./media";
 
 export interface PortfolioTimelineElements {
   intro: {
@@ -44,8 +45,18 @@ export interface VaultTimelineElements {
   cue: HTMLElement | null;
 }
 
-export function queryTimelineElements(root: HTMLElement): PortfolioTimelineElements {
+export function queryTimelineElements(
+  root: HTMLElement,
+  layout: NarrativeLayout,
+): PortfolioTimelineElements {
+  const layoutScope = `[data-animated-layout="${layout}"]`;
+  const query = <ElementType extends Element>(selector: string): ElementType | null =>
+    root.querySelector(`${layoutScope} ${selector}`) as ElementType | null;
   const toArray = (selector: string): Element[] | null => {
+    const found = root.querySelectorAll(`${layoutScope} ${selector}`);
+    return found.length ? Array.from(found) : null;
+  };
+  const toRootArray = (selector: string): Element[] | null => {
     const found = root.querySelectorAll(selector);
     return found.length ? Array.from(found) : null;
   };
@@ -62,19 +73,19 @@ export function queryTimelineElements(root: HTMLElement): PortfolioTimelineEleme
     },
     narrative: root.querySelector('[data-narrative]') as HTMLElement | null,
     settle: {
-      stage: root.querySelector('[data-scene-layer="settle"] [data-stage]') as HTMLElement | null,
-      header: root.querySelector('[data-scene-layer="settle"] [data-stage-header]') as HTMLElement | null,
-      transaction: root.querySelector('[data-scene-layer="settle"] [data-transaction]') as HTMLElement | null,
-      pathLine: root.querySelector('[data-scene-layer="settle"] [data-path-line]') as SVGPathElement | null,
-      token: root.querySelector('[data-scene-layer="settle"] [data-token]') as HTMLElement | null,
-      attempt: root.querySelector('[data-scene-layer="settle"] [data-attempt]') as HTMLElement | null,
-      evidence: root.querySelector('[data-scene-layer="settle"] [data-evidence]') as HTMLElement | null,
-      evidenceItems: toArray('[data-scene-layer="settle"] [data-evidence-item]'),
-      comparison: root.querySelector('[data-scene-layer="settle"] [data-comparison]') as HTMLElement | null,
-      mismatch: root.querySelector('[data-scene-layer="settle"] [data-mismatch]') as HTMLElement | null,
-      verdict: root.querySelector('[data-scene-layer="settle"] [data-verdict]') as HTMLElement | null,
-      chain: root.querySelector('[data-scene-layer="settle"] [data-chain]') as HTMLElement | null,
-      chainItems: toArray('[data-scene-layer="settle"] [data-chain-item]'),
+      stage: query<HTMLElement>('[data-stage]'),
+      header: query<HTMLElement>('[data-stage-header]'),
+      transaction: query<HTMLElement>('[data-transaction]'),
+      pathLine: query<SVGPathElement>('[data-path-line]'),
+      token: query<HTMLElement>('[data-token]'),
+      attempt: query<HTMLElement>('[data-attempt]'),
+      evidence: query<HTMLElement>('[data-evidence]'),
+      evidenceItems: toArray('[data-evidence-item]'),
+      comparison: query<HTMLElement>('[data-comparison]'),
+      mismatch: query<HTMLElement>('[data-mismatch]'),
+      verdict: query<HTMLElement>('[data-verdict]'),
+      chain: query<HTMLElement>('[data-chain]'),
+      chainItems: toArray('[data-chain-item]'),
     },
     vault: {
       layer: root.querySelector('[data-scene-layer="vault"]') as HTMLElement | null,
@@ -82,7 +93,7 @@ export function queryTimelineElements(root: HTMLElement): PortfolioTimelineEleme
       title: root.querySelector('[data-scene-layer="vault"] h2') as HTMLElement | null,
       descriptor: root.querySelector('[data-scene-layer="vault"] [data-vault-descriptor]') as HTMLElement | null,
       rail: root.querySelector('[data-scene-layer="vault"] [data-vault-rail]') as HTMLElement | null,
-      railItems: toArray('[data-scene-layer="vault"] [data-vault-rail-item]'),
+      railItems: toRootArray('[data-scene-layer="vault"] [data-vault-rail-item]'),
       cue: root.querySelector('[data-scene-layer="vault"] [data-vault-cue]') as HTMLElement | null,
     },
   };
@@ -98,7 +109,9 @@ export const stateTime = (
 
 export function buildNarrativeTimeline(
   elements: PortfolioTimelineElements,
+  layout: NarrativeLayout,
 ): gsap.core.Timeline {
+  void layout;
   const master = gsap.timeline({
     defaults: { ease: "none" },
     paused: true,

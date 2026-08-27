@@ -29,7 +29,8 @@ describe("animation timeline builders", () => {
       </section>
       <div data-narrative>
         <div data-scene-layer="settle">
-          <div data-stage data-state="project-established">
+          <div data-animated-layout="desktop">
+          <div data-stage data-layout="desktop" data-state="project-established">
             <header data-stage-header><h2>SettleDiff</h2><p>desc</p></header>
             <div data-transaction>
               <svg viewBox="0 0 1000 120" data-path>
@@ -51,6 +52,18 @@ describe("animation timeline builders", () => {
             <div data-verdict>verdict</div>
             <ol data-chain><li data-chain-item="claim">claim</li><li data-chain-item="evidence">evidence</li></ol>
           </div>
+          </div>
+          <div data-animated-layout="mobile">
+            <div data-stage data-layout="mobile">
+              <div data-transaction><span data-token>mobile token</span></div>
+              <div data-attempt>mobile attempt</div>
+              <div data-evidence><div data-evidence-item="request">MOBILE REQUEST</div></div>
+              <div data-comparison>mobile comparison</div>
+              <div data-mismatch>mobile mismatch</div>
+              <div data-verdict>mobile verdict</div>
+              <ol data-chain><li data-chain-item="claim">mobile claim</li></ol>
+            </div>
+          </div>
         </div>
         <div data-scene-layer="vault">
           <section data-vault-arrival>
@@ -71,24 +84,29 @@ describe("animation timeline builders", () => {
     return root;
   }
 
-  test("queryTimelineElements returns all expected animated targets", () => {
+  test("queryTimelineElements scopes animated targets to the active layout", () => {
     const root = buildRoot();
-    const elements = queryTimelineElements(root);
+    const desktop = queryTimelineElements(root, "desktop");
+    const mobile = queryTimelineElements(root, "mobile");
 
-    expect(elements.intro.section).not.toBeNull();
-    expect(elements.narrative).not.toBeNull();
-    expect(elements.settle.stage).not.toBeNull();
-    expect(elements.settle.token).not.toBeNull();
-    expect(elements.settle.pathLine).not.toBeNull();
-    expect(elements.settle.evidenceItems).toHaveLength(6);
-    expect("ack" in elements.settle).toBe(false);
-    expect(elements.vault.section).not.toBeNull();
-    expect(elements.vault.railItems).toHaveLength(2);
+    expect(desktop.intro.section).not.toBeNull();
+    expect(desktop.narrative).not.toBeNull();
+    expect(desktop.settle.stage).toHaveAttribute("data-layout", "desktop");
+    expect(desktop.settle.token).not.toBeNull();
+    expect(desktop.settle.pathLine).not.toBeNull();
+    expect(desktop.settle.evidenceItems).toHaveLength(6);
+    expect("ack" in desktop.settle).toBe(false);
+    expect(desktop.vault.section).not.toBeNull();
+    expect(desktop.vault.railItems).toHaveLength(2);
+    expect(mobile.settle.stage).toHaveAttribute("data-layout", "mobile");
+    expect(mobile.settle.token).toHaveTextContent("mobile token");
+    expect(mobile.settle.evidenceItems).toHaveLength(1);
+    expect(mobile.settle.stage).not.toBe(desktop.settle.stage);
   });
 
   test("buildSettleDiffTimeline returns a labelled timeline", () => {
     const root = buildRoot();
-    const elements = queryTimelineElements(root);
+    const elements = queryTimelineElements(root, "desktop");
     const tl = buildSettleDiffTimeline(elements.settle);
 
     expect(tl.duration()).toBeGreaterThan(0);
@@ -107,9 +125,9 @@ describe("animation timeline builders", () => {
 
   test("buildNarrativeTimeline and buildIntroTimeline are non-empty", () => {
     const root = buildRoot();
-    const elements = queryTimelineElements(root);
+    const elements = queryTimelineElements(root, "desktop");
 
-    const narrative = buildNarrativeTimeline(elements);
+    const narrative = buildNarrativeTimeline(elements, "desktop");
     const intro = buildIntroTimeline(elements.intro);
 
     expect(narrative.duration()).toBeGreaterThan(0);

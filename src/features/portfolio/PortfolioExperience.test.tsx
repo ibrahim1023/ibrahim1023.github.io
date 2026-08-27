@@ -1,6 +1,18 @@
 import { render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, test, vi } from "vitest";
 
+const runtime = vi.hoisted(() => {
+  const cleanup = vi.fn();
+  return {
+    cleanup,
+    initialize: vi.fn(() => cleanup),
+  };
+});
+
+vi.mock("@/lib/animation/runtime", () => ({
+  initializePortfolioAnimations: runtime.initialize,
+}));
+
 import { PortfolioExperience } from "./PortfolioExperience";
 
 const originalMatchMedia = window.matchMedia;
@@ -10,6 +22,8 @@ afterEach(() => {
     configurable: true,
     value: originalMatchMedia,
   });
+  runtime.cleanup.mockReset();
+  runtime.initialize.mockClear();
 });
 
 describe("PortfolioExperience shell", () => {
@@ -47,20 +61,21 @@ describe("PortfolioExperience shell", () => {
     ).toBeGreaterThan(0);
   });
 
-  test("does not activate the desktop animation layout on narrow viewports", () => {
-    Object.defineProperty(window, "matchMedia", {
-      configurable: true,
-      value: vi.fn().mockImplementation((query: string) => ({
-        matches:
-          query ===
-          "(width < 768px), (orientation: portrait) and (max-width: 1024px)",
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-      })),
-    });
+  test("delegates animation lifecycle ownership to the media-aware runtime", () => {
+    runtime.cleanup.mockClear();
+    runtime.initialize.mockClear();
+    const { container, unmount } = render(<PortfolioExperience />);
 
-    const { container } = render(<PortfolioExperience />);
+    expect(runtime.initialize).toHaveBeenCalledWith(
+      expect.objectContaining({
+        root: container.firstElementChild,
+        exposeState: false,
+        viewportHeight: expect.any(Function),
+      }),
+    );
 
-    expect(container.firstElementChild).not.toHaveAttribute("data-animated");
+    unmount();
+
+    expect(runtime.cleanup).toHaveBeenCalledOnce();
   });
 });
