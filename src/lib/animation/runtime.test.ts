@@ -55,12 +55,19 @@ function buildRoot() {
   return root;
 }
 
-function animationApis() {
+function animationApis({ throwOnMobileAdd = false } = {}) {
+  const branchCleanups: Array<() => void> = [];
   const mediaContext = {
-    add: vi.fn((query: string, callback: () => (() => void) | void) =>
-      query === NARRATIVE_MEDIA.desktop ? callback() : undefined,
-    ),
-    revert: vi.fn(),
+    add: vi.fn((query: string, callback: () => (() => void) | void) => {
+      if (throwOnMobileAdd && query === NARRATIVE_MEDIA.mobile) {
+        throw new Error("mobile media setup failed");
+      }
+      if (query === NARRATIVE_MEDIA.desktop) {
+        const cleanup = callback();
+        if (cleanup) branchCleanups.push(cleanup);
+      }
+    }),
+    revert: vi.fn(() => branchCleanups.forEach((cleanup) => cleanup())),
   };
 
   const gsapApi = {
@@ -68,15 +75,18 @@ function animationApis() {
     registerPlugin: vi.fn(),
     set: vi.fn(),
   } as unknown as typeof gsap;
+  const triggerKills: ReturnType<typeof vi.fn>[] = [];
   const create = vi.fn((options: unknown) => {
     void options;
-    return { kill: vi.fn() };
+    const kill = vi.fn();
+    triggerKills.push(kill);
+    return { kill };
   });
   const scrollTriggerApi = {
     create,
   } as unknown as typeof ScrollTrigger;
 
-  return { create, gsapApi, mediaContext, scrollTriggerApi };
+  return { create, gsapApi, mediaContext, scrollTriggerApi, triggerKills };
 }
 
 describe("portfolio animation runtime", () => {
@@ -131,6 +141,10 @@ describe("portfolio animation runtime", () => {
     hiddenCleanup();
 
     const debugRoot = buildRoot();
+    const debugStage = debugRoot.querySelector(
+      '[data-stage][data-layout="desktop"]',
+    ) as HTMLElement;
+    debugStage.dataset.state = "project-established";
     const debugApis = animationApis();
     const debugCleanup = initializePortfolioAnimations({
       root: debugRoot,
@@ -145,11 +159,31 @@ describe("portfolio animation runtime", () => {
 
     debugUpdate({ progress: 0.15 });
 
-    expect(debugRoot.querySelector('[data-stage][data-layout="desktop"]')).toHaveAttribute(
-      "data-state",
-      "request-in-flight",
-    );
+    expect(debugStage).toHaveAttribute("data-state", "request-in-flight");
     debugCleanup();
+    expect(debugStage).toHaveAttribute("data-state", "project-established");
+  });
+
+  test("reverts initialized branches when a later media registration fails", () => {
+    const root = buildRoot();
+    const { gsapApi, mediaContext, scrollTriggerApi, triggerKills } = animationApis({
+      throwOnMobileAdd: true,
+    });
+
+    const cleanup = initializePortfolioAnimations({
+      root,
+      gsapApi,
+      scrollTriggerApi,
+      viewportHeight: () => 800,
+      exposeState: false,
+    });
+
+    expect(cleanup).toEqual(expect.any(Function));
+    expect(mediaContext.revert).toHaveBeenCalledOnce();
+    expect(triggerKills).toHaveLength(2);
+    expect(triggerKills[0]).toHaveBeenCalledOnce();
+    expect(triggerKills[1]).toHaveBeenCalledOnce();
+    expect(root).not.toHaveAttribute("data-animated");
   });
 
   test("clears animation properties and keeps the story readable when setup fails", () => {

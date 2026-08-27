@@ -23,9 +23,17 @@ export function initializePortfolioAnimations(
 ): () => void {
   const { root, gsapApi, scrollTriggerApi, viewportHeight, exposeState } = options;
   let cleanedUp = false;
+  let media: ReturnType<typeof gsap.matchMedia> | undefined;
 
-  const resetReadableContent = () => {
+  const resetReadableContent = (stageStates = new Map<HTMLElement, string | null>()) => {
     gsapApi.set(root.querySelectorAll("[data-animatable]"), { clearProps: "all" });
+    stageStates.forEach((initialState, stage) => {
+      if (initialState === null) {
+        stage.removeAttribute("data-state");
+      } else {
+        stage.dataset.state = initialState;
+      }
+    });
     root.removeAttribute("data-animated");
     root.removeAttribute("data-state");
   };
@@ -33,20 +41,25 @@ export function initializePortfolioAnimations(
   const cleanupBranch = (
     timelines: gsap.core.Timeline[],
     triggers: ScrollTrigger[],
+    stageStates: Map<HTMLElement, string | null>,
   ) => {
     triggers.forEach((trigger) => trigger.kill());
     timelines.forEach((timeline) => timeline.kill());
-    resetReadableContent();
+    resetReadableContent(stageStates);
   };
 
   const initializeBranch = (layout: NarrativeLayout) => () => {
     const timelines: gsap.core.Timeline[] = [];
     const triggers: ScrollTrigger[] = [];
+    const stageStates = new Map<HTMLElement, string | null>();
 
     try {
       const elements = queryTimelineElements(root, layout);
       if (!elements.narrative || !elements.intro.section) {
         throw new Error("Portfolio animation targets are unavailable.");
+      }
+      if (elements.settle.stage) {
+        stageStates.set(elements.settle.stage, elements.settle.stage.getAttribute("data-state"));
       }
 
       const narrativeTimeline = buildNarrativeTimeline(elements, layout);
@@ -82,26 +95,27 @@ export function initializePortfolioAnimations(
 
       root.dataset.animated = "ready";
 
-      return () => cleanupBranch(timelines, triggers);
+      return () => cleanupBranch(timelines, triggers, stageStates);
     } catch {
-      cleanupBranch(timelines, triggers);
+      cleanupBranch(timelines, triggers, stageStates);
       return () => undefined;
     }
   };
 
   try {
     gsapApi.registerPlugin(scrollTriggerApi);
-    const media = gsapApi.matchMedia();
+    media = gsapApi.matchMedia();
     media.add(NARRATIVE_MEDIA.desktop, initializeBranch("desktop"));
     media.add(NARRATIVE_MEDIA.mobile, initializeBranch("mobile"));
 
     return () => {
       if (cleanedUp) return;
       cleanedUp = true;
-      media.revert();
+      media?.revert();
       resetReadableContent();
     };
   } catch {
+    media?.revert();
     resetReadableContent();
     return () => undefined;
   }
