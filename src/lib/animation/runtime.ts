@@ -52,6 +52,7 @@ export function initializePortfolioAnimations(
     const timelines: gsap.core.Timeline[] = [];
     const triggers: ScrollTrigger[] = [];
     const stageStates = new Map<HTMLElement, string | null>();
+    let refreshFrame: number | undefined;
 
     try {
       const elements = queryTimelineElements(root, layout);
@@ -73,7 +74,7 @@ export function initializePortfolioAnimations(
           end: () => `+=${runwayPixels(layout, viewportHeight())}`,
           pin: true,
           pinSpacing: true,
-          scrub: 0.5,
+          scrub: layout === "mobile" ? 0.25 : 0.5,
           animation: narrativeTimeline,
           onUpdate: (self) => {
             if (exposeState && elements.settle.stage) {
@@ -95,7 +96,17 @@ export function initializePortfolioAnimations(
 
       root.dataset.animated = "ready";
 
-      return () => cleanupBranch(timelines, triggers, stageStates);
+      refreshFrame = window.requestAnimationFrame(() => {
+        refreshFrame = undefined;
+        scrollTriggerApi.refresh();
+      });
+
+      return () => {
+        if (refreshFrame !== undefined) {
+          window.cancelAnimationFrame(refreshFrame);
+        }
+        cleanupBranch(timelines, triggers, stageStates);
+      };
     } catch {
       cleanupBranch(timelines, triggers, stageStates);
       return () => undefined;

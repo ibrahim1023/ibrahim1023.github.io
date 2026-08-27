@@ -142,24 +142,35 @@ describe("animation timeline builders", () => {
     expect(buildNarrativeTimeline(elements, "desktop").duration()).toBeCloseTo(seconds(1), 6);
   });
 
-  test("keeps mobile evidence in normal-flow coordinates until mobile choreography owns it", () => {
+  test("gives the mobile narrative vertical, in-order choreography without desktop coordinates", () => {
     const root = buildRoot();
     const elements = queryTimelineElements(root, "mobile");
     const timeline = buildNarrativeTimeline(elements, "mobile");
-    const normalFlowTargets = [
-      elements.settle.evidenceItems![0]!,
-      ...(elements.settle.chainItems ?? []),
-      ...(elements.vault.railItems ?? []),
-      elements.vault.title,
-      elements.vault.descriptor,
-      elements.vault.cue,
-    ].filter((target): target is Element => target !== null);
-    const evidenceTweens = timeline
-      .getChildren(true, true, true)
-      .filter((child) => child.targets().some((target: Element) => normalFlowTargets.includes(target)));
+    const mobileRequest = timeline.getById("mobile-request");
+    const mobileActivity = timeline.getById("mobile-activity");
+    const mobileEvidence = timeline.getById("mobile-evidence");
+    const mobileComparison = timeline.getById("mobile-comparison");
+    const mobileVerdict = timeline.getById("mobile-verdict");
 
-    expect(evidenceTweens).not.toHaveLength(0);
-    expect(evidenceTweens.every((tween) => !("x" in tween.vars) && !("y" in tween.vars) && !("scale" in tween.vars))).toBe(true);
+    expect(Object.keys(timeline.labels)).toEqual(SETTLE_DIFF_STATES);
+    expect(mobileRequest).toBeTruthy();
+    expect(mobileActivity).toBeTruthy();
+    expect(mobileEvidence).toBeTruthy();
+    expect(mobileComparison).toBeTruthy();
+    expect(mobileVerdict).toBeTruthy();
+    expect(mobileRequest!.vars.yPercent).toBe(0);
+    expect(mobileRequest!.vars.startAt).toMatchObject({ yPercent: -24 });
+    expect(mobileRequest!.vars).not.toHaveProperty("left");
+    expect(mobileActivity!.vars.yPercent).toBe(0);
+    expect(mobileActivity!.vars.startAt).toMatchObject({ yPercent: 12 });
+    expect(mobileEvidence!.vars.yPercent).toBe(0);
+    expect(mobileEvidence!.vars.startAt).toMatchObject({ yPercent: 18 });
+    expect(mobileEvidence!.vars.stagger).toBeGreaterThan(0);
+    expect(mobileComparison!.vars.yPercent).toBe(0);
+    expect(mobileComparison!.vars.startAt).toMatchObject({ yPercent: 12 });
+    expect(mobileVerdict!.vars.yPercent).toBe(0);
+    expect(mobileVerdict!.vars.startAt).toMatchObject({ yPercent: 10 });
+    expect(mobileVerdict!.vars).not.toHaveProperty("scale");
   });
 
   test("aligns persistent desktop evidence wrappers into one reasoning rail", () => {

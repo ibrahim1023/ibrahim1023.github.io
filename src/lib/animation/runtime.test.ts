@@ -55,14 +55,19 @@ function buildRoot() {
   return root;
 }
 
-function animationApis({ throwOnMobileAdd = false } = {}) {
+function animationApis({
+  throwOnMobileAdd = false,
+  activeQueries = [NARRATIVE_MEDIA.desktop] as string[],
+}: { throwOnMobileAdd?: boolean; activeQueries?: string[] } = {}) {
   const branchCleanups: Array<() => void> = [];
+  const callbacks = new Map<string, () => (() => void) | void>();
   const mediaContext = {
     add: vi.fn((query: string, callback: () => (() => void) | void) => {
       if (throwOnMobileAdd && query === NARRATIVE_MEDIA.mobile) {
         throw new Error("mobile media setup failed");
       }
-      if (query === NARRATIVE_MEDIA.desktop) {
+      callbacks.set(query, callback);
+      if (activeQueries.includes(query)) {
         const cleanup = callback();
         if (cleanup) branchCleanups.push(cleanup);
       }
@@ -84,9 +89,10 @@ function animationApis({ throwOnMobileAdd = false } = {}) {
   });
   const scrollTriggerApi = {
     create,
+    refresh: vi.fn(),
   } as unknown as typeof ScrollTrigger;
 
-  return { create, gsapApi, mediaContext, scrollTriggerApi, triggerKills };
+  return { callbacks, create, gsapApi, mediaContext, scrollTriggerApi, triggerKills };
 }
 
 describe("portfolio animation runtime", () => {
@@ -184,6 +190,35 @@ describe("portfolio animation runtime", () => {
     expect(triggerKills[0]).toHaveBeenCalledOnce();
     expect(triggerKills[1]).toHaveBeenCalledOnce();
     expect(root).not.toHaveAttribute("data-animated");
+  });
+
+  test("refreshes once after a newly matched layout creates its geometry", () => {
+    vi.useFakeTimers();
+    const root = buildRoot();
+    const { callbacks, create, gsapApi, scrollTriggerApi } = animationApis({
+      activeQueries: [],
+    });
+
+    const cleanup = initializePortfolioAnimations({
+      root,
+      gsapApi,
+      scrollTriggerApi,
+      viewportHeight: () => 844,
+      exposeState: false,
+    });
+    const mobileCleanup = callbacks.get(NARRATIVE_MEDIA.mobile)!();
+
+    expect(mobileCleanup).toEqual(expect.any(Function));
+    expect(create).toHaveBeenCalledTimes(2);
+    expect((scrollTriggerApi.refresh as unknown as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled();
+
+    vi.runAllTimers();
+
+    expect((scrollTriggerApi.refresh as unknown as ReturnType<typeof vi.fn>)).toHaveBeenCalledOnce();
+
+    mobileCleanup?.();
+    cleanup();
+    vi.useRealTimers();
   });
 
   test("clears animation properties and keeps the story readable when setup fails", () => {

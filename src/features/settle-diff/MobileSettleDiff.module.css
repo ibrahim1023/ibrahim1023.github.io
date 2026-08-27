@@ -1,5 +1,8 @@
 .stage {
   display: flex;
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 100%;
   min-width: 0;
   min-height: 100dvh;
   flex-direction: column;
@@ -7,6 +10,7 @@
   padding-block: var(--space-6);
   padding-inline: var(--gutter);
   font-size: max(1rem, var(--type-body));
+  overflow-x: clip;
 }
 
 .stage > *,
@@ -95,6 +99,20 @@
   letter-spacing: 0.08em;
 }
 
+.requestPath {
+  position: relative;
+  padding-inline-start: calc(var(--space-4) + 2px);
+}
+
+.requestPath::before {
+  position: absolute;
+  inset-block: var(--space-4) var(--space-2);
+  inset-inline-start: 0;
+  inline-size: 2px;
+  content: "";
+  background: linear-gradient(var(--color-accent), var(--color-line));
+}
+
 .activity > p:first-of-type strong {
   color: var(--color-accent);
 }
@@ -117,6 +135,7 @@
   gap: 2px;
   padding: var(--space-2);
   border: 1px solid var(--color-line);
+  overflow-wrap: anywhere;
 }
 
 .evidenceRail span,
@@ -180,6 +199,10 @@
   min-width: 0;
   overflow-wrap: anywhere;
   color: var(--color-text-primary);
+}
+
+.comparison dd {
+  overflow-wrap: anywhere;
 }
 
 .comparison [data-classification="PASS"] {

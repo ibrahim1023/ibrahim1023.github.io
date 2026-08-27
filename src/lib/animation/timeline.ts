@@ -177,7 +177,22 @@ export function appendRequestSegment(
 ) {
   const { start, duration } = segmentTiming("request-in-flight");
 
-  if (elements.pathLine && typeof elements.pathLine.getTotalLength === "function") {
+  if (layout === "mobile" && elements.transaction) {
+    tl.fromTo(
+      elements.transaction,
+      { opacity: 0.45, yPercent: -24 },
+      {
+        id: "mobile-request",
+        opacity: 1,
+        yPercent: 0,
+        duration,
+        ease: "power1.out",
+      },
+      start,
+    );
+  }
+
+  if (layout === "desktop" && elements.pathLine && typeof elements.pathLine.getTotalLength === "function") {
     const length = elements.pathLine.getTotalLength();
     gsap.set(elements.pathLine, { strokeDasharray: length, strokeDashoffset: length });
     tl.to(elements.pathLine, { strokeDashoffset: 0, duration }, start);
@@ -228,10 +243,17 @@ export function appendAttemptSegment(
   if (targets.length) {
     tl.fromTo(
       targets,
-      layout === "desktop" ? { opacity: 0, y: 16 } : { opacity: 0 },
+      layout === "desktop" ? { opacity: 0, y: 16 } : { opacity: 0, yPercent: 12 },
       layout === "desktop"
         ? { opacity: 1, y: 0, stagger: 0.06, duration: duration * 0.6, ease: "power1.out" }
-        : { opacity: 1, stagger: 0.06, duration: duration * 0.6, ease: "power1.out" },
+        : {
+          id: "mobile-activity",
+          opacity: 1,
+          yPercent: 0,
+          stagger: 0.06,
+          duration: duration * 0.6,
+          ease: "power1.out",
+        },
       start,
     );
   }
@@ -249,10 +271,17 @@ export function appendEvidenceSegment(
   if (elements.evidenceItems) {
     tl.fromTo(
       elements.evidenceItems,
-      layout === "desktop" ? { opacity: 0, y: 24, scale: 0.96 } : { opacity: 0 },
+      layout === "desktop" ? { opacity: 0, y: 24, scale: 0.96 } : { opacity: 0, yPercent: 18 },
       layout === "desktop"
         ? { opacity: 1, y: 0, scale: 1, stagger: 0.08, duration: duration * 0.55, ease: "power1.out" }
-        : { opacity: 1, stagger: 0.08, duration: duration * 0.55, ease: "power1.out" },
+        : {
+          id: "mobile-evidence",
+          opacity: 1,
+          yPercent: 0,
+          stagger: 0.055,
+          duration: duration * 0.55,
+          ease: "power1.out",
+        },
       start + duration * 0.1,
     );
   }
@@ -286,10 +315,16 @@ export function appendComparisonSegment(
   if (elements.comparison) {
     tl.fromTo(
       elements.comparison,
-      layout === "desktop" ? { opacity: 0, y: 28 } : { opacity: 0 },
+      layout === "desktop" ? { opacity: 0, y: 28 } : { opacity: 0, yPercent: 12 },
       layout === "desktop"
         ? { opacity: 1, y: 0, duration: duration * 0.6, ease: "power1.out" }
-        : { opacity: 1, duration: duration * 0.6, ease: "power1.out" },
+        : {
+          id: "mobile-comparison",
+          opacity: 1,
+          yPercent: 0,
+          duration: duration * 0.6,
+          ease: "power1.out",
+        },
       start + duration * 0.16,
     );
   }
@@ -313,10 +348,16 @@ export function appendConflictSegment(
   if (elements.mismatch) {
     tl.fromTo(
       elements.mismatch,
-      layout === "desktop" ? { opacity: 0, y: 18, scale: 0.96 } : { opacity: 0 },
+      layout === "desktop" ? { opacity: 0, y: 18, scale: 0.96 } : { opacity: 0, yPercent: 10 },
       layout === "desktop"
         ? { opacity: 1, y: 0, scale: 1, duration: duration * 0.55, ease: "power1.out" }
-        : { opacity: 1, duration: duration * 0.55, ease: "power1.out" },
+        : {
+          id: "mobile-conflict",
+          opacity: 1,
+          yPercent: 0,
+          duration: duration * 0.55,
+          ease: "power1.out",
+        },
       start + duration * 0.12,
     );
   }
@@ -337,10 +378,16 @@ export function appendVerdictSegment(
   if (elements.verdict) {
     tl.fromTo(
       elements.verdict,
-      layout === "desktop" ? { opacity: 0, y: 12, scale: 0.92 } : { opacity: 0 },
+      layout === "desktop" ? { opacity: 0, y: 12, scale: 0.92 } : { opacity: 0, yPercent: 10 },
       layout === "desktop"
         ? { opacity: 1, y: 0, scale: 1, duration: duration * 0.55, ease: "power1.out" }
-        : { opacity: 1, duration: duration * 0.55, ease: "power1.out" },
+        : {
+          id: "mobile-verdict",
+          opacity: 1,
+          yPercent: 0,
+          duration: duration * 0.55,
+          ease: "power1.out",
+        },
       start + duration * 0.12,
     );
   }
@@ -388,20 +435,20 @@ export function appendReasoningSegment(
   if (elements.chain) {
     tl.fromTo(
       elements.chain,
-      layout === "desktop" ? { opacity: 0, y: 28 } : { opacity: 0 },
+      layout === "desktop" ? { opacity: 0, y: 28 } : { opacity: 0, yPercent: 10 },
       layout === "desktop"
         ? { opacity: 1, y: 0, duration: duration * 0.55, ease: "power1.out" }
-        : { opacity: 1, duration: duration * 0.55, ease: "power1.out" },
+        : { id: "mobile-reasoning", opacity: 1, yPercent: 0, duration: duration * 0.55, ease: "power1.out" },
       start + duration * 0.18,
     );
   }
   if (elements.chainItems) {
     tl.fromTo(
       elements.chainItems,
-      layout === "desktop" ? { opacity: 0, y: 16 } : { opacity: 0 },
+      layout === "desktop" ? { opacity: 0, y: 16 } : { opacity: 0, yPercent: 8 },
       layout === "desktop"
         ? { opacity: 1, y: 0, stagger: 0.06, duration: duration * 0.4, ease: "power1.out" }
-        : { opacity: 1, stagger: 0.06, duration: duration * 0.4, ease: "power1.out" },
+        : { opacity: 1, yPercent: 0, stagger: 0.055, duration: duration * 0.4, ease: "power1.out" },
       start + duration * 0.28,
     );
   }
