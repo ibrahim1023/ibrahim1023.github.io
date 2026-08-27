@@ -35,6 +35,9 @@ describe("SettleDiffStage", () => {
       expect(item?.querySelector('[data-object-label="vault"]')).toHaveTextContent(
         object.vaultRole,
       );
+      expect(item?.querySelector('[data-object-label="vault"]')).not.toHaveAttribute(
+        "aria-hidden",
+      );
       expect(item).toHaveTextContent(object.primary);
       expect(item).toHaveTextContent(object.detail);
     }
@@ -133,5 +136,9 @@ describe("SettleDiffStage", () => {
       expect(targets.length).toBeGreaterThan(0);
       targets.forEach((target) => expect(target).toHaveAttribute("data-animatable"));
     });
+
+    expect(container.querySelector("[data-stage]")).toHaveAttribute(
+      "data-animatable",
+    );
   });
 });

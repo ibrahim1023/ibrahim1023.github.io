@@ -42,7 +42,6 @@ export function EvidenceMap() {
                 className={styles.evidenceLabel}
                 data-animatable
                 data-object-label="vault"
-                aria-hidden="true"
               >
                 {object.vaultRole}
               </span>

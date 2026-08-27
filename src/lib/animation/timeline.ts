@@ -49,6 +49,7 @@ export interface VaultTimelineElements {
   title: HTMLElement | null;
   rail: HTMLElement | null;
   railItems: Element[] | null;
+  connectors: SVGPathElement[] | null;
 }
 
 export function queryTimelineElements(
@@ -99,6 +100,7 @@ export function queryTimelineElements(
       title: query<HTMLElement>('[data-vault-transition-title]'),
       rail: query<HTMLElement>('[data-vault-transition-rail]'),
       railItems: toArray('[data-vault-transition-step]'),
+      connectors: toArray('[data-vault-transition-connector]') as SVGPathElement[] | null,
     },
   };
 }
@@ -489,7 +491,12 @@ function appendVaultTransitionTweens(
   if (settle.settleLabels) {
     tl.to(
       settle.settleLabels,
-      { opacity: 0, duration: available * 0.24, ease: "power1.out" },
+      {
+        opacity: 0,
+        visibility: "hidden",
+        duration: available * 0.24,
+        ease: "power1.out",
+      },
       startTime + available * 0.12,
     );
   }
@@ -497,11 +504,39 @@ function appendVaultTransitionTweens(
   if (settle.vaultLabels) {
     tl.fromTo(
       settle.vaultLabels,
-      layout === "desktop" ? { opacity: 0, y: 8 } : { opacity: 0, yPercent: 8 },
       layout === "desktop"
-        ? { opacity: 1, y: 0, duration: available * 0.28, ease: "power1.out" }
-        : { opacity: 1, yPercent: 0, duration: available * 0.28, ease: "power1.out" },
+        ? { opacity: 0, visibility: "hidden", y: 8 }
+        : { opacity: 0, visibility: "hidden", yPercent: 8 },
+      layout === "desktop"
+        ? {
+          opacity: 1,
+          visibility: "visible",
+          y: 0,
+          duration: available * 0.28,
+          ease: "power1.out",
+        }
+        : {
+          opacity: 1,
+          visibility: "visible",
+          yPercent: 0,
+          duration: available * 0.28,
+          ease: "power1.out",
+        },
       startTime + available * 0.18,
+    );
+  }
+
+  if (settle.connectors) {
+    tl.to(
+      settle.connectors,
+      {
+        opacity: 0,
+        scale: layout === "desktop" ? 0.01 : 1,
+        transformOrigin: "50% 50%",
+        duration: available * 0.24,
+        ease: "power1.out",
+      },
+      startTime + available * 0.08,
     );
   }
 
@@ -526,6 +561,15 @@ function appendVaultTransitionTweens(
         ? { opacity: 1, y: 0, duration: available * 0.3, ease: "power1.out" }
         : { opacity: 1, yPercent: 0, duration: available * 0.3, ease: "power1.out" },
       startTime + available * 0.38,
+    );
+  }
+
+  if (vault.connectors) {
+    tl.fromTo(
+      vault.connectors,
+      { opacity: 0 },
+      { opacity: 1, duration: available * 0.28, ease: "power1.out" },
+      startTime + available * 0.4,
     );
   }
 

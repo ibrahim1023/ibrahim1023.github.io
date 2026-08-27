@@ -26,6 +26,9 @@ describe("MobileSettleDiffStage", () => {
       expect(item?.querySelector('[data-object-label="vault"]')).toHaveTextContent(
         object.vaultRole,
       );
+      expect(item?.querySelector('[data-object-label="vault"]')).not.toHaveAttribute(
+        "aria-hidden",
+      );
     }
   });
 

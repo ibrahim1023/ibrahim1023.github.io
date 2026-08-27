@@ -43,6 +43,7 @@ describe("animation timeline builders", () => {
               <div data-attempt>ACTIVITY RECORDED</div>
             </div>
             <div data-evidence>
+              <svg><path data-evidence-connector /><path data-evidence-connector /></svg>
               <div data-evidence-item="request"><span data-object-label="settle">REQUEST</span><span data-object-label="vault">NOTE</span></div>
               <div data-evidence-item="payment"><span data-object-label="settle">PAYMENT</span><span data-object-label="vault">PROPOSED CHANGE</span></div>
               <div data-evidence-item="vendor"><span data-object-label="settle">VENDOR</span><span data-object-label="vault">EVIDENCE SOURCE</span></div>
@@ -70,6 +71,7 @@ describe("animation timeline builders", () => {
         </div>
         <div data-animated-layout="desktop">
           <section data-vault-transition>
+            <svg data-vault-transition-connectors><path data-vault-transition-connector="boundary" /><path data-vault-transition-connector="recheck" /></svg>
             <h2 data-vault-transition-title>Vault Steward</h2>
             <ol data-vault-transition-rail><li data-vault-transition-step>FIND</li><li data-vault-transition-step>PREVIEW</li></ol>
           </section>
@@ -210,6 +212,23 @@ describe("animation timeline builders", () => {
     for (const label of elements.settle.vaultLabels!) {
       expect(children.filter((child) => child.targets().includes(label))).toHaveLength(1);
     }
+  });
+
+  test("fades obsolete connectors and reveals the Vault boundary connectors", () => {
+    const root = buildRoot();
+    const elements = queryTimelineElements(root, "desktop");
+    const timeline = buildNarrativeTimeline(elements, "desktop");
+    const children = timeline.getChildren(true, true, true);
+    const oldConnectors: Element[] = elements.settle.connectors!;
+    const newConnectors: Element[] = elements.vault.connectors!;
+
+    expect(newConnectors).toHaveLength(2);
+    expect(children.some((child) => child.targets().length === oldConnectors.length
+      && child.targets().every((target: Element) => oldConnectors.includes(target))
+      && child.vars.opacity === 0)).toBe(true);
+    expect(children.some((child) => child.targets().length === newConnectors.length
+      && child.targets().every((target: Element) => newConnectors.includes(target))
+      && child.vars.opacity === 1)).toBe(true);
   });
 
   test("buildNarrativeTimeline and buildIntroTimeline are non-empty", () => {

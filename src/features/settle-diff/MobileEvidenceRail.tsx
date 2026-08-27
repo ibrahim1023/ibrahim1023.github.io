@@ -17,7 +17,7 @@ export function MobileEvidenceRail() {
             data-animatable
           >
             <span data-animatable data-object-label="settle">{object.label}</span>
-            <span data-animatable data-object-label="vault" aria-hidden="true">
+            <span data-animatable data-object-label="vault">
               {object.vaultRole}
             </span>
             <strong>{object.primary}</strong>

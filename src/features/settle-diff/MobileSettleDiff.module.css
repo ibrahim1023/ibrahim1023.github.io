@@ -157,7 +157,6 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--stage-accent);
-  opacity: 0;
 }
 
 .evidenceRail strong {
@@ -307,6 +306,11 @@
 }
 
 [data-animated="ready"] .transition {
+  opacity: 0;
+}
+
+[data-animated="ready"] .evidenceRail [data-object-label="vault"] {
+  visibility: hidden;
   opacity: 0;
 }
 

@@ -18,3 +18,21 @@ test("renders the approved in-pin decision rail", () => {
     vaultSteward.headline,
   );
 });
+
+test("marks every transition target for branch cleanup", () => {
+  const { container } = render(<VaultTransitionOverlay />);
+
+  expect(container.querySelector("[data-vault-transition]")).toHaveAttribute(
+    "data-animatable",
+  );
+  expect(container.querySelector("[data-vault-transition-title]")).toHaveAttribute(
+    "data-animatable",
+  );
+  expect(container.querySelector("[data-vault-transition-rail]")).toHaveAttribute(
+    "data-animatable",
+  );
+  container.querySelectorAll("[data-vault-transition-step]").forEach((step) => {
+    expect(step).toHaveAttribute("data-animatable");
+  });
+  expect(container.querySelectorAll("[data-vault-transition-connector]")).toHaveLength(2);
+});

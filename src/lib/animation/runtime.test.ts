@@ -21,11 +21,17 @@ function buildRoot() {
           <div data-stage data-layout="desktop" data-animatable>
             <div data-transaction><svg><path data-path-line></path></svg><span data-token></span></div>
             <div data-attempt></div>
-            <div data-evidence><div data-evidence-item="request"></div></div>
+            <div data-evidence><div data-evidence-item="request"><span data-object-label="settle" data-animatable></span><span data-object-label="vault" data-animatable></span></div></div>
             <div data-comparison></div>
             <div data-mismatch></div>
             <div data-verdict></div>
             <ol data-chain><li data-chain-item="claim"></li></ol>
+            <section data-vault-transition data-animatable>
+              <svg data-vault-transition-connectors><path data-vault-transition-connector="boundary" data-animatable /><path data-vault-transition-connector="recheck" data-animatable /></svg>
+              <h3 data-vault-transition-title data-animatable>Vault Steward</h3>
+              <p data-vault-transition-headline data-animatable>Keep your vault trustworthy</p>
+              <ol data-vault-transition-rail data-animatable><li data-vault-transition-step data-animatable>FIND</li></ol>
+            </section>
           </div>
         </div>
         <div data-animated-layout="mobile">
@@ -281,5 +287,37 @@ describe("portfolio animation runtime", () => {
     expect(gsapApi.set).toHaveBeenCalledWith(root.querySelectorAll("[data-animatable]"), {
       clearProps: "all",
     });
+  });
+
+  test("clears stage custom properties and Vault transition targets on setup failure", () => {
+    const root = buildRoot();
+    const failingPath = root.querySelector('[data-layout="desktop"] [data-path-line]') as SVGPathElement;
+    Object.defineProperty(failingPath, "getTotalLength", {
+      value: () => {
+        throw new Error("path unavailable");
+      },
+    });
+    const { gsapApi, scrollTriggerApi } = animationApis();
+
+    initializePortfolioAnimations({
+      root,
+      gsapApi,
+      scrollTriggerApi,
+      viewportHeight: () => 800,
+      exposeState: false,
+    });
+
+    const clearTargets = (gsapApi.set as unknown as ReturnType<typeof vi.fn>).mock.calls.at(-1)![0] as NodeListOf<Element>;
+    const targetSelectors = [
+      '[data-stage][data-layout="desktop"]',
+      '[data-vault-transition]',
+      '[data-vault-transition-title]',
+      '[data-vault-transition-step]',
+      '[data-vault-transition-connector]',
+    ];
+
+    for (const selector of targetSelectors) {
+      expect(Array.from(clearTargets)).toContain(root.querySelector(selector));
+    }
   });
 });

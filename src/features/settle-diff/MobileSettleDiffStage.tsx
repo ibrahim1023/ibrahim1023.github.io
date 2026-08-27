@@ -12,7 +12,7 @@ import styles from "./MobileSettleDiff.module.css";
 
 export function MobileSettleDiffStage() {
   return (
-    <div className={styles.stage} data-stage data-layout="mobile">
+    <div className={styles.stage} data-animatable data-stage data-layout="mobile">
       <header className={styles.header} data-stage-header data-animatable>
         <div className={styles.titleRow}>
           <h2>{settleDiff.title}</h2>
