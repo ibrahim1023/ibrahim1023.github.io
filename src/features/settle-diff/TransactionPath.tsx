@@ -5,7 +5,7 @@ import styles from "./SettleDiff.module.css";
 export function TransactionPath() {
   return (
     <div className={styles.transaction} data-transaction data-animatable>
-      <span className={styles.pathOrigin} aria-hidden="true" data-path-origin />
+      <span className={styles.pathOrigin} aria-hidden="true" data-path-origin data-animatable />
       <span className={styles.anchor} data-agent>
         {settleDiff.agentLabel}
       </span>
@@ -31,7 +31,7 @@ export function TransactionPath() {
       <span className={styles.budget} data-budget>
         {settleDiff.maxBudget} MAX
       </span>
-      <span className={styles.return} data-return>
+      <span className={styles.return} data-return data-animatable>
         <strong>{settleDiff.returnLabel}</strong>
         <span>{settleDiff.returnDetail}</span>
       </span>

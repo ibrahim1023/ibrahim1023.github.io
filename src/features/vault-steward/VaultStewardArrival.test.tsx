@@ -36,4 +36,19 @@ describe("VaultStewardArrival", () => {
       screen.getByRole("region", { name: "Vault Steward" }),
     ).toBeInTheDocument();
   });
+
+  test("marks every arrival tween target for runtime cleanup", () => {
+    const { container } = render(<VaultStewardArrival />);
+
+    [
+      "h2",
+      "[data-vault-descriptor]",
+      "[data-vault-cue]",
+      "[data-vault-rail-item]",
+    ].forEach((selector) => {
+      const targets = container.querySelectorAll(selector);
+      expect(targets.length).toBeGreaterThan(0);
+      targets.forEach((target) => expect(target).toHaveAttribute("data-animatable"));
+    });
+  });
 });

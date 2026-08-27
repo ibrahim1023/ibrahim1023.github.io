@@ -16,12 +16,12 @@ export function EvidenceMap() {
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <path d="M 50 45 L 16 22" data-evidence-connector />
-          <path d="M 50 45 L 16 70" data-evidence-connector />
-          <path d="M 50 45 L 46 16" data-evidence-connector />
-          <path d="M 50 45 L 46 76" data-evidence-connector />
-          <path d="M 50 45 L 74 22" data-evidence-connector />
-          <path d="M 50 45 L 74 70" data-evidence-connector />
+          <path d="M 50 45 L 16 22" data-evidence-connector data-animatable />
+          <path d="M 50 45 L 16 70" data-evidence-connector data-animatable />
+          <path d="M 50 45 L 46 16" data-evidence-connector data-animatable />
+          <path d="M 50 45 L 46 76" data-evidence-connector data-animatable />
+          <path d="M 50 45 L 74 22" data-evidence-connector data-animatable />
+          <path d="M 50 45 L 74 70" data-evidence-connector data-animatable />
         </svg>
         <ul className={styles.evidenceList}>
           {evidenceObjects.map((object) => (

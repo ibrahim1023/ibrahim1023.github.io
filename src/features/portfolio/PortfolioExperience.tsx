@@ -37,7 +37,7 @@ export function PortfolioExperience() {
         <div className={styles.sceneLayer} data-scene-layer="settle">
           <SettleDiffSection />
         </div>
-        <div className={styles.sceneLayer} data-scene-layer="vault">
+        <div className={styles.sceneLayer} data-scene-layer="vault" data-animatable>
           <VaultStewardArrival />
         </div>
       </div>

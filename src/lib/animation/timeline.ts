@@ -130,7 +130,7 @@ export function buildNarrativeTimeline(
   appendSettleDiffTweens(master, elements.settle, layout);
 
   const [vaultStart] = stateTime("vault-steward-arrival");
-  appendVaultRevealTweens(master, elements.settle, elements.vault, vaultStart);
+  appendVaultRevealTweens(master, elements.settle, elements.vault, vaultStart, layout);
 
   return master;
 }
@@ -150,12 +150,12 @@ function appendSettleDiffTweens(
 ) {
   addStateLabels(tl);
   appendRequestSegment(tl, elements, layout);
-  appendAttemptSegment(tl, elements);
-  appendEvidenceSegment(tl, elements);
-  appendComparisonSegment(tl, elements);
-  appendConflictSegment(tl, elements);
-  appendVerdictSegment(tl, elements);
-  appendReasoningSegment(tl, elements);
+  appendAttemptSegment(tl, elements, layout);
+  appendEvidenceSegment(tl, elements, layout);
+  appendComparisonSegment(tl, elements, layout);
+  appendConflictSegment(tl, elements, layout);
+  appendVerdictSegment(tl, elements, layout);
+  appendReasoningSegment(tl, elements, layout);
 
   const [vaultStart, vaultEnd] = stateTime("vault-steward-arrival");
   tl.to({}, { duration: vaultEnd - vaultStart }, vaultStart);
@@ -187,7 +187,9 @@ export function appendRequestSegment(
     tl.fromTo(
       elements.token,
       { "--token-progress": "8%", opacity: 1 },
-      { "--token-progress": "86%", opacity: 1, duration },
+      layout === "desktop"
+        ? { "--token-progress": "86%", opacity: 1, duration }
+        : { opacity: 1, duration },
       start,
     );
   }
@@ -195,33 +197,51 @@ export function appendRequestSegment(
   if (elements.return) {
     tl.fromTo(
       elements.return,
-      { opacity: 0, y: layout === "desktop" ? 12 : 8 },
-      { opacity: 1, y: 0, duration: duration * 0.38, ease: "power1.out" },
+      layout === "desktop" ? { opacity: 0, y: 12 } : { opacity: 0 },
+      layout === "desktop"
+        ? { opacity: 1, y: 0, duration: duration * 0.38, ease: "power1.out" }
+        : { opacity: 1, duration: duration * 0.38, ease: "power1.out" },
       start + duration * 0.62,
     );
   }
 }
 
-export function appendAttemptSegment(tl: gsap.core.Timeline, elements: SettleDiffTimelineElements) {
+export function appendAttemptSegment(
+  tl: gsap.core.Timeline,
+  elements: SettleDiffTimelineElements,
+  layout: NarrativeLayout,
+) {
   const { start, duration } = segmentTiming("attempt-recorded");
   const targets = [elements.attempt, elements.attemptStatus].filter(
     (target): target is HTMLElement => target !== null,
   );
 
   if (elements.token) {
-    tl.to(elements.token, { opacity: 0.2, y: -10, duration: duration * 0.45 }, start);
+    tl.to(
+      elements.token,
+      layout === "desktop"
+        ? { opacity: 0.2, y: -10, duration: duration * 0.45 }
+        : { opacity: 0.2, duration: duration * 0.45 },
+      start,
+    );
   }
   if (targets.length) {
     tl.fromTo(
       targets,
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, stagger: 0.06, duration: duration * 0.6, ease: "power1.out" },
+      layout === "desktop" ? { opacity: 0, y: 16 } : { opacity: 0 },
+      layout === "desktop"
+        ? { opacity: 1, y: 0, stagger: 0.06, duration: duration * 0.6, ease: "power1.out" }
+        : { opacity: 1, stagger: 0.06, duration: duration * 0.6, ease: "power1.out" },
       start,
     );
   }
 }
 
-export function appendEvidenceSegment(tl: gsap.core.Timeline, elements: SettleDiffTimelineElements) {
+export function appendEvidenceSegment(
+  tl: gsap.core.Timeline,
+  elements: SettleDiffTimelineElements,
+  layout: NarrativeLayout,
+) {
   const { start, duration } = segmentTiming("evidence-expanded");
   if (elements.evidence) {
     tl.fromTo(elements.evidence, { opacity: 0 }, { opacity: 1, duration: duration * 0.35 }, start);
@@ -229,8 +249,10 @@ export function appendEvidenceSegment(tl: gsap.core.Timeline, elements: SettleDi
   if (elements.evidenceItems) {
     tl.fromTo(
       elements.evidenceItems,
-      { opacity: 0, y: 24, scale: 0.96 },
-      { opacity: 1, y: 0, scale: 1, stagger: 0.08, duration: duration * 0.55, ease: "power1.out" },
+      layout === "desktop" ? { opacity: 0, y: 24, scale: 0.96 } : { opacity: 0 },
+      layout === "desktop"
+        ? { opacity: 1, y: 0, scale: 1, stagger: 0.08, duration: duration * 0.55, ease: "power1.out" }
+        : { opacity: 1, stagger: 0.08, duration: duration * 0.55, ease: "power1.out" },
       start + duration * 0.1,
     );
   }
@@ -242,9 +264,13 @@ export function appendEvidenceSegment(tl: gsap.core.Timeline, elements: SettleDi
   });
 }
 
-export function appendComparisonSegment(tl: gsap.core.Timeline, elements: SettleDiffTimelineElements) {
+export function appendComparisonSegment(
+  tl: gsap.core.Timeline,
+  elements: SettleDiffTimelineElements,
+  layout: NarrativeLayout,
+) {
   const { start, duration } = segmentTiming("comparison-visible");
-  if (elements.evidenceItems) {
+  if (layout === "desktop" && elements.evidenceItems) {
     tl.to(
       elements.evidenceItems,
       {
@@ -260,14 +286,20 @@ export function appendComparisonSegment(tl: gsap.core.Timeline, elements: Settle
   if (elements.comparison) {
     tl.fromTo(
       elements.comparison,
-      { opacity: 0, y: 28 },
-      { opacity: 1, y: 0, duration: duration * 0.6, ease: "power1.out" },
+      layout === "desktop" ? { opacity: 0, y: 28 } : { opacity: 0 },
+      layout === "desktop"
+        ? { opacity: 1, y: 0, duration: duration * 0.6, ease: "power1.out" }
+        : { opacity: 1, duration: duration * 0.6, ease: "power1.out" },
       start + duration * 0.16,
     );
   }
 }
 
-export function appendConflictSegment(tl: gsap.core.Timeline, elements: SettleDiffTimelineElements) {
+export function appendConflictSegment(
+  tl: gsap.core.Timeline,
+  elements: SettleDiffTimelineElements,
+  layout: NarrativeLayout,
+) {
   const { start, duration } = segmentTiming("mismatch-isolated");
   const supportingTargets = [elements.transaction, elements.attempt, elements.attemptStatus, elements.comparison].filter(
     (target): target is HTMLElement => target !== null,
@@ -281,14 +313,20 @@ export function appendConflictSegment(tl: gsap.core.Timeline, elements: SettleDi
   if (elements.mismatch) {
     tl.fromTo(
       elements.mismatch,
-      { opacity: 0, y: 18, scale: 0.96 },
-      { opacity: 1, y: 0, scale: 1, duration: duration * 0.55, ease: "power1.out" },
+      layout === "desktop" ? { opacity: 0, y: 18, scale: 0.96 } : { opacity: 0 },
+      layout === "desktop"
+        ? { opacity: 1, y: 0, scale: 1, duration: duration * 0.55, ease: "power1.out" }
+        : { opacity: 1, duration: duration * 0.55, ease: "power1.out" },
       start + duration * 0.12,
     );
   }
 }
 
-export function appendVerdictSegment(tl: gsap.core.Timeline, elements: SettleDiffTimelineElements) {
+export function appendVerdictSegment(
+  tl: gsap.core.Timeline,
+  elements: SettleDiffTimelineElements,
+  layout: NarrativeLayout,
+) {
   const { start, duration } = segmentTiming("unverifiable");
   const surroundingTargets = [elements.transaction, elements.attempt, elements.attemptStatus, elements.comparison, elements.mismatch, elements.evidence].filter(
     (target): target is HTMLElement => target !== null,
@@ -299,27 +337,42 @@ export function appendVerdictSegment(tl: gsap.core.Timeline, elements: SettleDif
   if (elements.verdict) {
     tl.fromTo(
       elements.verdict,
-      { opacity: 0, y: 12, scale: 0.92 },
-      { opacity: 1, y: 0, scale: 1, duration: duration * 0.55, ease: "power1.out" },
+      layout === "desktop" ? { opacity: 0, y: 12, scale: 0.92 } : { opacity: 0 },
+      layout === "desktop"
+        ? { opacity: 1, y: 0, scale: 1, duration: duration * 0.55, ease: "power1.out" }
+        : { opacity: 1, duration: duration * 0.55, ease: "power1.out" },
       start + duration * 0.12,
     );
   }
 }
 
-export function appendReasoningSegment(tl: gsap.core.Timeline, elements: SettleDiffTimelineElements) {
+export function appendReasoningSegment(
+  tl: gsap.core.Timeline,
+  elements: SettleDiffTimelineElements,
+  layout: NarrativeLayout,
+) {
   const { start, duration } = segmentTiming("reasoning-chain");
   if (elements.verdict) {
     tl.to(elements.verdict, { opacity: 0.22, duration: duration * 0.35 }, start);
   }
   if (elements.evidence) {
-    tl.to(elements.evidence, { opacity: 0.82, y: -12, scale: 0.92, duration: duration * 0.55 }, start);
+    tl.to(
+      elements.evidence,
+      layout === "desktop"
+        ? { opacity: 0.82, y: -12, scale: 0.92, duration: duration * 0.55 }
+        : { opacity: 0.82, duration: duration * 0.55 },
+      start,
+    );
   }
-  if (elements.evidenceItems) {
+  if (layout === "desktop" && elements.evidenceItems) {
     tl.to(
       elements.evidenceItems,
       {
+        "--evidence-left": "50%",
+        "--evidence-top": (index: number) => `${20 + index * 10}%`,
         x: 0,
-        y: (index) => (index - 2.5) * 12,
+        y: 0,
+        xPercent: -50,
         opacity: 0.78,
         scale: 0.9,
         stagger: 0.025,
@@ -329,19 +382,26 @@ export function appendReasoningSegment(tl: gsap.core.Timeline, elements: SettleD
       start,
     );
   }
+  if (layout === "mobile" && elements.evidenceItems) {
+    tl.to(elements.evidenceItems, { opacity: 0.78, duration: duration * 0.55 }, start);
+  }
   if (elements.chain) {
     tl.fromTo(
       elements.chain,
-      { opacity: 0, y: 28 },
-      { opacity: 1, y: 0, duration: duration * 0.55, ease: "power1.out" },
+      layout === "desktop" ? { opacity: 0, y: 28 } : { opacity: 0 },
+      layout === "desktop"
+        ? { opacity: 1, y: 0, duration: duration * 0.55, ease: "power1.out" }
+        : { opacity: 1, duration: duration * 0.55, ease: "power1.out" },
       start + duration * 0.18,
     );
   }
   if (elements.chainItems) {
     tl.fromTo(
       elements.chainItems,
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, stagger: 0.06, duration: duration * 0.4, ease: "power1.out" },
+      layout === "desktop" ? { opacity: 0, y: 16 } : { opacity: 0 },
+      layout === "desktop"
+        ? { opacity: 1, y: 0, stagger: 0.06, duration: duration * 0.4, ease: "power1.out" }
+        : { opacity: 1, stagger: 0.06, duration: duration * 0.4, ease: "power1.out" },
       start + duration * 0.28,
     );
   }
@@ -352,9 +412,11 @@ function appendVaultRevealTweens(
   settle: SettleDiffTimelineElements,
   vault: VaultTimelineElements,
   startTime: number,
+  layout: NarrativeLayout,
 ) {
   const [, endTime] = stateTime("vault-steward-arrival");
   const available = endTime - startTime;
+  const finalStateEnd = startTime + available;
 
   if (vault.layer) {
     tl.fromTo(
@@ -366,29 +428,27 @@ function appendVaultRevealTweens(
   }
 
   if (vault.railItems) {
+    const railStart = startTime + available * 0.15;
+    const railTiming = staggerTiming(railStart, finalStateEnd, vault.railItems.length);
     tl.fromTo(
       vault.railItems,
-      { opacity: 0, x: -24 },
-      {
-        opacity: 1,
-        x: 0,
-        stagger: 0.04,
-        duration: 0.3,
-      },
-      startTime + available * 0.15,
+      layout === "desktop" ? { opacity: 0, x: -24 } : { opacity: 0 },
+      layout === "desktop"
+        ? { opacity: 1, x: 0, stagger: railTiming.stagger, duration: railTiming.duration }
+        : { opacity: 1, stagger: railTiming.stagger, duration: railTiming.duration },
+      railStart,
     );
   }
 
   if (settle.chainItems) {
+    const chainStart = startTime + available * 0.15;
+    const chainTiming = staggerTiming(chainStart, finalStateEnd, settle.chainItems.length);
     tl.to(
       settle.chainItems,
-      {
-        opacity: 0,
-        x: 24,
-        stagger: 0.02,
-        duration: 0.3,
-      },
-      startTime + available * 0.15,
+      layout === "desktop"
+        ? { opacity: 0, x: 24, stagger: chainTiming.stagger, duration: chainTiming.duration }
+        : { opacity: 0, stagger: chainTiming.stagger, duration: chainTiming.duration },
+      chainStart,
     );
   }
 
@@ -404,13 +464,29 @@ function appendVaultRevealTweens(
     (t): t is HTMLElement => t !== null,
   );
   if (headlineTargets.length) {
+    const headlineStart = startTime + available * 0.45;
+    const headlineTiming = staggerTiming(headlineStart, finalStateEnd, headlineTargets.length);
     tl.fromTo(
       headlineTargets,
-      { opacity: 0, y: 24 },
-      { opacity: 1, y: 0, stagger: 0.05, duration: 0.3 },
-      startTime + available * 0.45,
+      layout === "desktop" ? { opacity: 0, y: 24 } : { opacity: 0 },
+      layout === "desktop"
+        ? {
+          opacity: 1,
+          y: 0,
+          stagger: headlineTiming.stagger,
+          duration: headlineTiming.duration,
+        }
+        : { opacity: 1, stagger: headlineTiming.stagger, duration: headlineTiming.duration },
+      headlineStart,
     );
   }
+}
+
+function staggerTiming(start: number, end: number, targetCount: number) {
+  const available = Math.max(0, end - start);
+  const duration = available * 0.7;
+  const stagger = targetCount > 1 ? (available - duration) / (targetCount - 1) : 0;
+  return { duration, stagger };
 }
 
 export function buildIntroTimeline(

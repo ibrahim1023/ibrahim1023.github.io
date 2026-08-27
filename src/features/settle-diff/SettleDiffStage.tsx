@@ -23,7 +23,7 @@ export function SettleDiffStage({
       </header>
       <p className={styles.attemptBadge} data-attempt data-animatable>
         <strong>{settleDiff.attemptLabel}</strong>
-        <span className={styles.attemptStatus} data-attempt-status>
+        <span className={styles.attemptStatus} data-attempt-status data-animatable>
           {settleDiff.activityStatus}
         </span>
         <span>{settleDiff.attemptQualifier}</span>

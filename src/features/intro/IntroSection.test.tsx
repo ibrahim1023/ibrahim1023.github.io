@@ -28,4 +28,17 @@ describe("IntroSection", () => {
 
     expect(container.querySelector("[data-handoff-track] [data-intro-cue-line]")).toBeInTheDocument();
   });
+
+  test("marks every intro tween target for runtime cleanup", () => {
+    const { container } = render(<IntroSection />);
+
+    [
+      "[data-intro-role]",
+      "[data-intro-name]",
+      "[data-intro-rule]",
+      "[data-intro-framing]",
+      "[data-intro-cue]",
+      "[data-intro-cue-line]",
+    ].forEach((selector) => expect(container.querySelector(selector)).toHaveAttribute("data-animatable"));
+  });
 });

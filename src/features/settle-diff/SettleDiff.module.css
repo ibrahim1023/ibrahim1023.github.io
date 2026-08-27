@@ -273,12 +273,12 @@
   color: var(--color-text-secondary);
 }
 
-[data-animated="ready"] .evidenceItem[data-evidence-item="request"] { left: 8%; top: 18%; }
-[data-animated="ready"] .evidenceItem[data-evidence-item="payment"] { left: 8%; top: 66%; }
-[data-animated="ready"] .evidenceItem[data-evidence-item="vendor"] { left: 38%; top: 12%; }
-[data-animated="ready"] .evidenceItem[data-evidence-item="chain"] { left: 38%; top: 72%; }
-[data-animated="ready"] .evidenceItem[data-evidence-item="response"] { left: 66%; top: 18%; }
-[data-animated="ready"] .evidenceItem[data-evidence-item="activity"] { left: 66%; top: 66%; }
+[data-animated="ready"] .evidenceItem[data-evidence-item="request"] { --evidence-left: 8%; --evidence-top: 18%; left: var(--evidence-left); top: var(--evidence-top); }
+[data-animated="ready"] .evidenceItem[data-evidence-item="payment"] { --evidence-left: 8%; --evidence-top: 66%; left: var(--evidence-left); top: var(--evidence-top); }
+[data-animated="ready"] .evidenceItem[data-evidence-item="vendor"] { --evidence-left: 38%; --evidence-top: 12%; left: var(--evidence-left); top: var(--evidence-top); }
+[data-animated="ready"] .evidenceItem[data-evidence-item="chain"] { --evidence-left: 38%; --evidence-top: 72%; left: var(--evidence-left); top: var(--evidence-top); }
+[data-animated="ready"] .evidenceItem[data-evidence-item="response"] { --evidence-left: 66%; --evidence-top: 18%; left: var(--evidence-left); top: var(--evidence-top); }
+[data-animated="ready"] .evidenceItem[data-evidence-item="activity"] { --evidence-left: 66%; --evidence-top: 66%; left: var(--evidence-left); top: var(--evidence-top); }
 
 /* ------------------------------------------------------------ comparison */
 

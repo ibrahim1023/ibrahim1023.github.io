@@ -114,4 +114,19 @@ describe("SettleDiffStage", () => {
     expect(screen.getAllByText("base").length).toBeGreaterThan(0);
     expect(screen.getAllByText("tempo").length).toBeGreaterThan(0);
   });
+
+  test("marks every GSAP-owned desktop evidence target for runtime cleanup", () => {
+    const { container } = render(<SettleDiffStage />);
+
+    [
+      "[data-path-origin]",
+      "[data-return]",
+      "[data-attempt-status]",
+      "[data-evidence-connector]",
+    ].forEach((selector) => {
+      const targets = container.querySelectorAll(selector);
+      expect(targets.length).toBeGreaterThan(0);
+      targets.forEach((target) => expect(target).toHaveAttribute("data-animatable"));
+    });
+  });
 });

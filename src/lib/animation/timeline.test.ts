@@ -135,6 +135,50 @@ describe("animation timeline builders", () => {
     expect(children.some((child) => child.duration() > 0 && child.targets().includes(elements.settle.chain!))).toBe(true);
   });
 
+  test("buildNarrativeTimeline stays inside the normalized twelve-second runway", () => {
+    const root = buildRoot();
+    const elements = queryTimelineElements(root, "desktop");
+
+    expect(buildNarrativeTimeline(elements, "desktop").duration()).toBeCloseTo(seconds(1), 6);
+  });
+
+  test("keeps mobile evidence in normal-flow coordinates until mobile choreography owns it", () => {
+    const root = buildRoot();
+    const elements = queryTimelineElements(root, "mobile");
+    const timeline = buildNarrativeTimeline(elements, "mobile");
+    const normalFlowTargets = [
+      elements.settle.evidenceItems![0]!,
+      ...(elements.settle.chainItems ?? []),
+      ...(elements.vault.railItems ?? []),
+      elements.vault.title,
+      elements.vault.descriptor,
+      elements.vault.cue,
+    ].filter((target): target is Element => target !== null);
+    const evidenceTweens = timeline
+      .getChildren(true, true, true)
+      .filter((child) => child.targets().some((target: Element) => normalFlowTargets.includes(target)));
+
+    expect(evidenceTweens).not.toHaveLength(0);
+    expect(evidenceTweens.every((tween) => !("x" in tween.vars) && !("y" in tween.vars) && !("scale" in tween.vars))).toBe(true);
+  });
+
+  test("aligns persistent desktop evidence wrappers into one reasoning rail", () => {
+    const root = buildRoot();
+    const elements = queryTimelineElements(root, "desktop");
+    const timeline = buildNarrativeTimeline(elements, "desktop");
+    const evidenceItems = elements.settle.evidenceItems!;
+    const railTween = timeline
+      .getChildren(true, true, true)
+      .find((child) => child.targets().length === evidenceItems.length
+        && child.targets().every((target: Element) => evidenceItems.includes(target))
+        && child.vars["--evidence-left"] === "50%");
+
+    expect(railTween).toBeDefined();
+    expect(railTween!.vars.xPercent).toBe(-50);
+    expect(railTween!.vars["--evidence-top"](0)).toBe("20%");
+    expect(railTween!.vars["--evidence-top"](5)).toBe("70%");
+  });
+
   test("buildNarrativeTimeline and buildIntroTimeline are non-empty", () => {
     const root = buildRoot();
     const elements = queryTimelineElements(root, "desktop");
