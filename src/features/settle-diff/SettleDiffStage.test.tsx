@@ -50,7 +50,9 @@ describe("SettleDiffStage", () => {
       screen.getByRole("link", { name: "View SettleDiff source on GitHub" }),
     ).toHaveAttribute("href", projectLinks.settleDiff);
     expect(screen.getAllByText("HTTP 402").length).toBeGreaterThan(0);
-    expect(screen.getByText("broadcast_failed")).toBeInTheDocument();
+    expect(container.querySelector("[data-attempt-status]")).toHaveTextContent(
+      "broadcast_failed",
+    );
     expect(screen.queryByText("acknowledged")).not.toBeInTheDocument();
     expect(
       container.querySelector('[data-evidence-item="activity"]'),

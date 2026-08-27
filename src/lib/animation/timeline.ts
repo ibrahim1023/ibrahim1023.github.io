@@ -1,7 +1,10 @@
 import { gsap } from "gsap";
 
 import { STATE_RANGES } from "@/features/settle-diff/settleDiffState";
-import type { SettleDiffState } from "@/features/settle-diff/settleDiffTypes";
+import {
+  SETTLE_DIFF_STATES,
+  type SettleDiffState,
+} from "@/features/settle-diff/settleDiffTypes";
 import type { NarrativeLayout } from "./media";
 
 export interface PortfolioTimelineElements {
@@ -13,6 +16,7 @@ export interface PortfolioTimelineElements {
     framing: HTMLElement | null;
     cue: HTMLElement | null;
     cueLine: HTMLElement | null;
+    pathOrigin: HTMLElement | null;
   };
   narrative: HTMLElement | null;
   settle: SettleDiffTimelineElements;
@@ -25,9 +29,12 @@ export interface SettleDiffTimelineElements {
   transaction: HTMLElement | null;
   pathLine: SVGPathElement | null;
   token: HTMLElement | null;
+  return: HTMLElement | null;
   attempt: HTMLElement | null;
+  attemptStatus: HTMLElement | null;
   evidence: HTMLElement | null;
   evidenceItems: Element[] | null;
+  connectors: SVGPathElement[] | null;
   comparison: HTMLElement | null;
   mismatch: HTMLElement | null;
   verdict: HTMLElement | null;
@@ -70,6 +77,7 @@ export function queryTimelineElements(
       framing: root.querySelector('[data-intro] [data-intro-framing]') as HTMLElement | null,
       cue: root.querySelector('[data-intro] [data-intro-cue]') as HTMLElement | null,
       cueLine: root.querySelector('[data-intro] [data-intro-cue-line]') as HTMLElement | null,
+      pathOrigin: query<HTMLElement>('[data-path-origin]'),
     },
     narrative: root.querySelector('[data-narrative]') as HTMLElement | null,
     settle: {
@@ -78,9 +86,12 @@ export function queryTimelineElements(
       transaction: query<HTMLElement>('[data-transaction]'),
       pathLine: query<SVGPathElement>('[data-path-line]'),
       token: query<HTMLElement>('[data-token]'),
+      return: query<HTMLElement>('[data-return]'),
       attempt: query<HTMLElement>('[data-attempt]'),
+      attemptStatus: query<HTMLElement>('[data-attempt-status]'),
       evidence: query<HTMLElement>('[data-evidence]'),
       evidenceItems: toArray('[data-evidence-item]'),
+      connectors: toArray('[data-evidence-connector]') as SVGPathElement[] | null,
       comparison: query<HTMLElement>('[data-comparison]'),
       mismatch: query<HTMLElement>('[data-mismatch]'),
       verdict: query<HTMLElement>('[data-verdict]'),
@@ -111,13 +122,12 @@ export function buildNarrativeTimeline(
   elements: PortfolioTimelineElements,
   layout: NarrativeLayout,
 ): gsap.core.Timeline {
-  void layout;
   const master = gsap.timeline({
     defaults: { ease: "none" },
     paused: true,
   });
 
-  appendSettleDiffTweens(master, elements.settle);
+  appendSettleDiffTweens(master, elements.settle, layout);
 
   const [vaultStart] = stateTime("vault-steward-arrival");
   appendVaultRevealTweens(master, elements.settle, elements.vault, vaultStart);
@@ -129,138 +139,212 @@ export function buildSettleDiffTimeline(
   elements: SettleDiffTimelineElements,
 ): gsap.core.Timeline {
   const tl = gsap.timeline({ defaults: { ease: "none" }, paused: true });
-  appendSettleDiffTweens(tl, elements);
+  appendSettleDiffTweens(tl, elements, "desktop");
   return tl;
 }
 
 function appendSettleDiffTweens(
   tl: gsap.core.Timeline,
   elements: SettleDiffTimelineElements,
+  layout: NarrativeLayout,
 ) {
-  const addStateLabel = (state: SettleDiffState) => {
-    const [start] = stateTime(state);
-    tl.addLabel(state, start);
-    return [start, stateTime(state)[1]] as const;
-  };
+  addStateLabels(tl);
+  appendRequestSegment(tl, elements, layout);
+  appendAttemptSegment(tl, elements);
+  appendEvidenceSegment(tl, elements);
+  appendComparisonSegment(tl, elements);
+  appendConflictSegment(tl, elements);
+  appendVerdictSegment(tl, elements);
+  appendReasoningSegment(tl, elements);
 
-  addStateLabel("project-established");
+  const [vaultStart, vaultEnd] = stateTime("vault-steward-arrival");
+  tl.to({}, { duration: vaultEnd - vaultStart }, vaultStart);
+}
 
-  const [reqStart, reqEnd] = addStateLabel("request-in-flight");
+function addStateLabels(tl: gsap.core.Timeline) {
+  SETTLE_DIFF_STATES.forEach((state) => tl.addLabel(state, stateTime(state)[0]));
+}
+
+const segmentTiming = (state: SettleDiffState) => {
+  const [start, end] = stateTime(state);
+  return { start, end, duration: end - start };
+};
+
+export function appendRequestSegment(
+  tl: gsap.core.Timeline,
+  elements: SettleDiffTimelineElements,
+  layout: NarrativeLayout,
+) {
+  const { start, duration } = segmentTiming("request-in-flight");
 
   if (elements.pathLine && typeof elements.pathLine.getTotalLength === "function") {
     const length = elements.pathLine.getTotalLength();
-    gsap.set(elements.pathLine, {
-      strokeDasharray: length,
-      strokeDashoffset: length,
-    });
-    tl.to(
-      elements.pathLine,
-      { strokeDashoffset: 0, duration: reqEnd - reqStart },
-      reqStart,
-    );
+    gsap.set(elements.pathLine, { strokeDasharray: length, strokeDashoffset: length });
+    tl.to(elements.pathLine, { strokeDashoffset: 0, duration }, start);
   }
 
   if (elements.token) {
-    gsap.set(elements.token, { left: "8%" });
     tl.fromTo(
       elements.token,
-      { left: "8%" },
-      { left: "86%", duration: reqEnd - reqStart },
-      reqStart,
+      { "--token-progress": "8%", opacity: 1 },
+      { "--token-progress": "86%", opacity: 1, duration },
+      start,
     );
   }
 
-  addStateLabel("attempt-recorded");
+  if (elements.return) {
+    tl.fromTo(
+      elements.return,
+      { opacity: 0, y: layout === "desktop" ? 12 : 8 },
+      { opacity: 1, y: 0, duration: duration * 0.38, ease: "power1.out" },
+      start + duration * 0.62,
+    );
+  }
+}
 
-  const [evStart] = addStateLabel("evidence-expanded");
+export function appendAttemptSegment(tl: gsap.core.Timeline, elements: SettleDiffTimelineElements) {
+  const { start, duration } = segmentTiming("attempt-recorded");
+  const targets = [elements.attempt, elements.attemptStatus].filter(
+    (target): target is HTMLElement => target !== null,
+  );
 
+  if (elements.token) {
+    tl.to(elements.token, { opacity: 0.2, y: -10, duration: duration * 0.45 }, start);
+  }
+  if (targets.length) {
+    tl.fromTo(
+      targets,
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, stagger: 0.06, duration: duration * 0.6, ease: "power1.out" },
+      start,
+    );
+  }
+}
+
+export function appendEvidenceSegment(tl: gsap.core.Timeline, elements: SettleDiffTimelineElements) {
+  const { start, duration } = segmentTiming("evidence-expanded");
+  if (elements.evidence) {
+    tl.fromTo(elements.evidence, { opacity: 0 }, { opacity: 1, duration: duration * 0.35 }, start);
+  }
   if (elements.evidenceItems) {
     tl.fromTo(
       elements.evidenceItems,
       { opacity: 0, y: 24, scale: 0.96 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        stagger: 0.04,
-        duration: 0.4,
-      },
-      evStart,
+      { opacity: 1, y: 0, scale: 1, stagger: 0.08, duration: duration * 0.55, ease: "power1.out" },
+      start + duration * 0.1,
     );
   }
+  elements.connectors?.forEach((connector) => {
+    if (typeof connector.getTotalLength !== "function") return;
+    const length = connector.getTotalLength();
+    gsap.set(connector, { strokeDasharray: length, strokeDashoffset: length });
+    tl.to(connector, { strokeDashoffset: 0, duration: duration * 0.55 }, start + duration * 0.1);
+  });
+}
 
-  const [cmpStart, cmpEnd] = addStateLabel("comparison-visible");
-
+export function appendComparisonSegment(tl: gsap.core.Timeline, elements: SettleDiffTimelineElements) {
+  const { start, duration } = segmentTiming("comparison-visible");
+  if (elements.evidenceItems) {
+    tl.to(
+      elements.evidenceItems,
+      {
+        x: (index) => (index % 2 === 0 ? -54 : 54),
+        y: (index) => (Math.floor(index / 2) - 1) * 30,
+        opacity: 0.42,
+        duration: duration * 0.65,
+        ease: "power1.out",
+      },
+      start,
+    );
+  }
   if (elements.comparison) {
     tl.fromTo(
       elements.comparison,
-      { y: 30, xPercent: -50, yPercent: -50 },
-      { y: 0, xPercent: -50, yPercent: -50, duration: cmpEnd - cmpStart },
-      cmpStart,
+      { opacity: 0, y: 28 },
+      { opacity: 1, y: 0, duration: duration * 0.6, ease: "power1.out" },
+      start + duration * 0.16,
     );
   }
+}
 
-  const [mmStart, mmEnd] = addStateLabel("mismatch-isolated");
-
+export function appendConflictSegment(tl: gsap.core.Timeline, elements: SettleDiffTimelineElements) {
+  const { start, duration } = segmentTiming("mismatch-isolated");
+  const supportingTargets = [elements.transaction, elements.attempt, elements.attemptStatus, elements.comparison].filter(
+    (target): target is HTMLElement => target !== null,
+  );
+  if (supportingTargets.length) {
+    tl.to(supportingTargets, { opacity: 0.32, duration: duration * 0.45 }, start);
+  }
+  if (elements.evidenceItems) {
+    tl.to(elements.evidenceItems, { opacity: 0.5, duration: duration * 0.45 }, start);
+  }
   if (elements.mismatch) {
     tl.fromTo(
       elements.mismatch,
-      { scale: 0.88, xPercent: -50, yPercent: -50 },
-      { scale: 1, xPercent: -50, yPercent: -50, duration: mmEnd - mmStart },
-      mmStart,
+      { opacity: 0, y: 18, scale: 0.96 },
+      { opacity: 1, y: 0, scale: 1, duration: duration * 0.55, ease: "power1.out" },
+      start + duration * 0.12,
     );
   }
+}
 
-  const [uvStart, uvEnd] = addStateLabel("unverifiable");
-
+export function appendVerdictSegment(tl: gsap.core.Timeline, elements: SettleDiffTimelineElements) {
+  const { start, duration } = segmentTiming("unverifiable");
+  const surroundingTargets = [elements.transaction, elements.attempt, elements.attemptStatus, elements.comparison, elements.mismatch, elements.evidence].filter(
+    (target): target is HTMLElement => target !== null,
+  );
+  if (surroundingTargets.length) {
+    tl.to(surroundingTargets, { opacity: 0.14, duration: duration * 0.4 }, start);
+  }
   if (elements.verdict) {
     tl.fromTo(
       elements.verdict,
-      { scale: 0.85, xPercent: -50, yPercent: -50 },
-      { scale: 1, xPercent: -50, yPercent: -50, duration: uvEnd - uvStart },
-      uvStart,
+      { opacity: 0, y: 12, scale: 0.92 },
+      { opacity: 1, y: 0, scale: 1, duration: duration * 0.55, ease: "power1.out" },
+      start + duration * 0.12,
     );
   }
+}
 
-  const [rcStart, rcEnd] = addStateLabel("reasoning-chain");
-
+export function appendReasoningSegment(tl: gsap.core.Timeline, elements: SettleDiffTimelineElements) {
+  const { start, duration } = segmentTiming("reasoning-chain");
+  if (elements.verdict) {
+    tl.to(elements.verdict, { opacity: 0.22, duration: duration * 0.35 }, start);
+  }
   if (elements.evidence) {
-    tl.fromTo(
-      elements.evidence,
-      { y: 0, scale: 1 },
-      { y: -40, scale: 0.85, duration: rcEnd - rcStart },
-      rcStart,
-    );
+    tl.to(elements.evidence, { opacity: 0.82, y: -12, scale: 0.92, duration: duration * 0.55 }, start);
   }
-
   if (elements.evidenceItems) {
-    tl.fromTo(
+    tl.to(
       elements.evidenceItems,
-      { opacity: 1, y: 0 },
-      { opacity: 0, y: -24, stagger: 0.02, duration: 0.35 },
-      rcStart,
+      {
+        x: 0,
+        y: (index) => (index - 2.5) * 12,
+        opacity: 0.78,
+        scale: 0.9,
+        stagger: 0.025,
+        duration: duration * 0.55,
+        ease: "power1.out",
+      },
+      start,
     );
   }
-
   if (elements.chain) {
     tl.fromTo(
       elements.chain,
-      { y: 40, xPercent: -50, yPercent: -50 },
-      { y: 0, xPercent: -50, yPercent: -50, duration: rcEnd - rcStart },
-      rcStart,
+      { opacity: 0, y: 28 },
+      { opacity: 1, y: 0, duration: duration * 0.55, ease: "power1.out" },
+      start + duration * 0.18,
     );
   }
-
   if (elements.chainItems) {
     tl.fromTo(
       elements.chainItems,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, stagger: 0.03, duration: 0.25 },
-      rcStart + 0.1,
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, stagger: 0.06, duration: duration * 0.4, ease: "power1.out" },
+      start + duration * 0.28,
     );
   }
-
-  addStateLabel("vault-steward-arrival");
 }
 
 function appendVaultRevealTweens(
@@ -351,7 +435,16 @@ export function buildIntroTimeline(
     tl.fromTo(
       elements.cueLine,
       { scaleX: 1, transformOrigin: "left center" },
-      { scaleX: 0, duration: 0.6 },
+      { scaleX: 1.7, duration: 0.6 },
+      0,
+    );
+  }
+
+  if (elements.pathOrigin) {
+    tl.fromTo(
+      elements.pathOrigin,
+      { opacity: 0.2, scaleX: 0.4, transformOrigin: "left center" },
+      { opacity: 1, scaleX: 1, duration: 0.6 },
       0,
     );
   }

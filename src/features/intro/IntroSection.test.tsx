@@ -22,4 +22,10 @@ describe("IntroSection", () => {
 
     expect(screen.getByRole("region", { name: "Intro" })).toBeInTheDocument();
   });
+
+  test("keeps the selected-work cue inside its handoff track", () => {
+    const { container } = render(<IntroSection />);
+
+    expect(container.querySelector("[data-handoff-track] [data-intro-cue-line]")).toBeInTheDocument();
+  });
 });

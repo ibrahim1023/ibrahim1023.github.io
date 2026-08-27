@@ -5,6 +5,7 @@ import styles from "./SettleDiff.module.css";
 export function TransactionPath() {
   return (
     <div className={styles.transaction} data-transaction data-animatable>
+      <span className={styles.pathOrigin} aria-hidden="true" data-path-origin />
       <span className={styles.anchor} data-agent>
         {settleDiff.agentLabel}
       </span>

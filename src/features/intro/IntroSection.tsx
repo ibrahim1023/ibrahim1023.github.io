@@ -10,7 +10,9 @@ export function IntroSection() {
       <span className={styles.rule} aria-hidden="true" data-intro-rule />
       <p className={styles.framing} data-intro-framing>{identity.framing}</p>
       <p className={styles.cue} data-intro-cue>
-        <span className={styles.cueLine} aria-hidden="true" data-intro-cue-line />
+        <span className={styles.handoffTrack} aria-hidden="true" data-handoff-track>
+          <span className={styles.cueLine} data-intro-cue-line />
+        </span>
         {identity.selectedWorkCue}
       </p>
     </section>

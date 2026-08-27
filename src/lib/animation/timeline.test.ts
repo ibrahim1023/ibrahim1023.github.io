@@ -6,7 +6,9 @@ import {
   buildNarrativeTimeline,
   buildSettleDiffTimeline,
   queryTimelineElements,
+  seconds,
 } from "./timeline";
+import { SETTLE_DIFF_STATES } from "@/features/settle-diff/settleDiffTypes";
 
 describe("animation timeline builders", () => {
   beforeAll(() => {
@@ -25,7 +27,7 @@ describe("animation timeline builders", () => {
         <h1 data-intro-name>Ibrahim Arshad</h1>
         <span data-intro-rule></span>
         <p data-intro-framing>Framing</p>
-        <p data-intro-cue><span data-intro-cue-line></span>Selected work</p>
+        <p data-intro-cue><span data-handoff-track><span data-intro-cue-line></span></span>Selected work</p>
       </section>
       <div data-narrative>
         <div data-scene-layer="settle">
@@ -36,6 +38,7 @@ describe("animation timeline builders", () => {
               <svg viewBox="0 0 1000 120" data-path>
                 <path data-path-line d="M 20 46 L 980 46" />
               </svg>
+              <span data-path-origin></span>
               <span data-token>0.01 USDC</span>
               <div data-attempt>ACTIVITY RECORDED</div>
             </div>
@@ -104,23 +107,32 @@ describe("animation timeline builders", () => {
     expect(mobile.settle.stage).not.toBe(desktop.settle.stage);
   });
 
-  test("buildSettleDiffTimeline returns a labelled timeline", () => {
+  test("buildSettleDiffTimeline uses every approved state boundary and preserves its final hold", () => {
     const root = buildRoot();
     const elements = queryTimelineElements(root, "desktop");
     const tl = buildSettleDiffTimeline(elements.settle);
 
-    expect(tl.duration()).toBeGreaterThan(0);
-    expect(Object.keys(tl.labels).sort()).toEqual([
-      "attempt-recorded",
-      "comparison-visible",
-      "evidence-expanded",
-      "mismatch-isolated",
-      "project-established",
-      "reasoning-chain",
-      "request-in-flight",
-      "unverifiable",
-      "vault-steward-arrival",
-    ]);
+    expect(Object.keys(tl.labels)).toEqual(SETTLE_DIFF_STATES);
+    expect(tl.labels["request-in-flight"]).toBe(seconds(0.1));
+    expect(tl.labels["attempt-recorded"]).toBe(seconds(0.24));
+    expect(tl.labels.unverifiable).toBe(seconds(0.8));
+    expect(tl.labels["vault-steward-arrival"]).toBe(seconds(0.96));
+    expect(tl.duration()).toBe(seconds(1));
+  });
+
+  test("buildNarrativeTimeline gives desktop objects non-zero motion in the approved segments", () => {
+    const root = buildRoot();
+    const elements = queryTimelineElements(root, "desktop");
+    const timeline = buildNarrativeTimeline(elements, "desktop");
+    const children = timeline.getChildren(true, true, true);
+
+    expect(children.some((child) => child.duration() > 0 && child.targets().includes(elements.settle.token!))).toBe(true);
+    expect(children.some((child) => child.duration() > 0 && child.targets().includes(elements.settle.attempt!))).toBe(true);
+    expect(children.some((child) => child.duration() > 0 && child.targets().includes(elements.settle.evidenceItems![0]!))).toBe(true);
+    expect(children.some((child) => child.duration() > 0 && child.targets().includes(elements.settle.comparison!))).toBe(true);
+    expect(children.some((child) => child.duration() > 0 && child.targets().includes(elements.settle.mismatch!))).toBe(true);
+    expect(children.some((child) => child.duration() > 0 && child.targets().includes(elements.settle.verdict!))).toBe(true);
+    expect(children.some((child) => child.duration() > 0 && child.targets().includes(elements.settle.chain!))).toBe(true);
   });
 
   test("buildNarrativeTimeline and buildIntroTimeline are non-empty", () => {
@@ -132,5 +144,19 @@ describe("animation timeline builders", () => {
 
     expect(narrative.duration()).toBeGreaterThan(0);
     expect(intro.duration()).toBeGreaterThan(0);
+  });
+
+  test("buildIntroTimeline extends the cue toward the active transaction path origin", () => {
+    const root = buildRoot();
+    const elements = queryTimelineElements(root, "desktop");
+    const pathOrigin = root.querySelector("[data-animated-layout=\"desktop\"] [data-path-origin]");
+    const intro = buildIntroTimeline(elements.intro);
+    const introTargets = intro
+      .getChildren(true, true, true)
+      .flatMap((child) => child.targets());
+
+    expect((elements.intro as { pathOrigin?: HTMLElement | null }).pathOrigin).toBe(pathOrigin);
+    expect(introTargets).toContain(elements.intro.cueLine);
+    expect(introTargets).toContain(pathOrigin);
   });
 });
