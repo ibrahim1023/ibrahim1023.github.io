@@ -42,7 +42,11 @@ export function SettleDiffStage({
         <p className={styles.verdictReason}>{settleDiff.verdictReason}</p>
       </div>
       <ReasoningRail />
-      <VaultTransitionOverlay className={styles.transition} />
+      <VaultTransitionOverlay
+        className={styles.transition}
+        connectorClassName={styles.transitionConnectors}
+        connectorPathClassName={styles.transitionConnector}
+      />
     </div>
   );
 }

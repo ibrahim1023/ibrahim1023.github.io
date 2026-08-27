@@ -473,6 +473,17 @@
   display: none;
 }
 
+.transitionConnectors {
+  pointer-events: none;
+}
+
+.transitionConnector {
+  fill: none;
+  stroke: var(--stage-accent);
+  stroke-width: 0.35;
+  vector-effect: non-scaling-stroke;
+}
+
 .transition [data-vault-transition-connector] {
   fill: none;
   stroke: var(--stage-accent);

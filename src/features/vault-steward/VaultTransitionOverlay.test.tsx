@@ -36,3 +36,27 @@ test("marks every transition target for branch cleanup", () => {
   });
   expect(container.querySelectorAll("[data-vault-transition-connector]")).toHaveLength(2);
 });
+
+test("supports explicit mobile bounds and vertical connector geometry", () => {
+  const { container } = render(
+    <VaultTransitionOverlay
+      layout="mobile"
+      connectorClassName="mobile-connectors"
+      connectorPathClassName="mobile-connector"
+    />,
+  );
+  const connectors = container.querySelector("[data-vault-transition-connectors]");
+
+  expect(connectors).toHaveClass("mobile-connectors");
+  expect(connectors).toHaveAttribute("data-vault-transition-layout", "mobile");
+  expect(connectors).toHaveAttribute("viewBox", "0 0 100 100");
+  expect(container.querySelectorAll("[data-vault-transition-connector]")).toHaveLength(2);
+  container.querySelectorAll("[data-vault-transition-connector]").forEach((path) => {
+    expect(path).toHaveClass("mobile-connector");
+    expect(path).toHaveAttribute("data-animatable");
+  });
+  expect(container.querySelector('[data-vault-transition-connector="recheck"]')).toHaveAttribute(
+    "d",
+    "M 50 82 V 96",
+  );
+});

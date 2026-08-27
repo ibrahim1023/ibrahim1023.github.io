@@ -91,3 +91,34 @@ test("320px mobile keeps the source link focus outline within the viewport", asy
   expect(focusBounds.right).toBeLessThanOrEqual(focusBounds.viewportWidth);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
 });
+
+test("mobile Vault transition connectors keep bounded stroked geometry", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/portfolio/");
+  await expectRuntimeLayout(page, "mobile");
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(300);
+
+  const geometry = await page
+    .locator('[data-layout="mobile"] [data-vault-transition-connectors]')
+    .evaluate((svg) => {
+      const bounds = svg.getBoundingClientRect();
+      return {
+        width: bounds.width,
+        height: bounds.height,
+        paths: Array.from(svg.querySelectorAll("[data-vault-transition-connector]")).map(
+          (path) => {
+            const style = window.getComputedStyle(path);
+            return { opacity: style.opacity, stroke: style.stroke };
+          },
+        ),
+      };
+    });
+
+  expect(geometry.width).toBeGreaterThan(0);
+  expect(geometry.height).toBeGreaterThan(0);
+  expect(geometry.paths).toHaveLength(2);
+  expect(geometry.paths.every(({ opacity, stroke }) => opacity === "1" && stroke !== "none")).toBe(true);
+});

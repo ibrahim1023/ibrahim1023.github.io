@@ -71,7 +71,12 @@ export function MobileSettleDiffStage() {
         </ol>
       </section>
 
-      <VaultTransitionOverlay className={styles.transition} />
+      <VaultTransitionOverlay
+        className={styles.transition}
+        connectorClassName={styles.transitionConnectors}
+        connectorPathClassName={styles.transitionConnector}
+        layout="mobile"
+      />
     </div>
   );
 }
