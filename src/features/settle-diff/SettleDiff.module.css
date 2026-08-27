@@ -13,6 +13,13 @@
   display: none;
 }
 
+/* This marker identifies the normal-DOM story that the noscript style reveals
+   when the animated layouts are unavailable. */
+.reducedBranch[data-no-js-narrative] {
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
 @media (width < 768px), (orientation: portrait) and (max-width: 1024px) {
   .section {
     padding-inline: 0;

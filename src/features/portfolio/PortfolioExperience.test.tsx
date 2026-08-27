@@ -11,6 +11,13 @@ const runtime = vi.hoisted(() => {
 
 vi.mock("@/lib/animation/runtime", () => ({
   initializePortfolioAnimations: runtime.initialize,
+  shouldExposeTimelineState: ({
+    nodeEnv,
+    timelineDebug,
+  }: {
+    nodeEnv: string | undefined;
+    timelineDebug: string | undefined;
+  }) => nodeEnv === "development" && timelineDebug === "true",
 }));
 
 import { PortfolioExperience } from "./PortfolioExperience";
@@ -37,6 +44,7 @@ describe("PortfolioExperience shell", () => {
     expect(container.querySelectorAll('[data-layout="desktop"]')).toHaveLength(1);
     expect(container.querySelectorAll('[data-layout="mobile"]')).toHaveLength(1);
     expect(container.querySelectorAll('[data-branch="reduced"]')).toHaveLength(1);
+    expect(container.querySelectorAll("[data-no-js-narrative]")).toHaveLength(1);
   });
 
   test("renders the approved identity and project copy", () => {

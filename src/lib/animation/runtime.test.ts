@@ -3,7 +3,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { describe, expect, test, vi } from "vitest";
 
 import { NARRATIVE_MEDIA } from "./media";
-import { initializePortfolioAnimations } from "./runtime";
+import {
+  initializePortfolioAnimations,
+  shouldExposeTimelineState,
+} from "./runtime";
 
 function buildRoot() {
   const root = document.createElement("div");
@@ -102,6 +105,27 @@ function animationApis({
 }
 
 describe("portfolio animation runtime", () => {
+  test("exposes timeline state only for an explicit development debug session", () => {
+    expect(
+      shouldExposeTimelineState({
+        nodeEnv: "production",
+        timelineDebug: "true",
+      }),
+    ).toBe(false);
+    expect(
+      shouldExposeTimelineState({
+        nodeEnv: "development",
+        timelineDebug: "true",
+      }),
+    ).toBe(true);
+    expect(
+      shouldExposeTimelineState({
+        nodeEnv: "development",
+        timelineDebug: undefined,
+      }),
+    ).toBe(false);
+  });
+
   test("sets up media-scoped timelines and tears down their context", () => {
     const root = buildRoot();
     const { create, gsapApi, mediaContext, scrollTriggerApi } = animationApis();
@@ -319,5 +343,38 @@ describe("portfolio animation runtime", () => {
     for (const selector of targetSelectors) {
       expect(Array.from(clearTargets)).toContain(root.querySelector(selector));
     }
+  });
+
+  test("clears every animated target without removing its readable document order", () => {
+    const root = buildRoot();
+    const animatableTargets = Array.from(root.querySelectorAll("[data-animatable]"));
+    animatableTargets.forEach((target) => {
+      (target as HTMLElement).style.cssText = "opacity: 0; transform: translateX(8px)";
+    });
+    const failingPath = root.querySelector('[data-layout="desktop"] [data-path-line]') as SVGPathElement;
+    Object.defineProperty(failingPath, "getTotalLength", {
+      value: () => {
+        throw new Error("path unavailable");
+      },
+    });
+    const { gsapApi, scrollTriggerApi } = animationApis();
+    const clearSet = vi.fn((targets: NodeListOf<Element>, vars: { clearProps?: string }) => {
+      if (vars.clearProps === "all") {
+        targets.forEach((target) => target.removeAttribute("style"));
+      }
+    });
+    gsapApi.set = clearSet as unknown as typeof gsap.set;
+
+    initializePortfolioAnimations({
+      root,
+      gsapApi,
+      scrollTriggerApi,
+      viewportHeight: () => 800,
+      exposeState: false,
+    });
+
+    expect(Array.from(clearSet.mock.calls[0]![0])).toEqual(animatableTargets);
+    expect(animatableTargets.every((target) => !target.hasAttribute("style"))).toBe(true);
+    expect(Array.from(root.querySelectorAll("[data-animatable]"))).toEqual(animatableTargets);
   });
 });

@@ -18,6 +18,17 @@ export interface PortfolioAnimationOptions {
   exposeState: boolean;
 }
 
+export interface TimelineDebugEnvironment {
+  nodeEnv: string | undefined;
+  timelineDebug: string | undefined;
+}
+
+export function shouldExposeTimelineState(
+  env: TimelineDebugEnvironment,
+): boolean {
+  return env.nodeEnv === "development" && env.timelineDebug === "true";
+}
+
 export function initializePortfolioAnimations(
   options: PortfolioAnimationOptions,
 ): () => void {
@@ -27,15 +38,17 @@ export function initializePortfolioAnimations(
 
   const resetReadableContent = (stageStates = new Map<HTMLElement, string | null>()) => {
     gsapApi.set(root.querySelectorAll("[data-animatable]"), { clearProps: "all" });
-    stageStates.forEach((initialState, stage) => {
-      if (initialState === null) {
-        stage.removeAttribute("data-state");
-      } else {
-        stage.dataset.state = initialState;
-      }
-    });
+    if (exposeState) {
+      stageStates.forEach((initialState, stage) => {
+        if (initialState === null) {
+          stage.removeAttribute("data-state");
+        } else {
+          stage.dataset.state = initialState;
+        }
+      });
+      root.removeAttribute("data-state");
+    }
     root.removeAttribute("data-animated");
-    root.removeAttribute("data-state");
   };
 
   const cleanupBranch = (
@@ -59,7 +72,7 @@ export function initializePortfolioAnimations(
       if (!elements.narrative || !elements.intro.section) {
         throw new Error("Portfolio animation targets are unavailable.");
       }
-      if (elements.settle.stage) {
+      if (exposeState && elements.settle.stage) {
         stageStates.set(elements.settle.stage, elements.settle.stage.getAttribute("data-state"));
       }
 
@@ -109,6 +122,9 @@ export function initializePortfolioAnimations(
       };
     } catch {
       cleanupBranch(timelines, triggers, stageStates);
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Portfolio animation disabled; using readable fallback.");
+      }
       return () => undefined;
     }
   };
@@ -128,6 +144,9 @@ export function initializePortfolioAnimations(
   } catch {
     media?.revert();
     resetReadableContent();
+    if (process.env.NODE_ENV === "development") {
+      console.warn("Portfolio animation disabled; using readable fallback.");
+    }
     return () => undefined;
   }
 }

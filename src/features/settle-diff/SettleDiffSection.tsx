@@ -14,9 +14,17 @@ export function SettleDiffSection() {
       <div className={styles.mobileBranch} data-animated-layout="mobile">
         <MobileSettleDiffStage />
       </div>
-      <div className={styles.reducedBranch} data-branch="reduced">
+      <div
+        className={styles.reducedBranch}
+        data-branch="reduced"
+        data-no-js-narrative
+      >
         <ReducedMotionNarrative />
       </div>
+      <noscript>
+        <style>{`[data-animated-layout] { display: none !important; }
+[data-branch="reduced"] { display: block !important; }`}</style>
+      </noscript>
     </section>
   );
 }

@@ -9,7 +9,7 @@ import { TransactionPath } from "./TransactionPath";
 import { VaultTransitionOverlay } from "../vault-steward/VaultTransitionOverlay";
 
 export function SettleDiffStage({
-  state = "project-established",
+  state,
 }: {
   state?: SettleDiffState;
 }) {
@@ -18,7 +18,7 @@ export function SettleDiffStage({
       className={styles.stage}
       data-animatable
       data-layout="desktop"
-      data-state={state}
+      data-state={state === undefined ? undefined : state}
       data-stage
     >
       <header className={styles.stageHeader} data-stage-header>

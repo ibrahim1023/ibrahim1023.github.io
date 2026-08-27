@@ -26,6 +26,7 @@ test("exported site loads under the repository subpath without errors", async ({
     page.getByRole("region", { name: "SettleDiff" }),
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Skip to content" })).toBeAttached();
+  await expect(page.locator("[data-state]")).toHaveCount(0);
 
   expect(failedResponses).toEqual([]);
   expect(pageErrors).toEqual([]);

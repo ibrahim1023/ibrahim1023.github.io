@@ -8,7 +8,10 @@ import { IntroSection } from "@/features/intro/IntroSection";
 import { SettleDiffSection } from "@/features/settle-diff/SettleDiffSection";
 import { VaultStewardArrival } from "@/features/vault-steward/VaultStewardArrival";
 
-import { initializePortfolioAnimations } from "@/lib/animation/runtime";
+import {
+  initializePortfolioAnimations,
+  shouldExposeTimelineState,
+} from "@/lib/animation/runtime";
 
 import styles from "./PortfolioExperience.module.css";
 
@@ -24,9 +27,10 @@ export function PortfolioExperience() {
       gsapApi: gsap,
       scrollTriggerApi: ScrollTrigger,
       viewportHeight: () => window.innerHeight,
-      exposeState:
-        process.env.NODE_ENV !== "production" &&
-        process.env.NEXT_PUBLIC_TIMELINE_DEBUG === "true",
+      exposeState: shouldExposeTimelineState({
+        nodeEnv: process.env.NODE_ENV,
+        timelineDebug: process.env.NEXT_PUBLIC_TIMELINE_DEBUG,
+      }),
     });
   }, []);
 

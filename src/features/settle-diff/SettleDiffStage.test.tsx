@@ -82,13 +82,10 @@ describe("SettleDiffStage", () => {
     );
   });
 
-  test("defaults to the established baseline state", () => {
+  test("does not render production timeline debug state by default", () => {
     const { container } = render(<SettleDiffStage />);
 
-    expect(container.firstElementChild).toHaveAttribute(
-      "data-state",
-      "project-established",
-    );
+    expect(container.firstElementChild).not.toHaveAttribute("data-state");
   });
 
   test("renders the verdict and its factual reason", () => {
