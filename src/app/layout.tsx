@@ -8,8 +8,21 @@ import "@/styles/tokens.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: identity.name,
+  metadataBase: new URL("https://ibrahim1023.github.io"),
+  title: "Ibrahim Arshad — AI Systems Engineer",
   description: identity.framing,
+  alternates: { canonical: "/portfolio/" },
+  openGraph: {
+    type: "website",
+    url: "/portfolio/",
+    title: "Ibrahim Arshad — AI Systems Engineer",
+    description: identity.framing,
+  },
+  twitter: {
+    card: "summary",
+    title: "Ibrahim Arshad — AI Systems Engineer",
+    description: identity.framing,
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

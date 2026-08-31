@@ -11,6 +11,7 @@
     "dev": "next dev",
     "build": "next build",
     "build:pages": "NEXT_PUBLIC_BASE_PATH=/portfolio next build",
+    "build:pages:e2e": "NEXT_PUBLIC_BASE_PATH=/portfolio NEXT_PUBLIC_E2E=true next build",
     "serve:export": "node scripts/serve-export.mjs",
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
@@ -18,9 +19,11 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:e2e:pages": "pnpm build:pages && pnpm test:e2e",
+    "test:e2e:pages": "pnpm build:pages:e2e && pnpm test:e2e",
+    "bundle:check": "node scripts/check-bundle-budget.mjs",
+    "lighthouse": "lhci autorun --config=lighthouserc.cjs",
     "analyze": "ANALYZE=true next build",
-    "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm build:pages && pnpm test:e2e"
+    "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e:pages && pnpm build:pages && pnpm bundle:check && pnpm lighthouse"
   },
   "dependencies": {
     "gsap": "3.15.0",
@@ -30,6 +33,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
+    "@lhci/cli": "0.15.1",
     "@next/bundle-analyzer": "16.3.2",
     "@playwright/test": "1.62.1",
     "@testing-library/dom": "10.4.1",

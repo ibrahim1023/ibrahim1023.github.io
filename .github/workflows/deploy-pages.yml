@@ -43,14 +43,23 @@ jobs:
       - name: Verify root static export
         run: pnpm build
 
-      - name: Build GitHub Pages export
-        run: pnpm build:pages
+      - name: Build instrumented GitHub Pages export for browser tests
+        run: pnpm build:pages:e2e
 
       - name: Install Chromium for Playwright
         run: pnpm exec playwright install --with-deps chromium
 
       - name: End-to-end tests against the exported site
         run: pnpm test:e2e
+
+      - name: Rebuild clean GitHub Pages production export
+        run: pnpm build:pages
+
+      - name: Enforce page JavaScript budget
+        run: pnpm bundle:check
+
+      - name: Enforce Lighthouse thresholds
+        run: pnpm lighthouse
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

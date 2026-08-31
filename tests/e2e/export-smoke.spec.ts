@@ -23,6 +23,19 @@ test("exported site loads under the repository subpath without errors", async ({
 
   await page.goto("/portfolio/");
 
+  await expect(page).toHaveTitle("Ibrahim Arshad — AI Systems Engineer");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://ibrahim1023.github.io/portfolio/",
+  );
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+    "content",
+    "https://ibrahim1023.github.io/portfolio/",
+  );
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+    "content",
+    "summary",
+  );
   await expect(page.getByRole("main")).toBeVisible();
   await expect(
     page.getByRole("region", { name: "SettleDiff" }),

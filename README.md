@@ -32,7 +32,9 @@ pnpm lint          # ESLint
 pnpm typecheck     # strict TypeScript
 pnpm test          # Vitest unit + component tests
 pnpm test:e2e      # Playwright against an existing out/ export
-pnpm validate      # lint + typecheck + test + both builds + e2e
+pnpm bundle:check  # enforce the 180 KiB gzip page-JavaScript budget
+pnpm lighthouse    # run repeatable Lighthouse CI against out/
+pnpm validate      # all automated release gates, ending on a production export
 ```
 
 ## Static export
@@ -40,20 +42,30 @@ pnpm validate      # lint + typecheck + test + both builds + e2e
 ```bash
 pnpm build          # root / custom-domain build (NEXT_PUBLIC_BASE_PATH="")
 pnpm build:pages    # GitHub project Pages build (NEXT_PUBLIC_BASE_PATH=/portfolio)
+pnpm build:pages:e2e # instrumented Pages build used only by lifecycle tests
 pnpm serve:export   # serve out/ at http://127.0.0.1:4173/portfolio/
 ```
 
-Both commands emit a static `out/` directory. The only difference is the
+All build commands emit a static `out/` directory. The production commands differ by the
 `NEXT_PUBLIC_BASE_PATH` environment setting, which is applied to Next.js
 `basePath` in `next.config.ts`. Raw files from `public/` go through
 `withBasePath()` in `src/lib/deployment/basePath.ts`; components never
-hard-code the repository name.
+hard-code the repository name. The E2E build additionally enables lifecycle
+probes and is always replaced by a clean production build before validation
+artifacts are published.
+
+`pnpm lighthouse` starts and stops the local export server itself and writes
+reports to `.lighthouseci/`. Install Chromium with
+`pnpm exec playwright install chromium` first. Interaction-to-next-paint and
+physical-device touch-scroll traces remain part of manual Mac/iPhone acceptance.
+If port `4173` is occupied, choose another with `LHCI_PORT=4174 pnpm lighthouse`.
 
 ## Deploy to GitHub Pages
 
 1. Push to `main`. The `Deploy to GitHub Pages` workflow runs lint, typecheck,
-   unit/component tests, both static exports, and Playwright e2e tests against
-   the exported site before any deployment step runs.
+   unit/component tests, browser tests, a 180 KiB gzip bundle check, and
+   Lighthouse performance/accessibility/best-practice/SEO gates. It rebuilds
+   the clean production export before measuring and uploading it.
 2. In the repository: **Settings → Pages → Build and deployment → Source →
    GitHub Actions** (one-time setup).
 3. The deploy job publishes the validated `out/` artifact to
