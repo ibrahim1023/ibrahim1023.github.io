@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { scrollNarrativeTo } from "./helpers/narrative";
+
 test("exported site loads under the repository subpath without errors", async ({
   page,
 }) => {
@@ -26,6 +28,9 @@ test("exported site loads under the repository subpath without errors", async ({
     page.getByRole("region", { name: "SettleDiff" }),
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Skip to content" })).toBeAttached();
+  await expect(page.locator("[data-state]")).toHaveCount(0);
+  await expect(page.locator('[data-portfolio-experience][data-animated="ready"]')).toBeVisible();
+  await scrollNarrativeTo(page, "desktop", 0.6);
   await expect(page.locator("[data-state]")).toHaveCount(0);
 
   expect(failedResponses).toEqual([]);

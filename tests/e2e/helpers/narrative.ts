@@ -50,7 +50,15 @@ export async function scrollNarrativeTo(
   );
 }
 
-export async function expectMostlyVisible(locator: Locator) {
+export async function expectMostlyVisible(
+  locator: Locator,
+  options: { requireViewport?: boolean } = {},
+) {
+  const { requireViewport = true } = options;
+  await expect(locator).toBeVisible();
+  if (requireViewport) {
+    await expect(locator).toBeInViewport({ ratio: 0.25 });
+  }
   await expect
     .poll(async () =>
       locator.evaluate((node) => {
@@ -58,6 +66,7 @@ export async function expectMostlyVisible(locator: Locator) {
         const rect = node.getBoundingClientRect();
         return (
           Number(style.opacity) >= 0.75 && rect.width > 0 && rect.height > 0
+          && Number.isFinite(rect.top) && Number.isFinite(rect.left)
         );
       }),
     )

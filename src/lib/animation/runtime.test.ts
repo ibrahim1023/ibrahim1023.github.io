@@ -378,20 +378,17 @@ describe("portfolio animation runtime", () => {
     expect(Array.from(root.querySelectorAll("[data-animatable]"))).toEqual(animatableTargets);
   });
 
-  test("warns once per initialization when development animation setup fails", () => {
+  test("warns once across two failing media callbacks in one initialization", () => {
     vi.stubEnv("NODE_ENV", "development");
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     try {
       const root = buildRoot();
-      const failingPath = root.querySelector('[data-layout="desktop"] [data-path-line]') as SVGPathElement;
-      Object.defineProperty(failingPath, "getTotalLength", {
-        value: () => {
-          throw new Error("path unavailable");
-        },
+      root.querySelector("[data-narrative]")?.remove();
+      const apis = animationApis({
+        activeQueries: [NARRATIVE_MEDIA.desktop, NARRATIVE_MEDIA.mobile],
       });
-      const apis = animationApis({ throwOnMobileAdd: true });
 
-      initializePortfolioAnimations({
+      const cleanup = initializePortfolioAnimations({
         root,
         gsapApi: apis.gsapApi,
         scrollTriggerApi: apis.scrollTriggerApi,
@@ -401,6 +398,8 @@ describe("portfolio animation runtime", () => {
 
       expect(warn).toHaveBeenCalledTimes(1);
       expect(warn).toHaveBeenCalledWith("Portfolio animation disabled; using readable fallback.");
+      expect(apis.mediaContext.add).toHaveBeenCalledTimes(2);
+      cleanup();
     } finally {
       warn.mockRestore();
       vi.unstubAllEnvs();

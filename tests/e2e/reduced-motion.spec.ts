@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { waitForAnimationFrames } from "./helpers/narrative";
+
 const STORY_HEADINGS = [
   "Request",
   "Activity recorded",
@@ -28,6 +30,9 @@ test("default motion exposes only the animated branch", async ({ page }) => {
   await expect(page.locator('[data-animated-layout="desktop"]')).toBeVisible();
   await expect(page.locator('[data-animated-layout="mobile"]')).toBeHidden();
   await expect(page.locator('[data-branch="reduced"]')).toBeHidden();
+  await expect(page.locator("[data-state]")).toHaveCount(0);
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await waitForAnimationFrames(page);
   await expect(page.locator("[data-state]")).toHaveCount(0);
   expect(pageErrors).toEqual([]);
   expect(consoleErrors).toEqual([]);
@@ -64,6 +69,9 @@ test("reduced motion exposes only the complete static narrative", async ({
     ).toBeVisible();
   }
 
+  await expect(page.locator("[data-state]")).toHaveCount(0);
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await waitForAnimationFrames(page);
   await expect(page.locator("[data-state]")).toHaveCount(0);
   expect(pageErrors).toEqual([]);
   expect(consoleErrors).toEqual([]);

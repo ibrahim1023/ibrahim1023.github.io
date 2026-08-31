@@ -1,6 +1,12 @@
 import { expect, test, type Page } from "@playwright/test";
 
-import { waitForAnimationFrames } from "./helpers/narrative";
+import {
+  activeLayout,
+  activeNarrativeLocator,
+  expectMostlyVisible,
+  scrollNarrativeTo,
+  waitForAnimationFrames,
+} from "./helpers/narrative";
 
 test.use({ viewport: { width: 390, height: 844 } });
 
@@ -15,6 +21,18 @@ async function expectRuntimeLayout(page: Page, layout: "mobile" | "desktop") {
   await expectOnlyLayout(page, layout);
   await expect(page.locator(".pin-spacer")).toHaveCount(layout === "desktop" ? 1 : 0);
 }
+
+const MOBILE_STATES = [
+  [0.05, "[data-stage-header]"],
+  [0.17, "[data-transaction]"],
+  [0.28, "[data-attempt]"],
+  [0.43, "[data-evidence]"],
+  [0.6, "[data-comparison]"],
+  [0.74, "[data-mismatch]"],
+  [0.85, "[data-verdict]"],
+  [0.93, "[data-chain]"],
+  [0.985, "[data-vault-transition]"],
+] as const;
 
 test("mobile uses the vertical narrative without horizontal overflow", async ({ page }) => {
   const errors: string[] = [];
@@ -39,6 +57,81 @@ test("mobile remains exclusive and overflow-free at 360 pixels", async ({ page }
 
   await expectRuntimeLayout(page, "mobile");
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
+});
+
+test("mobile traverses every semantic state forward and in reverse", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/portfolio/");
+  await expectRuntimeLayout(page, "mobile");
+
+  const mobile = activeLayout(page, "mobile");
+  await expect(mobile.locator("[data-stage]")).toHaveCount(1);
+
+  for (const [progress, selector] of MOBILE_STATES) {
+    await scrollNarrativeTo(page, "mobile", progress);
+    const state = activeNarrativeLocator(page, "mobile", selector);
+    await expectMostlyVisible(state, { requireViewport: false });
+    if (selector === "[data-evidence]") {
+      await expect(state.locator("[data-evidence-item]")).toHaveCount(6);
+      await expect(state.locator('[data-object-label="settle"]')).toHaveText([
+        "REQUEST",
+        "PAYMENT",
+        "VENDOR",
+        "CHAIN",
+        "RESPONSE",
+        "ACTIVITY",
+      ]);
+    }
+    if (selector === "[data-comparison]") {
+      await expect(state.locator("[data-comparison-row]")).toHaveCount(6);
+      await expect(state.locator('[data-classification="DIFF"]')).toHaveText("DIFF");
+      await expect(state.locator('[data-classification="FAIL"]')).toHaveText("FAIL");
+      await expect(state.locator('[data-classification="UNKNOWN"]')).toHaveCount(2);
+    }
+    if (selector === "[data-mismatch]") {
+      await expect(state.getByRole("heading", { name: "Chain conflict" })).toBeVisible();
+      await expect(state).toContainText("base");
+      await expect(state).toContainText("tempo");
+    }
+    if (selector === "[data-verdict]") {
+      await expect(state).toContainText("UNVERIFIABLE");
+      await expect(state).toContainText("no confirmed charge, no transaction hash");
+    }
+    if (selector === "[data-chain]") {
+      await expect(state.locator("[data-chain-item]")).toHaveCount(4);
+      await expect(state.locator("[data-chain-item] strong")).toHaveText([
+        "CLAIM",
+        "EVIDENCE",
+        "FINDING",
+        "VERDICT",
+      ]);
+    }
+  }
+
+  for (const [progress, selector] of [...MOBILE_STATES].reverse()) {
+    await scrollNarrativeTo(page, "mobile", progress);
+    await expectMostlyVisible(activeNarrativeLocator(page, "mobile", selector), { requireViewport: false });
+  }
+
+  await scrollNarrativeTo(page, "mobile", 0.997);
+  const transition = activeNarrativeLocator(page, "mobile", "[data-vault-transition]");
+  await expectMostlyVisible(transition, { requireViewport: false });
+  await expect(transition.locator("[data-vault-transition-title]")).toHaveText("Vault Steward");
+  await expect(transition.locator("[data-vault-transition-step]")).toHaveText([
+    "FIND",
+    "PREVIEW",
+    "APPROVE",
+    "VERIFY",
+  ]);
+  await expect(mobile.locator('[data-object-label="vault"]')).toHaveCount(6);
+  await expect(mobile.locator('[data-object-label="vault"]')).toHaveText([
+    "NOTE",
+    "PROPOSED CHANGE",
+    "EVIDENCE SOURCE",
+    "POLICY",
+    "CURRENT / AFTER",
+    "AUDIT / RECHECK",
+  ]);
 });
 
 test("orientation changes rebuild one visible layout without page errors", async ({ page }) => {

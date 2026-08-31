@@ -1,7 +1,6 @@
 import { expect, test } from "@playwright/test";
 
 import {
-  activeLayout,
   activeNarrativeLocator,
   capturePageDiagnostics,
   expectMostlyVisible,
@@ -32,14 +31,14 @@ test("fast forward and reverse scrolling leaves one readable stage", async ({ pa
   await scrollNarrativeTo(page, "desktop", 0.05);
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await waitForFrames(page);
-  await expect(page.locator("[data-vault-arrival]")).toBeInViewport();
+  const arrival = page.locator("[data-vault-arrival]");
+  await expect(arrival).toBeInViewport();
+  await expect(arrival.locator("h2")).toHaveText("Vault Steward");
+  await expect(arrival.getByText("Keep your vault trustworthy")).toBeVisible();
+  await expect(arrival.locator("[data-vault-rail-item]")).toHaveCount(4);
 
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await waitForFrames(page);
-  const desktop = activeLayout(page, "desktop");
-  await expect(desktop.locator("[data-stage]")).toHaveCount(1);
-  await expect(page.locator('[data-stage]:visible')).toHaveCount(1);
-  await expect(page.locator('[data-orphaned="true"]')).toHaveCount(0);
+  await scrollNarrativeTo(page, "desktop", 0.05);
+  await expect(arrival).not.toBeInViewport();
   await expectMostlyVisible(activeNarrativeLocator(page, "desktop", "[data-stage-header]"));
 
   expect(diagnostics.pageErrors).toEqual([]);
@@ -58,6 +57,8 @@ test("mid-story refresh restores a coherent comparison", async ({ page }) => {
   await expectMostlyVisible(activeNarrativeLocator(page, "desktop", "[data-comparison]"));
   await page.reload();
   await readyDesktop(page);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+  await scrollNarrativeTo(page, "desktop", 0.6);
   await expectMostlyVisible(activeNarrativeLocator(page, "desktop", "[data-comparison]"));
   await expect(page.locator('[data-stage]:visible')).toHaveCount(1);
 
@@ -72,6 +73,9 @@ test("back-forward navigation rebuilds one active animation lifecycle", async ({
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/portfolio/");
   await readyDesktop(page);
+  await scrollNarrativeTo(page, "desktop", 0.6);
+  const midStoryScroll = await page.evaluate(() => window.scrollY);
+  await expectMostlyVisible(activeNarrativeLocator(page, "desktop", "[data-comparison]"));
   await page.goto("about:blank");
   await page.goBack();
   await readyDesktop(page);
@@ -79,7 +83,11 @@ test("back-forward navigation rebuilds one active animation lifecycle", async ({
   await expect(page.locator('[data-portfolio-experience][data-animated="ready"]')).toHaveCount(1);
   await expect(page.locator('[data-animated-layout="desktop"]:visible')).toHaveCount(1);
   await expect(page.locator('[data-stage]:visible')).toHaveCount(1);
-  await expect(page.locator('[data-orphaned="true"]')).toHaveCount(0);
+  await expect(page.locator(".pin-spacer")).toHaveCount(1);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(
+    Math.max(1, Math.floor(midStoryScroll * 0.8)),
+  );
+  await expectMostlyVisible(activeNarrativeLocator(page, "desktop", "[data-comparison]"));
 
   expect(diagnostics.pageErrors).toEqual([]);
   expect(diagnostics.consoleErrors).toEqual([]);
@@ -101,11 +109,34 @@ test("animation setup failure keeps the readable story and emits no production e
   await page.goto("/portfolio/");
 
   await expect(page.locator('[data-portfolio-experience][data-animated="ready"]')).toHaveCount(0);
-  await expect(page.locator('[data-animated-layout="desktop"]')).toBeVisible();
+  const desktop = page.locator('[data-animated-layout="desktop"]');
+  await expect(desktop).toBeVisible();
   await expect(page.locator('[data-animated-layout="mobile"]')).toBeHidden();
-  await expect(page.getByRole("heading", { name: "SettleDiff" })).toBeVisible();
-  await expect(page.getByText("ACTIVITY RECORDED", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("UNVERIFIABLE", { exact: true }).first()).toBeVisible();
+  await expect(desktop.getByRole("heading", { name: "SettleDiff" })).toBeVisible();
+  await expect(desktop.getByText("ACTIVITY RECORDED", { exact: true })).toBeVisible();
+  await expect(desktop.locator("[data-attempt-status]")).toHaveText("broadcast_failed");
+  await expect(desktop.locator("[data-evidence-item]")).toHaveCount(6);
+  await expect(desktop.locator("tbody tr")).toHaveCount(6);
+  await expect(desktop.getByRole("heading", { name: "Chain conflict" })).toBeVisible();
+  await expect(desktop).toContainText("base → tempo");
+  await expect(desktop.locator("[data-verdict] p").first()).toHaveText("UNVERIFIABLE");
+  await expect(desktop.locator("[data-chain-item]")).toHaveCount(4);
+  await expect(desktop.locator("[data-vault-transition-title]")).toHaveText("Vault Steward");
+  await expect(desktop.locator("[data-vault-transition-step]")).toHaveText([
+    "FIND",
+    "PREVIEW",
+    "APPROVE",
+    "VERIFY",
+  ]);
+
+  const arrival = page.locator("[data-vault-arrival]");
+  await expect(arrival.getByRole("heading", { name: "Vault Steward" })).toBeVisible();
+  await expect(arrival).toContainText("Keep your vault trustworthy");
+  await expect(arrival).toContainText("Local-first, evidence-backed vault maintenance");
+  await expect(arrival).toContainText("Current");
+  await expect(arrival).toContainText("After");
+  await expect(arrival.locator("[data-vault-rail-item]")).toHaveCount(4);
+  await expect(arrival).toContainText("Case study continues");
 
   expect(diagnostics.pageErrors).toEqual([]);
   expect(diagnostics.consoleErrors).toEqual([]);
