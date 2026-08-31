@@ -177,21 +177,42 @@ describe("animation timeline builders", () => {
     expect(mobileVerdict!.vars).not.toHaveProperty("scale");
   });
 
-  test("aligns persistent desktop evidence wrappers into one reasoning rail", () => {
+  test("clears prior focus frames before each new narrative frame enters", () => {
+    const root = buildRoot();
+    const elements = queryTimelineElements(root, "desktop");
+    const timeline = buildNarrativeTimeline(elements, "desktop");
+    const children = timeline.getChildren(true, true, true);
+
+    const hasExitTween = (target: Element | null) => children.some((child) =>
+      target !== null && child.targets().includes(target) && child.vars.opacity === 0,
+    );
+
+    expect(hasExitTween(elements.settle.comparison)).toBe(true);
+    expect(hasExitTween(elements.settle.mismatch)).toBe(true);
+    expect(hasExitTween(elements.settle.verdict)).toBe(true);
+    expect(hasExitTween(elements.settle.chain)).toBe(true);
+    expect(hasExitTween(elements.settle.evidence)).toBe(true);
+  });
+
+  test("repositions persistent evidence while hidden before revealing the Vault grid", () => {
     const root = buildRoot();
     const elements = queryTimelineElements(root, "desktop");
     const timeline = buildNarrativeTimeline(elements, "desktop");
     const evidenceItems = elements.settle.evidenceItems!;
-    const railTween = timeline
+    const itemTweens = timeline
       .getChildren(true, true, true)
-      .find((child) => child.targets().length === evidenceItems.length
-        && child.targets().every((target: Element) => evidenceItems.includes(target))
-        && child.vars["--evidence-left"] === "50%");
+      .filter((child) => child.targets().length === evidenceItems.length
+        && child.targets().every((target: Element) => evidenceItems.includes(target)));
+    const positioningTween = itemTweens.find((child) =>
+      typeof child.vars["--evidence-left"] === "function"
+      && child.vars.opacity === 0,
+    );
+    const revealTween = itemTweens.find((child) => child.vars.opacity === 1);
 
-    expect(railTween).toBeDefined();
-    expect(railTween!.vars.xPercent).toBe(-50);
-    expect(railTween!.vars["--evidence-top"](0)).toBe("20%");
-    expect(railTween!.vars["--evidence-top"](5)).toBe("70%");
+    expect(positioningTween).toBeDefined();
+    expect(positioningTween!.vars["--evidence-left"](0)).toBe("20%");
+    expect(positioningTween!.vars["--evidence-left"](5)).toBe("80%");
+    expect(revealTween).toBeDefined();
   });
 
   test("targets each persistent label once and excludes the stable arrival from the scrub timeline", () => {

@@ -103,6 +103,7 @@
   right: 0;
   height: 120px;
   opacity: var(--transaction-opacity);
+  z-index: 1;
 }
 
 .pathSvg {
@@ -206,6 +207,7 @@
   gap: var(--space-1);
   text-align: center;
   opacity: var(--attempt-opacity);
+  z-index: 2;
 }
 
 .attemptBadge strong {
@@ -232,6 +234,7 @@
   position: absolute;
   inset: 0;
   opacity: var(--evidence-opacity);
+  z-index: 2;
 }
 
 .connectors {
@@ -307,6 +310,7 @@
   transform: translate(-50%, -50%);
   width: min(640px, 92%);
   opacity: var(--comparison-opacity);
+  z-index: 4;
 }
 
 .comparisonTable {
@@ -373,6 +377,7 @@
   transform: translate(-50%, -50%);
   text-align: center;
   opacity: var(--mismatch-opacity);
+  z-index: 4;
 }
 
 .mismatchValues {
@@ -414,6 +419,7 @@
   text-align: center;
   width: min(92vw, 42rem);
   opacity: var(--verdict-opacity);
+  z-index: 4;
 }
 
 .verdictLabel {
@@ -446,6 +452,30 @@
   gap: var(--space-3);
   width: min(480px, 92%);
   opacity: var(--chain-opacity);
+  z-index: 4;
+}
+
+[data-animated="ready"] .comparison,
+[data-animated="ready"] .mismatch,
+[data-animated="ready"] .verdict,
+[data-animated="ready"] .chain {
+  isolation: isolate;
+}
+
+[data-animated="ready"] .comparison::before,
+[data-animated="ready"] .mismatch::before,
+[data-animated="ready"] .verdict::before,
+[data-animated="ready"] .chain::before {
+  position: absolute;
+  z-index: -1;
+  inset: clamp(-4rem, -7vw, -2rem);
+  border: 1px solid color-mix(in srgb, var(--stage-line) 28%, transparent);
+  background:
+    radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--color-canvas) 94%, transparent) 0 52%, transparent 82%),
+    color-mix(in srgb, var(--color-canvas) 96%, transparent);
+  box-shadow: 0 0 5rem 3rem var(--color-canvas);
+  content: "";
+  pointer-events: none;
 }
 
 .chainItem {
@@ -474,6 +504,7 @@
   gap: var(--space-2);
   text-align: center;
   color: var(--color-text-primary);
+  z-index: 6;
 }
 
 .transition [data-vault-transition-connectors] {

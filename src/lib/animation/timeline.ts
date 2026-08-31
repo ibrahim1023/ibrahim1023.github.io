@@ -294,13 +294,22 @@ export function appendComparisonSegment(
   layout: NarrativeLayout,
 ) {
   const { start, duration } = segmentTiming("comparison-visible");
+  const backgroundTargets = [elements.transaction, elements.attempt, elements.attemptStatus].filter(
+    (target): target is HTMLElement => target !== null,
+  );
+  if (backgroundTargets.length) {
+    tl.to(backgroundTargets, { opacity: 0, duration: duration * 0.32 }, start);
+  }
+  if (elements.evidence) {
+    tl.to(elements.evidence, { opacity: 0.06, duration: duration * 0.36 }, start);
+  }
   if (layout === "desktop" && elements.evidenceItems) {
     tl.to(
       elements.evidenceItems,
       {
         x: (index) => (index % 2 === 0 ? -54 : 54),
         y: (index) => (Math.floor(index / 2) - 1) * 30,
-        opacity: 0.42,
+        opacity: 0.22,
         duration: duration * 0.65,
         ease: "power1.out",
       },
@@ -331,14 +340,11 @@ export function appendConflictSegment(
   layout: NarrativeLayout,
 ) {
   const { start, duration } = segmentTiming("mismatch-isolated");
-  const supportingTargets = [elements.transaction, elements.attempt, elements.attemptStatus, elements.comparison].filter(
+  const supportingTargets = [elements.transaction, elements.attempt, elements.attemptStatus, elements.comparison, elements.evidence].filter(
     (target): target is HTMLElement => target !== null,
   );
   if (supportingTargets.length) {
-    tl.to(supportingTargets, { opacity: 0.32, duration: duration * 0.45 }, start);
-  }
-  if (elements.evidenceItems) {
-    tl.to(elements.evidenceItems, { opacity: 0.5, duration: duration * 0.45 }, start);
+    tl.to(supportingTargets, { opacity: 0, duration: duration * 0.36 }, start);
   }
   if (elements.mismatch) {
     tl.fromTo(
@@ -368,7 +374,7 @@ export function appendVerdictSegment(
     (target): target is HTMLElement => target !== null,
   );
   if (surroundingTargets.length) {
-    tl.to(surroundingTargets, { opacity: 0.14, duration: duration * 0.4 }, start);
+    tl.to(surroundingTargets, { opacity: 0, duration: duration * 0.34 }, start);
   }
   if (elements.verdict) {
     tl.fromTo(
@@ -394,38 +400,11 @@ export function appendReasoningSegment(
   layout: NarrativeLayout,
 ) {
   const { start, duration } = segmentTiming("reasoning-chain");
-  if (elements.verdict) {
-    tl.to(elements.verdict, { opacity: 0.22, duration: duration * 0.35 }, start);
-  }
-  if (elements.evidence) {
-    tl.to(
-      elements.evidence,
-      layout === "desktop"
-        ? { opacity: 0.82, y: -12, scale: 0.92, duration: duration * 0.55 }
-        : { opacity: 0.82, duration: duration * 0.55 },
-      start,
-    );
-  }
-  if (layout === "desktop" && elements.evidenceItems) {
-    tl.to(
-      elements.evidenceItems,
-      {
-        "--evidence-left": "50%",
-        "--evidence-top": (index: number) => `${20 + index * 10}%`,
-        x: 0,
-        y: 0,
-        xPercent: -50,
-        opacity: 0.78,
-        scale: 0.9,
-        stagger: 0.025,
-        duration: duration * 0.55,
-        ease: "power1.out",
-      },
-      start,
-    );
-  }
-  if (layout === "mobile" && elements.evidenceItems) {
-    tl.to(elements.evidenceItems, { opacity: 0.78, duration: duration * 0.55 }, start);
+  const priorFrames = [elements.comparison, elements.mismatch, elements.verdict, elements.evidence].filter(
+    (target): target is HTMLElement => target !== null,
+  );
+  if (priorFrames.length) {
+    tl.to(priorFrames, { opacity: 0, duration: duration * 0.3 }, start);
   }
   if (elements.chain) {
     tl.fromTo(
@@ -460,17 +439,30 @@ function appendVaultTransitionTweens(
   const available = endTime - startTime;
   const finalStateEnd = startTime + available;
 
+  const obsoleteFrames = [
+    settle.transaction,
+    settle.attempt,
+    settle.attemptStatus,
+    settle.comparison,
+    settle.mismatch,
+    settle.verdict,
+  ].filter((target): target is HTMLElement => target !== null);
+  if (obsoleteFrames.length) {
+    tl.to(obsoleteFrames, { opacity: 0, duration: available * 0.16 }, startTime);
+  }
+
+  if (settle.evidence) {
+    tl.to(settle.evidence, { opacity: 1, duration: available * 0.16 }, startTime + available * 0.2);
+  }
+
   if (settle.evidenceItems) {
-    tl.fromTo(
+    tl.to(
       settle.evidenceItems,
-      layout === "desktop"
-        ? { opacity: 0.78 }
-        : { opacity: 0.78, yPercent: 0 },
       layout === "desktop"
         ? {
           "--evidence-left": (index: number) => `${20 + (index % 3) * 30}%`,
           "--evidence-top": (index: number) => `${42 + Math.floor(index / 3) * 20}%`,
-          opacity: 1,
+          opacity: 0,
           scale: 0.84,
           x: 0,
           y: 0,
@@ -479,12 +471,22 @@ function appendVaultTransitionTweens(
           ease: "power1.out",
         }
         : {
-          opacity: 1,
+          opacity: 0,
           yPercent: 0,
           duration: available * 0.3,
           ease: "power1.out",
         },
       startTime,
+    );
+    tl.to(
+      settle.evidenceItems,
+      {
+        opacity: 1,
+        stagger: available * 0.018,
+        duration: available * 0.22,
+        ease: "power1.out",
+      },
+      startTime + available * 0.3,
     );
   }
 
@@ -592,8 +594,8 @@ function appendVaultTransitionTweens(
     tl.to(
       settle.chainItems,
       layout === "desktop"
-        ? { opacity: 0.16, x: 16, stagger: chainTiming.stagger, duration: chainTiming.duration }
-        : { opacity: 0.16, yPercent: -6, stagger: chainTiming.stagger, duration: chainTiming.duration },
+        ? { opacity: 0, x: 16, stagger: chainTiming.stagger, duration: chainTiming.duration }
+        : { opacity: 0, yPercent: -6, stagger: chainTiming.stagger, duration: chainTiming.duration },
       chainStart,
     );
   }
@@ -601,7 +603,7 @@ function appendVaultTransitionTweens(
   if (settle.chain) {
     tl.to(
       settle.chain,
-      { opacity: 0.16, duration: available * 0.2 },
+      { opacity: 0, duration: available * 0.2 },
       startTime + available * 0.3,
     );
   }

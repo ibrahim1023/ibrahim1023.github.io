@@ -172,6 +172,41 @@ test("desktop exposes every semantic state forward and in reverse", async ({ pag
   expect(diagnostics.failedResponses).toEqual([]);
 });
 
+test("desktop keeps one foreground frame readable at every narrative handoff", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/portfolio/");
+  await waitForAnimationReady(page);
+
+  const opacity = async (selector: string) => activeNarrativeLocator(page, "desktop", selector)
+    .evaluate((node) => Number.parseFloat(getComputedStyle(node).opacity));
+
+  await scrollNarrativeTo(page, "desktop", 0.67);
+  expect(await opacity("[data-comparison]")).toBeGreaterThanOrEqual(0.9);
+  expect(await opacity("[data-evidence]")).toBeLessThanOrEqual(0.08);
+  expect(await opacity("[data-attempt]")).toBeLessThanOrEqual(0.02);
+
+  await scrollNarrativeTo(page, "desktop", 0.795);
+  expect(await opacity("[data-mismatch]")).toBeGreaterThanOrEqual(0.9);
+  expect(await opacity("[data-comparison]")).toBeLessThanOrEqual(0.02);
+  expect(await opacity("[data-evidence]")).toBeLessThanOrEqual(0.02);
+
+  await scrollNarrativeTo(page, "desktop", 0.895);
+  expect(await opacity("[data-verdict]")).toBeGreaterThanOrEqual(0.9);
+  expect(await opacity("[data-mismatch]")).toBeLessThanOrEqual(0.02);
+  expect(await opacity("[data-comparison]")).toBeLessThanOrEqual(0.02);
+
+  await scrollNarrativeTo(page, "desktop", 0.955);
+  expect(await opacity("[data-chain]")).toBeGreaterThanOrEqual(0.9);
+  expect(await opacity("[data-verdict]")).toBeLessThanOrEqual(0.02);
+  expect(await opacity("[data-evidence]")).toBeLessThanOrEqual(0.02);
+
+  await scrollNarrativeTo(page, "desktop", 0.997);
+  expect(await opacity("[data-vault-transition]")).toBeGreaterThanOrEqual(0.9);
+  expect(await opacity("[data-chain]")).toBeLessThanOrEqual(0.02);
+  expect(await opacity("[data-verdict]")).toBeLessThanOrEqual(0.02);
+});
+
 test("the persistent Vault arrival releases from the pinned scene", async ({ page }) => {
   const diagnostics = capturePageDiagnostics(page);
   await page.setViewportSize({ width: 1440, height: 900 });
