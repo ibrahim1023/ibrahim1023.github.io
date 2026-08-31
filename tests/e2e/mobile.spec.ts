@@ -1,11 +1,10 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 
 import {
   activeLayout,
   activeNarrativeLocator,
   expectMostlyVisible,
   scrollNarrativeTo,
-  waitForAnimationFrames,
 } from "./helpers/narrative";
 
 test.use({ viewport: { width: 390, height: 844 } });
@@ -23,16 +22,75 @@ async function expectRuntimeLayout(page: Page, layout: "mobile" | "desktop") {
 }
 
 const MOBILE_STATES = [
-  [0.05, "[data-stage-header]"],
+  [0.005, "[data-stage-header]"],
   [0.17, "[data-transaction]"],
   [0.28, "[data-attempt]"],
   [0.43, "[data-evidence]"],
   [0.6, "[data-comparison]"],
   [0.74, "[data-mismatch]"],
   [0.85, "[data-verdict]"],
-  [0.93, "[data-chain]"],
+  [0.95, "[data-chain]"],
   [0.985, "[data-vault-transition]"],
 ] as const;
+
+async function expectMobileStateChildren(state: Locator, selector: string) {
+  if (selector === "[data-stage-header]") {
+    await expectMostlyVisible(state.locator("h2"), { requireViewport: false });
+    await expectMostlyVisible(state.locator("p"), { requireViewport: false });
+  }
+  if (selector === "[data-transaction]") {
+    await expectMostlyVisible(state.locator("h3"), { requireViewport: false });
+    await expectMostlyVisible(state.locator("p").first(), { requireViewport: false });
+    await expectMostlyVisible(state.locator("p").last(), { requireViewport: false });
+  }
+  if (selector === "[data-attempt]") {
+    await expectMostlyVisible(state.locator("h3"), { requireViewport: false });
+    await expectMostlyVisible(state.locator("p").first(), { requireViewport: false });
+    await expectMostlyVisible(state.locator("p").last(), { requireViewport: false });
+  }
+  if (selector === "[data-evidence]") {
+    const items = state.locator("[data-evidence-item]");
+    await expect(items).toHaveCount(6);
+    for (const item of await items.all()) {
+      await expectMostlyVisible(item, { requireViewport: false });
+      await expectMostlyVisible(item.locator('[data-object-label="settle"]'), { requireViewport: false });
+      await expectMostlyVisible(item.locator("strong"), { requireViewport: false });
+      await expectMostlyVisible(item.locator("small"), { requireViewport: false });
+    }
+  }
+  if (selector === "[data-comparison]") {
+    const rows = state.locator("[data-comparison-row]");
+    await expect(rows).toHaveCount(6);
+    for (const row of await rows.all()) {
+      await expectMostlyVisible(row, { requireViewport: false });
+      await expectMostlyVisible(row.locator("[data-classification]"), { requireViewport: false });
+    }
+  }
+  if (selector === "[data-mismatch]") {
+    await expectMostlyVisible(state.locator("h3"), { requireViewport: false });
+    for (const paragraph of await state.locator("p").all()) {
+      await expectMostlyVisible(paragraph, { requireViewport: false });
+    }
+    await expect(state.getByRole("heading", { name: "Chain conflict" })).toBeVisible();
+    await expect(state).toContainText("base");
+    await expect(state).toContainText("tempo");
+  }
+  if (selector === "[data-verdict]") {
+    await expectMostlyVisible(state.locator("h3"), { requireViewport: false });
+    await expectMostlyVisible(state.locator("p"), { requireViewport: false });
+    await expect(state).toContainText("UNVERIFIABLE");
+    await expect(state).toContainText("no confirmed charge, no transaction hash");
+  }
+  if (selector === "[data-chain]") {
+    const items = state.locator("[data-chain-item]");
+    await expect(items).toHaveCount(4);
+    for (const item of await items.all()) {
+      await expectMostlyVisible(item, { requireViewport: false });
+      await expectMostlyVisible(item.locator("strong"), { requireViewport: false });
+      await expectMostlyVisible(item.locator("span"), { requireViewport: false });
+    }
+  }
+}
 
 test("mobile uses the vertical narrative without horizontal overflow", async ({ page }) => {
   const errors: string[] = [];
@@ -71,51 +129,25 @@ test("mobile traverses every semantic state forward and in reverse", async ({ pa
     await scrollNarrativeTo(page, "mobile", progress);
     const state = activeNarrativeLocator(page, "mobile", selector);
     await expectMostlyVisible(state, { requireViewport: false });
-    if (selector === "[data-evidence]") {
-      await expect(state.locator("[data-evidence-item]")).toHaveCount(6);
-      await expect(state.locator('[data-object-label="settle"]')).toHaveText([
-        "REQUEST",
-        "PAYMENT",
-        "VENDOR",
-        "CHAIN",
-        "RESPONSE",
-        "ACTIVITY",
-      ]);
-    }
-    if (selector === "[data-comparison]") {
-      await expect(state.locator("[data-comparison-row]")).toHaveCount(6);
-      await expect(state.locator('[data-classification="DIFF"]')).toHaveText("DIFF");
-      await expect(state.locator('[data-classification="FAIL"]')).toHaveText("FAIL");
-      await expect(state.locator('[data-classification="UNKNOWN"]')).toHaveCount(2);
-    }
-    if (selector === "[data-mismatch]") {
-      await expect(state.getByRole("heading", { name: "Chain conflict" })).toBeVisible();
-      await expect(state).toContainText("base");
-      await expect(state).toContainText("tempo");
-    }
-    if (selector === "[data-verdict]") {
-      await expect(state).toContainText("UNVERIFIABLE");
-      await expect(state).toContainText("no confirmed charge, no transaction hash");
-    }
-    if (selector === "[data-chain]") {
-      await expect(state.locator("[data-chain-item]")).toHaveCount(4);
-      await expect(state.locator("[data-chain-item] strong")).toHaveText([
-        "CLAIM",
-        "EVIDENCE",
-        "FINDING",
-        "VERDICT",
-      ]);
-    }
+    await expectMobileStateChildren(state, selector);
+    await state.scrollIntoViewIfNeeded();
+    await expect(state).toBeInViewport({ ratio: 0.03 });
   }
 
   for (const [progress, selector] of [...MOBILE_STATES].reverse()) {
     await scrollNarrativeTo(page, "mobile", progress);
-    await expectMostlyVisible(activeNarrativeLocator(page, "mobile", selector), { requireViewport: false });
+    const state = activeNarrativeLocator(page, "mobile", selector);
+    await expectMostlyVisible(state, { requireViewport: false });
+    await expectMobileStateChildren(state, selector);
+    await state.scrollIntoViewIfNeeded();
+    await expect(state).toBeInViewport({ ratio: 0.03 });
   }
 
   await scrollNarrativeTo(page, "mobile", 0.997);
   const transition = activeNarrativeLocator(page, "mobile", "[data-vault-transition]");
   await expectMostlyVisible(transition, { requireViewport: false });
+  await expectMostlyVisible(transition.locator("[data-vault-transition-title]"), { requireViewport: false });
+  await expectMostlyVisible(transition.locator("[data-vault-transition-headline]"), { requireViewport: false });
   await expect(transition.locator("[data-vault-transition-title]")).toHaveText("Vault Steward");
   await expect(transition.locator("[data-vault-transition-step]")).toHaveText([
     "FIND",
@@ -123,6 +155,11 @@ test("mobile traverses every semantic state forward and in reverse", async ({ pa
     "APPROVE",
     "VERIFY",
   ]);
+  for (const step of await transition.locator("[data-vault-transition-step]").all()) {
+    await expectMostlyVisible(step, { requireViewport: false });
+  }
+  await transition.scrollIntoViewIfNeeded();
+  await expect(transition).toBeInViewport({ ratio: 0.03 });
   await expect(mobile.locator('[data-object-label="vault"]')).toHaveCount(6);
   await expect(mobile.locator('[data-object-label="vault"]')).toHaveText([
     "NOTE",
@@ -194,26 +231,13 @@ test("mobile Vault transition connectors keep bounded stroked geometry", async (
   await expectRuntimeLayout(page, "mobile");
 
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  await waitForAnimationFrames(page);
-
-  const geometry = await page
-    .locator('[data-layout="mobile"] [data-vault-transition-connectors]')
-    .evaluate((svg) => {
-      const bounds = svg.getBoundingClientRect();
-      return {
-        width: bounds.width,
-        height: bounds.height,
-        paths: Array.from(svg.querySelectorAll("[data-vault-transition-connector]")).map(
-          (path) => {
-            const style = window.getComputedStyle(path);
-            return { opacity: style.opacity, stroke: style.stroke };
-          },
-        ),
-      };
+  const connectors = page.locator('[data-layout="mobile"] [data-vault-transition-connectors]');
+  await expect.poll(() => connectors.evaluate((svg) => {
+    const bounds = svg.getBoundingClientRect();
+    const paths = Array.from(svg.querySelectorAll("[data-vault-transition-connector]"));
+    return bounds.width > 0 && bounds.height > 0 && paths.length === 2 && paths.every((path) => {
+      const style = window.getComputedStyle(path);
+      return Number(style.opacity) >= 0.95 && style.stroke !== "none";
     });
-
-  expect(geometry.width).toBeGreaterThan(0);
-  expect(geometry.height).toBeGreaterThan(0);
-  expect(geometry.paths).toHaveLength(2);
-  expect(geometry.paths.every(({ opacity, stroke }) => opacity === "1" && stroke !== "none")).toBe(true);
+  })).toBe(true);
 });

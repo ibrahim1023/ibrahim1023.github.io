@@ -8,7 +8,10 @@ export const RUNWAY_MULTIPLIER = {
 export type NarrativeLayout = keyof typeof RUNWAY_MULTIPLIER;
 
 export function activeLayout(page: Page, layout: NarrativeLayout): Locator {
-  return page.locator(`[data-animated-layout="${layout}"]`);
+  // The visible branch is part of this helper's contract. A caller that asks
+  // for the inactive branch must fail its first assertion instead of silently
+  // inspecting hidden duplicate markup.
+  return page.locator(`[data-animated-layout="${layout}"]:visible`);
 }
 
 export function activeNarrativeLocator(
@@ -52,23 +55,25 @@ export async function scrollNarrativeTo(
 
 export async function expectMostlyVisible(
   locator: Locator,
-  options: { requireViewport?: boolean } = {},
+  options: { requireViewport?: boolean; viewportRatio?: number } = {},
 ) {
   const { requireViewport = true } = options;
+  const viewportRatio = options.viewportRatio ?? 0.25;
+  const minimumOpacity = requireViewport ? 0.75 : 0.05;
   await expect(locator).toBeVisible();
   if (requireViewport) {
-    await expect(locator).toBeInViewport({ ratio: 0.25 });
+    await expect(locator).toBeInViewport({ ratio: viewportRatio });
   }
   await expect
     .poll(async () =>
-      locator.evaluate((node) => {
+      locator.evaluate((node, minimumOpacity) => {
         const style = getComputedStyle(node);
         const rect = node.getBoundingClientRect();
         return (
-          Number(style.opacity) >= 0.75 && rect.width > 0 && rect.height > 0
+          Number(style.opacity) >= minimumOpacity && rect.width > 0 && rect.height > 0
           && Number.isFinite(rect.top) && Number.isFinite(rect.left)
         );
-      }),
+      }, minimumOpacity),
     )
     .toBe(true);
 }

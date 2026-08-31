@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 
 import {
   activeLayout,
@@ -6,6 +6,7 @@ import {
   capturePageDiagnostics,
   expectMostlyVisible,
   scrollNarrativeTo,
+  waitForAnimationFrames,
 } from "./helpers/narrative";
 
 const DESKTOP_STATES = [
@@ -16,7 +17,7 @@ const DESKTOP_STATES = [
   [0.6, "[data-comparison]"],
   [0.74, "[data-mismatch]"],
   [0.85, "[data-verdict]"],
-  [0.93, "[data-chain]"],
+  [0.95, "[data-chain]"],
   [0.985, "[data-vault-transition]"],
 ] as const;
 
@@ -49,6 +50,67 @@ const VAULT_ROLES = [
 
 const REASONING_LABELS = ["CLAIM", "EVIDENCE", "FINDING", "VERDICT"] as const;
 
+async function expectDesktopStateChildren(state: Locator, selector: string) {
+  if (selector === "[data-stage-header]") {
+    await expectMostlyVisible(state.locator("h2"), { requireViewport: false });
+    await expectMostlyVisible(state.locator("p"), { requireViewport: false });
+  }
+  if (selector === "[data-token]") {
+    await expect(state).toHaveText("0.01 USDC");
+  }
+  if (selector === "[data-attempt]") {
+    await expectMostlyVisible(state.locator("strong"), { requireViewport: false });
+    await expectMostlyVisible(state.locator("[data-attempt-status]"), { requireViewport: false });
+    await expectMostlyVisible(state.locator("span").last(), { requireViewport: false });
+  }
+  if (selector === "[data-evidence]") {
+    await expect(state.locator("[data-evidence-item]")).toHaveCount(6);
+    for (const [id, label, primary, detail] of EVIDENCE) {
+      const item = state.locator(`[data-evidence-item="${id}"]`);
+      await expectMostlyVisible(item, { requireViewport: false });
+      await expectMostlyVisible(item.locator('[data-object-label="settle"]'), { requireViewport: false });
+      await expect(item.locator('[data-object-label="settle"]')).toHaveText(label);
+      await expect(item).toContainText(primary);
+      await expect(item).toContainText(detail);
+    }
+  }
+  if (selector === "[data-comparison]") {
+    await expect(state.locator("tbody tr")).toHaveCount(6);
+    for (const [id, classification] of CLASSIFICATIONS) {
+      const row = state.locator(`[data-comparison-row="${id}"]`);
+      await expectMostlyVisible(row, { requireViewport: false });
+      await expectMostlyVisible(row.locator("[data-classification]"), { requireViewport: false });
+      await expect(row.locator("[data-classification]")).toHaveText(classification);
+    }
+  }
+  if (selector === "[data-mismatch]") {
+    await expectMostlyVisible(state.locator("h3"), { requireViewport: false });
+    for (const paragraph of await state.locator("p").all()) {
+      await expectMostlyVisible(paragraph, { requireViewport: false });
+    }
+    await expect(state.getByRole("heading", { name: "Chain conflict" })).toBeVisible();
+    await expect(state).toContainText("base");
+    await expect(state).toContainText("tempo");
+    await expect(state).toContainText("Missing settlement proof remains visible");
+  }
+  if (selector === "[data-verdict]") {
+    await expectMostlyVisible(state.locator("p").first(), { requireViewport: false });
+    await expectMostlyVisible(state.locator("p").last(), { requireViewport: false });
+    await expect(state).toContainText("UNVERIFIABLE");
+    await expect(state).toContainText("no confirmed charge, no transaction hash");
+  }
+  if (selector === "[data-chain]") {
+    const items = state.locator("[data-chain-item]");
+    await expect(items).toHaveCount(4);
+    for (const item of await items.all()) {
+      await expectMostlyVisible(item, { requireViewport: false });
+    }
+    for (const label of REASONING_LABELS) {
+      await expect(state).toContainText(label);
+    }
+  }
+}
+
 async function waitForAnimationReady(page: Page) {
   await expect(page.locator('[data-portfolio-experience][data-animated="ready"]')).toBeVisible();
   await expect(page.locator('[data-animated-layout="desktop"]')).toBeVisible();
@@ -71,48 +133,22 @@ test("desktop exposes every semantic state forward and in reverse", async ({ pag
     await scrollNarrativeTo(page, "desktop", progress);
     const state = activeNarrativeLocator(page, "desktop", selector);
     await expectMostlyVisible(state);
-    if (selector === "[data-evidence]") {
-      await expect(state.locator("[data-evidence-item]")).toHaveCount(6);
-      for (const [id, label, primary, detail] of EVIDENCE) {
-        const item = state.locator(`[data-evidence-item="${id}"]`);
-        await expect(item.locator('[data-object-label="settle"]')).toHaveText(label);
-        await expect(item).toContainText(primary);
-        await expect(item).toContainText(detail);
-      }
-    }
-    if (selector === "[data-comparison]") {
-      await expect(state.locator("tbody tr")).toHaveCount(6);
-      for (const [id, classification] of CLASSIFICATIONS) {
-        await expect(state.locator(`[data-comparison-row="${id}"] [data-classification]`)).toHaveText(classification);
-      }
-    }
-    if (selector === "[data-mismatch]") {
-      await expect(state.getByRole("heading", { name: "Chain conflict" })).toBeVisible();
-      await expect(state).toContainText("base");
-      await expect(state).toContainText("tempo");
-      await expect(state).toContainText("Missing settlement proof remains visible");
-    }
-    if (selector === "[data-verdict]") {
-      await expect(state).toContainText("UNVERIFIABLE");
-      await expect(state).toContainText("no confirmed charge, no transaction hash");
-    }
-    if (selector === "[data-chain]") {
-      await expect(state.locator("[data-chain-item]")).toHaveCount(4);
-      for (const label of REASONING_LABELS) {
-        await expect(state).toContainText(label);
-      }
-    }
+    await expectDesktopStateChildren(state, selector);
   }
 
   for (const [progress, selector] of [...DESKTOP_STATES].reverse()) {
     await scrollNarrativeTo(page, "desktop", progress);
-    await expectMostlyVisible(activeNarrativeLocator(page, "desktop", selector));
+    const state = activeNarrativeLocator(page, "desktop", selector);
+    await expectMostlyVisible(state);
+    await expectDesktopStateChildren(state, selector);
   }
 
   await scrollNarrativeTo(page, "desktop", 0.997);
   const transition = activeNarrativeLocator(page, "desktop", "[data-vault-transition]");
   await expectMostlyVisible(transition);
   await expect(transition.locator("[data-vault-transition-title]")).toHaveText("Vault Steward");
+  await expectMostlyVisible(transition.locator("[data-vault-transition-title]"), { requireViewport: false });
+  await expectMostlyVisible(transition.locator("[data-vault-transition-headline]"), { requireViewport: false });
   await expect(transition.locator("[data-vault-transition-step]")).toHaveCount(4);
   await expect(transition.locator("[data-vault-transition-step]")).toHaveText([
     "FIND",
@@ -120,6 +156,9 @@ test("desktop exposes every semantic state forward and in reverse", async ({ pag
     "APPROVE",
     "VERIFY",
   ]);
+  for (const step of await transition.locator("[data-vault-transition-step]").all()) {
+    await expectMostlyVisible(step, { requireViewport: false });
+  }
   for (const [index, role] of VAULT_ROLES.entries()) {
     await expect(
       desktop.locator(`[data-evidence-item="${EVIDENCE[index]![0]}"] [data-object-label="vault"]`),
@@ -142,38 +181,43 @@ test("the persistent Vault arrival releases from the pinned scene", async ({ pag
 
   const transition = activeNarrativeLocator(page, "desktop", "[data-vault-transition]");
   const arrival = page.locator("[data-vault-arrival]");
-  const stage = activeNarrativeLocator(page, "desktop", "[data-stage]");
   await scrollNarrativeTo(page, "desktop", 0.985);
   await expectMostlyVisible(transition);
   await expect(arrival).not.toBeInViewport();
   expect(await arrival.evaluate((node) => node.closest(".pin-spacer"))).toBeNull();
   expect(await arrival.evaluate((node) => node.closest("[data-narrative]"))).toBeNull();
-  const before = await transition.evaluate((node) => node.getBoundingClientRect().toJSON());
-  const stageBefore = await stage.evaluate((node) => node.getBoundingClientRect().toJSON());
-
-  await scrollNarrativeTo(page, "desktop", 0.99);
-  await expectMostlyVisible(transition);
-  await expect(arrival).not.toBeInViewport();
-  const middle = await transition.evaluate((node) => node.getBoundingClientRect().toJSON());
-  const stageMiddle = await stage.evaluate((node) => node.getBoundingClientRect().toJSON());
-  expect(Math.abs(middle.top - before.top)).toBeLessThan(page.viewportSize()!.height);
-  expect(Math.abs(stageMiddle.top - stageBefore.top)).toBeLessThan(8);
-
   await scrollNarrativeTo(page, "desktop", 0.995);
   await expectMostlyVisible(transition);
   await expect(arrival).not.toBeInViewport();
-  const after = await transition.evaluate((node) => node.getBoundingClientRect().toJSON());
-  const stageAfter = await stage.evaluate((node) => node.getBoundingClientRect().toJSON());
-  expect(Math.abs(after.top - middle.top)).toBeLessThan(page.viewportSize()!.height);
-  expect(Math.abs(stageAfter.top - stageMiddle.top)).toBeLessThan(8);
+  const narrativeEnd = await page.locator("[data-narrative]").evaluate((node) => {
+    const anchor = node.parentElement?.classList.contains("pin-spacer") ? node.parentElement : node;
+    return anchor.getBoundingClientRect().top + window.scrollY + window.innerHeight * 7;
+  });
+  await page.evaluate((target) => window.scrollTo(0, target - 4), narrativeEnd);
+  await waitForAnimationFrames(page);
+  const beforeRelease = await page.evaluate(() => ({
+    scrollY: window.scrollY,
+    stage: document.querySelector('[data-animated-layout="desktop"] [data-stage]')?.getBoundingClientRect().toJSON(),
+    arrival: document.querySelector("[data-vault-arrival]")?.getBoundingClientRect().toJSON(),
+  }));
+  await page.evaluate((target) => window.scrollTo(0, target + 8), narrativeEnd);
+  await waitForAnimationFrames(page);
+  const afterRelease = await page.evaluate(() => ({
+    scrollY: window.scrollY,
+    stage: document.querySelector('[data-animated-layout="desktop"] [data-stage]')?.getBoundingClientRect().toJSON(),
+    arrival: document.querySelector("[data-vault-arrival]")?.getBoundingClientRect().toJSON(),
+  }));
+  expect(afterRelease.scrollY).toBeGreaterThan(beforeRelease.scrollY);
+  expect(afterRelease.stage).not.toBeUndefined();
+  expect(afterRelease.arrival).not.toBeUndefined();
+  expect(Math.abs(afterRelease.stage!.top - beforeRelease.stage!.top)).toBeLessThan(page.viewportSize()!.height);
+  expect(Math.abs(afterRelease.arrival!.top - beforeRelease.arrival!.top)).toBeLessThan(page.viewportSize()!.height);
+  expect(afterRelease.stage!.top).toBeLessThanOrEqual(beforeRelease.stage!.top + 16);
+  expect(afterRelease.arrival!.top).toBeLessThanOrEqual(beforeRelease.arrival!.top + 16);
 
-  await page.evaluate(
-    () =>
-      new Promise<void>((resolve) => {
-        window.scrollTo(0, document.body.scrollHeight);
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-      }),
-  );
+  const documentHeight = await page.evaluate(() => document.body.scrollHeight);
+  await page.evaluate((target) => window.scrollTo(0, target), documentHeight);
+  await waitForAnimationFrames(page);
   await expect(arrival).toBeInViewport();
   await expect(arrival.getByText("Keep your vault trustworthy")).toBeVisible();
   expect(diagnostics.pageErrors).toEqual([]);

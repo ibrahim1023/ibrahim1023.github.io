@@ -10,6 +10,34 @@ import {
   queryTimelineElements,
 } from "./timeline";
 
+interface E2ELifecycleProbe {
+  initializations: number;
+  activeBranches: number;
+  activeTriggers: number;
+  createdTriggers: number;
+}
+
+declare global {
+  interface Window {
+    __portfolioE2ELifecycle__?: E2ELifecycleProbe;
+  }
+}
+
+function getE2ELifecycleProbe(): E2ELifecycleProbe | undefined {
+  if (
+    typeof window === "undefined" ||
+    new URL(window.location.href).searchParams.get("e2eLifecycle") !== "1"
+  ) {
+    return undefined;
+  }
+  return (window.__portfolioE2ELifecycle__ ??= {
+    initializations: 0,
+    activeBranches: 0,
+    activeTriggers: 0,
+    createdTriggers: 0,
+  });
+}
+
 export interface PortfolioAnimationOptions {
   root: HTMLElement;
   gsapApi: typeof gsap;
@@ -36,6 +64,8 @@ export function initializePortfolioAnimations(
   let cleanedUp = false;
   let media: ReturnType<typeof gsap.matchMedia> | undefined;
   let warnedForInitialization = false;
+  const lifecycleProbe = getE2ELifecycleProbe();
+  if (lifecycleProbe) lifecycleProbe.initializations += 1;
 
   const warnAnimationFailureOnce = () => {
     if (process.env.NODE_ENV !== "development" || warnedForInitialization) return;
@@ -73,6 +103,7 @@ export function initializePortfolioAnimations(
     const triggers: ScrollTrigger[] = [];
     const stageStates = new Map<HTMLElement, string | null>();
     let refreshFrame: number | undefined;
+    let probeBranchActive = false;
 
     try {
       const elements = queryTimelineElements(root, layout);
@@ -115,6 +146,12 @@ export function initializePortfolioAnimations(
       );
 
       root.dataset.animated = "ready";
+      if (lifecycleProbe) {
+        lifecycleProbe.activeBranches += 1;
+        lifecycleProbe.activeTriggers += triggers.length;
+        lifecycleProbe.createdTriggers += triggers.length;
+        probeBranchActive = true;
+      }
 
       refreshFrame = window.requestAnimationFrame(() => {
         refreshFrame = undefined;
@@ -124,6 +161,11 @@ export function initializePortfolioAnimations(
       return () => {
         if (refreshFrame !== undefined) {
           window.cancelAnimationFrame(refreshFrame);
+        }
+        if (lifecycleProbe && probeBranchActive) {
+          lifecycleProbe.activeBranches -= 1;
+          lifecycleProbe.activeTriggers -= triggers.length;
+          probeBranchActive = false;
         }
         cleanupBranch(timelines, triggers, stageStates);
       };
