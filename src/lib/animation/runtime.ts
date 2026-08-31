@@ -11,10 +11,15 @@ import {
 } from "./timeline";
 
 interface E2ELifecycleProbe {
+  generation: number;
   initializations: number;
-  activeBranches: number;
-  activeTriggers: number;
-  createdTriggers: number;
+  registrations: Array<{
+    generation: number;
+    id: number;
+    role: "narrative" | "intro";
+    active: boolean;
+  }>;
+  nextRegistrationId: number;
 }
 
 declare global {
@@ -25,16 +30,17 @@ declare global {
 
 function getE2ELifecycleProbe(): E2ELifecycleProbe | undefined {
   if (
+    process.env.NEXT_PUBLIC_E2E !== "true" ||
     typeof window === "undefined" ||
     new URL(window.location.href).searchParams.get("e2eLifecycle") !== "1"
   ) {
     return undefined;
   }
   return (window.__portfolioE2ELifecycle__ ??= {
+    generation: 0,
     initializations: 0,
-    activeBranches: 0,
-    activeTriggers: 0,
-    createdTriggers: 0,
+    registrations: [],
+    nextRegistrationId: 1,
   });
 }
 
@@ -65,6 +71,7 @@ export function initializePortfolioAnimations(
   let media: ReturnType<typeof gsap.matchMedia> | undefined;
   let warnedForInitialization = false;
   const lifecycleProbe = getE2ELifecycleProbe();
+  const probeGeneration = lifecycleProbe ? ++lifecycleProbe.generation : 0;
   if (lifecycleProbe) lifecycleProbe.initializations += 1;
 
   const warnAnimationFailureOnce = () => {
@@ -103,7 +110,19 @@ export function initializePortfolioAnimations(
     const triggers: ScrollTrigger[] = [];
     const stageStates = new Map<HTMLElement, string | null>();
     let refreshFrame: number | undefined;
-    let probeBranchActive = false;
+    const probeRegistrations: E2ELifecycleProbe["registrations"] = [];
+
+    const registerProbeTrigger = (role: "narrative" | "intro") => {
+      if (!lifecycleProbe) return;
+      const registration: E2ELifecycleProbe["registrations"][number] = {
+        generation: probeGeneration,
+        id: lifecycleProbe.nextRegistrationId++,
+        role,
+        active: true,
+      };
+      lifecycleProbe.registrations.push(registration);
+      probeRegistrations.push(registration);
+    };
 
     try {
       const elements = queryTimelineElements(root, layout);
@@ -134,6 +153,7 @@ export function initializePortfolioAnimations(
           },
         }),
       );
+      registerProbeTrigger("narrative");
 
       triggers.push(
         scrollTriggerApi.create({
@@ -144,14 +164,9 @@ export function initializePortfolioAnimations(
           animation: introTimeline,
         }),
       );
+      registerProbeTrigger("intro");
 
       root.dataset.animated = "ready";
-      if (lifecycleProbe) {
-        lifecycleProbe.activeBranches += 1;
-        lifecycleProbe.activeTriggers += triggers.length;
-        lifecycleProbe.createdTriggers += triggers.length;
-        probeBranchActive = true;
-      }
 
       refreshFrame = window.requestAnimationFrame(() => {
         refreshFrame = undefined;
@@ -162,11 +177,9 @@ export function initializePortfolioAnimations(
         if (refreshFrame !== undefined) {
           window.cancelAnimationFrame(refreshFrame);
         }
-        if (lifecycleProbe && probeBranchActive) {
-          lifecycleProbe.activeBranches -= 1;
-          lifecycleProbe.activeTriggers -= triggers.length;
-          probeBranchActive = false;
-        }
+        probeRegistrations.forEach((registration) => {
+          registration.active = false;
+        });
         cleanupBranch(timelines, triggers, stageStates);
       };
     } catch {

@@ -12,8 +12,8 @@ import {
 const DESKTOP_STATES = [
   [0.05, "[data-stage-header]"],
   [0.17, "[data-token]"],
-  [0.28, "[data-attempt]"],
-  [0.43, "[data-evidence]"],
+  [0.32, "[data-attempt]"],
+  [0.5, "[data-evidence]"],
   [0.6, "[data-comparison]"],
   [0.74, "[data-mismatch]"],
   [0.85, "[data-verdict]"],
@@ -207,13 +207,19 @@ test("the persistent Vault arrival releases from the pinned scene", async ({ pag
     stage: document.querySelector('[data-animated-layout="desktop"] [data-stage]')?.getBoundingClientRect().toJSON(),
     arrival: document.querySelector("[data-vault-arrival]")?.getBoundingClientRect().toJSON(),
   }));
-  expect(afterRelease.scrollY).toBeGreaterThan(beforeRelease.scrollY);
   expect(afterRelease.stage).not.toBeUndefined();
   expect(afterRelease.arrival).not.toBeUndefined();
-  expect(Math.abs(afterRelease.stage!.top - beforeRelease.stage!.top)).toBeLessThan(page.viewportSize()!.height);
-  expect(Math.abs(afterRelease.arrival!.top - beforeRelease.arrival!.top)).toBeLessThan(page.viewportSize()!.height);
-  expect(afterRelease.stage!.top).toBeLessThanOrEqual(beforeRelease.stage!.top + 16);
-  expect(afterRelease.arrival!.top).toBeLessThanOrEqual(beforeRelease.arrival!.top + 16);
+  const scrollDelta = afterRelease.scrollY - beforeRelease.scrollY;
+  const stageDelta = beforeRelease.stage!.top - afterRelease.stage!.top;
+  const arrivalDelta = beforeRelease.arrival!.top - afterRelease.arrival!.top;
+  expect(scrollDelta).toBeGreaterThanOrEqual(10);
+  expect(scrollDelta).toBeLessThanOrEqual(14);
+  expect(stageDelta).toBeGreaterThan(0);
+  expect(stageDelta).toBeLessThanOrEqual(32);
+  expect(arrivalDelta).toBeGreaterThan(0);
+  expect(arrivalDelta).toBeLessThanOrEqual(32);
+  expect(Math.abs(stageDelta - scrollDelta)).toBeLessThanOrEqual(20);
+  expect(Math.abs(arrivalDelta - scrollDelta)).toBeLessThanOrEqual(20);
 
   const documentHeight = await page.evaluate(() => document.body.scrollHeight);
   await page.evaluate((target) => window.scrollTo(0, target), documentHeight);

@@ -395,3 +395,37 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  .stage {
+    position: relative;
+    display: block;
+    min-height: 475dvh;
+    padding: 0;
+  }
+
+  .header,
+  .requestPath,
+  .activity,
+  .evidenceRail,
+  .comparison,
+  .conflict,
+  .verdict,
+  .reasoning,
+  .transition {
+    position: absolute;
+    inset-inline: var(--gutter);
+    box-sizing: border-box;
+    inline-size: auto;
+  }
+
+  .header { top: 0%; }
+  .requestPath { top: 17%; }
+  .activity { top: 28%; }
+  .evidenceRail { top: 43%; }
+  .comparison { top: 60%; }
+  .conflict { top: 74%; }
+  .verdict { top: 85%; }
+  .reasoning { top: 95%; }
+  .transition { top: 98.5%; }
+}

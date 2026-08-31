@@ -36,6 +36,23 @@ async function expectNarrativeStart(page: Page) {
     return rect.width > 0 && rect.height > 0 && path.querySelector("[data-path-line]") !== null && style.display !== "none";
   })).toBe(true);
 
+  const requestVisuals = await transaction.evaluate((node) => {
+    const token = node.querySelector("[data-token]")!;
+    const path = node.querySelector("[data-path-line]")!;
+    const tokenStyle = getComputedStyle(token);
+    const pathStyle = getComputedStyle(path);
+    const tokenTransform = tokenStyle.transform.match(/^matrix\([^,]+,[^,]+,[^,]+,[^,]+,[^,]+,([^\)]+)\)$/);
+    return {
+      tokenProgress: tokenStyle.getPropertyValue("--token-progress").trim(),
+      tokenY: tokenTransform ? Number(tokenTransform[1]) : 0,
+      pathDashOffset: Number.parseFloat(pathStyle.strokeDashoffset),
+    };
+  });
+  expect(requestVisuals.tokenProgress).toBe("8%");
+  expect(requestVisuals.tokenY).toBeGreaterThanOrEqual(-2);
+  expect(requestVisuals.tokenY).toBeLessThanOrEqual(2);
+  expect(requestVisuals.pathDashOffset).toBeGreaterThan(0);
+
   const resetTargets: Array<[Locator, number]> = [
     [activeNarrativeLocator(page, "desktop", "[data-comparison]"), 28],
     [activeNarrativeLocator(page, "desktop", "[data-verdict]"), 12],
@@ -86,7 +103,7 @@ test("mid-story refresh restores a coherent comparison", async ({ page }) => {
   await scrollNarrativeTo(page, "desktop", 0.6);
   const midStoryScroll = await page.evaluate(() => window.scrollY);
   await expectMostlyVisible(activeNarrativeLocator(page, "desktop", "[data-comparison]"));
-  await page.reload();
+  await page.reload({ waitUntil: "commit" });
   await expect.poll(() => page.evaluate((before) => Math.abs(window.scrollY - before), midStoryScroll))
     .toBeLessThanOrEqual(8);
   await readyDesktop(page);
@@ -118,20 +135,27 @@ test("back-forward navigation rebuilds one active animation lifecycle", async ({
   const lifecycle = await page.evaluate(() => {
     const probe = (window as Window & {
       __portfolioE2ELifecycle__?: {
+        generation: number;
         initializations: number;
-        activeBranches: number;
-        activeTriggers: number;
-        createdTriggers: number;
+        registrations: Array<{
+          generation: number;
+          id: number;
+          role: "narrative" | "intro";
+          active: boolean;
+        }>;
+        nextRegistrationId: number;
       };
     }).__portfolioE2ELifecycle__;
     return probe ? { ...probe } : null;
   });
-  expect(lifecycle).toEqual({
-    initializations: 1,
-    activeBranches: 1,
-    activeTriggers: 2,
-    createdTriggers: 2,
-  });
+  expect(lifecycle).not.toBeNull();
+  expect(lifecycle!.initializations).toBe(1);
+  expect(lifecycle!.registrations).toHaveLength(2);
+  expect(lifecycle!.registrations.filter(({ active }) => active)).toEqual([
+    expect.objectContaining({ generation: lifecycle!.generation, role: "narrative", active: true }),
+    expect.objectContaining({ generation: lifecycle!.generation, role: "intro", active: true }),
+  ]);
+  expect(lifecycle!.registrations.filter(({ generation, active }) => generation < lifecycle!.generation && active)).toHaveLength(0);
   await expect(page.locator("[data-state]")).toHaveCount(0);
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(
     Math.max(1, Math.floor(midStoryScroll * 0.8)),

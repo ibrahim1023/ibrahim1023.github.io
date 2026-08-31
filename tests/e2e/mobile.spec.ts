@@ -23,14 +23,14 @@ async function expectRuntimeLayout(page: Page, layout: "mobile" | "desktop") {
 
 const MOBILE_STATES = [
   [0.005, "[data-stage-header]"],
-  [0.17, "[data-transaction]"],
-  [0.28, "[data-attempt]"],
-  [0.43, "[data-evidence]"],
-  [0.6, "[data-comparison]"],
-  [0.74, "[data-mismatch]"],
-  [0.85, "[data-verdict]"],
+  [0.2, "[data-transaction]"],
+  [0.32, "[data-attempt]"],
+  [0.5, "[data-evidence]"],
+  [0.65, "[data-comparison]"],
+  [0.78, "[data-mismatch]"],
+  [0.88, "[data-verdict]"],
   [0.95, "[data-chain]"],
-  [0.985, "[data-vault-transition]"],
+  [0.997, "[data-vault-transition]"],
 ] as const;
 
 async function expectMobileStateChildren(state: Locator, selector: string) {
@@ -128,24 +128,20 @@ test("mobile traverses every semantic state forward and in reverse", async ({ pa
   for (const [progress, selector] of MOBILE_STATES) {
     await scrollNarrativeTo(page, "mobile", progress);
     const state = activeNarrativeLocator(page, "mobile", selector);
-    await expectMostlyVisible(state, { requireViewport: false });
+    await expectMostlyVisible(state, { viewportRatio: 0.03 });
     await expectMobileStateChildren(state, selector);
-    await state.scrollIntoViewIfNeeded();
-    await expect(state).toBeInViewport({ ratio: 0.03 });
   }
 
   for (const [progress, selector] of [...MOBILE_STATES].reverse()) {
     await scrollNarrativeTo(page, "mobile", progress);
     const state = activeNarrativeLocator(page, "mobile", selector);
-    await expectMostlyVisible(state, { requireViewport: false });
+    await expectMostlyVisible(state, { viewportRatio: 0.03 });
     await expectMobileStateChildren(state, selector);
-    await state.scrollIntoViewIfNeeded();
-    await expect(state).toBeInViewport({ ratio: 0.03 });
   }
 
   await scrollNarrativeTo(page, "mobile", 0.997);
   const transition = activeNarrativeLocator(page, "mobile", "[data-vault-transition]");
-  await expectMostlyVisible(transition, { requireViewport: false });
+  await expectMostlyVisible(transition, { viewportRatio: 0.03 });
   await expectMostlyVisible(transition.locator("[data-vault-transition-title]"), { requireViewport: false });
   await expectMostlyVisible(transition.locator("[data-vault-transition-headline]"), { requireViewport: false });
   await expect(transition.locator("[data-vault-transition-title]")).toHaveText("Vault Steward");
@@ -158,8 +154,6 @@ test("mobile traverses every semantic state forward and in reverse", async ({ pa
   for (const step of await transition.locator("[data-vault-transition-step]").all()) {
     await expectMostlyVisible(step, { requireViewport: false });
   }
-  await transition.scrollIntoViewIfNeeded();
-  await expect(transition).toBeInViewport({ ratio: 0.03 });
   await expect(mobile.locator('[data-object-label="vault"]')).toHaveCount(6);
   await expect(mobile.locator('[data-object-label="vault"]')).toHaveText([
     "NOTE",

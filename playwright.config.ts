@@ -2,6 +2,7 @@ import { defineConfig } from "@playwright/test";
 
 const port = Number(process.env.E2E_PORT ?? "4173");
 const baseURL = `http://127.0.0.1:${port}`;
+const exportRoot = process.env.E2E_ROOT ?? "out";
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -15,7 +16,7 @@ export default defineConfig({
     viewport: { width: 1440, height: 900 },
   },
   webServer: {
-    command: `node scripts/serve-export.mjs --root out --base-path /portfolio --port ${port}`,
+    command: `node scripts/serve-export.mjs --root ${exportRoot} --base-path /portfolio --port ${port}`,
     url: `${baseURL}/portfolio/`,
     reuseExistingServer: false,
     timeout: 120_000,

@@ -29,6 +29,7 @@ test("exported site loads under the repository subpath without errors", async ({
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Skip to content" })).toBeAttached();
   await expect(page.locator("[data-state]")).toHaveCount(0);
+  expect(await page.evaluate(() => "__portfolioE2ELifecycle__" in window)).toBe(false);
   await expect(page.locator('[data-portfolio-experience][data-animated="ready"]')).toBeVisible();
   await scrollNarrativeTo(page, "desktop", 0.6);
   await expect(page.locator("[data-state]")).toHaveCount(0);

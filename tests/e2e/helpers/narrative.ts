@@ -59,7 +59,7 @@ export async function expectMostlyVisible(
 ) {
   const { requireViewport = true } = options;
   const viewportRatio = options.viewportRatio ?? 0.25;
-  const minimumOpacity = requireViewport ? 0.75 : 0.05;
+  const minimumOpacity = 0.75;
   await expect(locator).toBeVisible();
   if (requireViewport) {
     await expect(locator).toBeInViewport({ ratio: viewportRatio });
