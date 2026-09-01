@@ -142,11 +142,11 @@ unclipped content at 200% zoom.
 
 | Environment | Availability | Result |
 |---|---|---|
-| Safari `26.6.2` on owner Mac | available | PASS — production export, 2026-09-01 |
-| Chrome `152.0.7977.65` on owner Mac | available | PASS — production export, 2026-09-01 |
+| Safari `26.6.2` on owner Mac | available | FAIL — duplicate/messy SettleDiff → Vault handoff in owner recording, 2026-09-01 |
+| Chrome `152.0.7977.65` on owner Mac | available | blocked — shared transition defect must be fixed and retested |
 | Firefox on owner Mac | not installed | pending — installation/owner review required |
 | Edge on owner Mac | not installed | pending — installation/owner review required |
-| iOS Safari on owner iPhone | available | pending |
+| iOS Safari on owner iPhone | available | FAIL — owner reports missing animation; recording and device details pending |
 
 Android is outside the supported Phase 1 device scope. Do not infer or report
 Android compatibility from responsive desktop emulation.
@@ -195,7 +195,9 @@ Phase 1 result: `PENDING`
 
 Known supported-scope limitations: physical Mac browser/iPhone acceptance,
 INP/scroll traces, deployed-commit agreement, and owner final sign-off remain
-pending. No product defect is currently recorded inside the supported scope.
+pending. Two supported-scope defects are open: the desktop SettleDiff → Vault
+handoff exposes the transition and stable arrival together, and the iPhone
+experience does not present the intended animation.
 
 Do not change the result to `PASS` while a blocking implementation item or
 required Mac/iPhone check remains incomplete. Record any discovered limitation

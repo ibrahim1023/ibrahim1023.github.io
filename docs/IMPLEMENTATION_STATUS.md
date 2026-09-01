@@ -57,16 +57,25 @@ Record current Safari, Chrome, Firefox, and Edge versions and results for
 keyboard order, focus visibility, 200% zoom, reduced motion, mid-story refresh,
 back/forward navigation, and console cleanliness.
 
-Safari `26.6.2` and Chrome `152.0.7977.65` passed the available physical-Mac
-visual, reverse-scroll, refresh/navigation, keyboard-order, focus, and 200%
-zoom checks on 2026-09-01. Firefox and Edge are not installed; their checks and
-the physical Safari reduced-motion confirmation remain pending.
+Safari `26.6.2` and Chrome `152.0.7977.65` passed reverse-scroll,
+refresh/navigation, keyboard-order, focus, and 200% zoom checks on 2026-09-01.
+The owner recording subsequently exposed a blocking shared transition defect:
+the animated Vault frame remains visible as the stable Vault arrival enters.
+Safari failed final visual acceptance and Chrome must be retested after the
+shared fix. Firefox and Edge are not installed; their checks and the physical
+Safari reduced-motion confirmation remain pending.
 
 ### A2 — Physical iPhone acceptance
 
 Record iPhone model, iOS/Safari version, portrait/landscape behavior, dynamic
 browser chrome, native touch scrolling, iOS reduced motion, VoiceOver order,
 source links, and the complete mobile transformation.
+
+Owner testing on 2026-09-01 reports that the intended animations are absent.
+The received still image confirms the production page loads, but an iPhone
+screen recording plus the device/iOS and Reduce Motion settings are still
+needed to distinguish runtime failure from the current understated, unpinned
+mobile choreography.
 
 ### A3 — Interaction performance traces
 
