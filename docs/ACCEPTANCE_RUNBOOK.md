@@ -142,11 +142,11 @@ unclipped content at 200% zoom.
 
 | Environment | Availability | Result |
 |---|---|---|
-| Safari `26.6.2` on owner Mac | available | FAIL — duplicate/messy SettleDiff → Vault handoff in owner recording, 2026-09-01 |
-| Chrome `152.0.7977.65` on owner Mac | available | blocked — shared transition defect must be fixed and retested |
+| Safari `26.6.2` on owner Mac | available | RETEST REQUIRED — recorded handoff defect fixed in `f574c37`; automated release regression and local frame review pass |
+| Chrome `152.0.7977.65` on owner Mac | available | RETEST REQUIRED — shared handoff fix in `f574c37`; prior interaction checks passed |
 | Firefox on owner Mac | not installed | pending — installation/owner review required |
 | Edge on owner Mac | not installed | pending — installation/owner review required |
-| iOS Safari on owner iPhone | available | FAIL — owner reports missing animation; recording and device details pending |
+| iOS Safari on owner iPhone | available | RETEST REQUIRED — recording confirmed motion setting enabled and exposed long-flow choreography defect; sticky single-viewport fix in `f574c37` passes automated 320–390px checks |
 
 Android is outside the supported Phase 1 device scope. Do not infer or report
 Android compatibility from responsive desktop emulation.
@@ -165,7 +165,7 @@ version, commit, URL, viewport, device/browser, date, and raw report path.
 | LCP | ≤ 2.5 s | PASS — 936–945 ms |
 | CLS | ≤ 0.1 | PASS — 0 in all 3 runs |
 | INP | ≤ 200 ms | pending |
-| Route JS + animation dependencies | ≤ 180 KiB gzip | PASS — 180,798 bytes / 184,320-byte limit |
+| Route JS + animation dependencies | ≤ 180 KiB gzip | PASS — 180,895 bytes / 184,320-byte limit |
 
 Also record:
 
@@ -195,9 +195,9 @@ Phase 1 result: `PENDING`
 
 Known supported-scope limitations: physical Mac browser/iPhone acceptance,
 INP/scroll traces, deployed-commit agreement, and owner final sign-off remain
-pending. Two supported-scope defects are open: the desktop SettleDiff → Vault
-handoff exposes the transition and stable arrival together, and the iPhone
-experience does not present the intended animation.
+pending. The two defects found in the owner recordings have implementation and
+regression fixes in `f574c37`, but remain acceptance findings until the owner
+repeats the physical Mac and iPhone checks.
 
 Do not change the result to `PASS` while a blocking implementation item or
 required Mac/iPhone check remains incomplete. Record any discovered limitation

@@ -4,7 +4,7 @@
 
 **Implementation branch:** `codex/phase-1-implementation`
 
-**Reviewed implementation commit:** `4fadac81d5ce3fdf1b572be054e0039ae4b2863f`
+**Reviewed implementation commit:** `f574c37273105e062c1f5f507c90408815d8e897`
 
 **Legend:** complete, evidence pending
 
@@ -38,6 +38,7 @@ that Phase 1 has passed owner device acceptance or deployment sign-off.
 | Separate desktop and mobile choreography | `SettleDiffStage.tsx`, `MobileSettleDiffStage.tsx`, media-aware runtime |
 | Persistent six-object SettleDiff → Vault transformation | dual labels, transition overlay, timeline ownership tests |
 | Clean foreground-frame handoffs | commit `5b179d9`; overlap regression in `scroll-states.spec.ts` |
+| Device scroll-choreography repair | commit `f574c37`; sticky mobile viewport, exclusive scene exits, compact mobile evidence/comparison, single-owner Vault release regressions |
 | Stable normal-flow Vault arrival | `VaultStewardArrival.tsx`, release E2E |
 | Reduced-motion, no-JavaScript, and setup-failure fallbacks | runtime tests and reduced/no-JS E2E |
 | Production debug gating | no `data-state` in production export E2E |
@@ -59,11 +60,13 @@ back/forward navigation, and console cleanliness.
 
 Safari `26.6.2` and Chrome `152.0.7977.65` passed reverse-scroll,
 refresh/navigation, keyboard-order, focus, and 200% zoom checks on 2026-09-01.
-The owner recording subsequently exposed a blocking shared transition defect:
-the animated Vault frame remains visible as the stable Vault arrival enters.
-Safari failed final visual acceptance and Chrome must be retested after the
-shared fix. Firefox and Edge are not installed; their checks and the physical
-Safari reduced-motion confirmation remain pending.
+The owner Mac recording then exposed a shared SettleDiff → Vault ownership
+defect. Commit `f574c37` replaces the overlapping/fading release with a
+continuous spatial handoff and adds an exact-one-visible-title regression
+through the release interval. Automated and local frame review now pass; both
+physical browsers require one owner retest before their visual result can be
+changed to PASS. Firefox and Edge are not installed, and physical Safari
+reduced-motion confirmation remains pending.
 
 ### A2 — Physical iPhone acceptance
 
@@ -71,11 +74,15 @@ Record iPhone model, iOS/Safari version, portrait/landscape behavior, dynamic
 browser chrome, native touch scrolling, iOS reduced motion, VoiceOver order,
 source links, and the complete mobile transformation.
 
-Owner testing on 2026-09-01 reports that the intended animations are absent.
-The received still image confirms the production page loads, but an iPhone
-screen recording plus the device/iOS and Reduce Motion settings are still
-needed to distinguish runtime failure from the current understated, unpinned
-mobile choreography.
+The owner iPhone recording and confirmation that Reduce Motion is disabled
+showed that the runtime was active, but the unpinned 475dvh layout presented
+scenes as widely spaced normal-flow content and allowed the stable Vault
+arrival to enter before the scrub completed. Commit `f574c37` replaces that
+layout with one native sticky viewport, explicit foreground exits, compact
+evidence/comparison frames, a contained 575dvh runway, and a single-owner Vault
+handoff. Automated 320–390px, portrait/orientation, reverse-scroll, and visual
+frame checks pass. Physical iPhone portrait/landscape, dynamic chrome,
+VoiceOver, and touch-scroll confirmation must now be repeated by the owner.
 
 ### A3 — Interaction performance traces
 
@@ -94,10 +101,10 @@ reviewed and deployed SHAs must match before final sign-off.
 
 - Frozen-lockfile install: pass.
 - Lint and strict types: pass.
-- Unit/component tests: 16 files, 74 tests passed.
-- Browser suite: 28 tests passed, including the 8 required viewport checks.
+- Unit/component tests: 16 files, 76 tests passed.
+- Browser suite: 30 tests passed, including the 8 required viewport checks.
 - Root and `/portfolio` production exports: pass.
-- Page JavaScript: 180,798 bytes gzip; limit 184,320.
+- Page JavaScript: 180,895 bytes gzip; limit 184,320.
 - Lighthouse, three desktop runs: Performance 99, Accessibility 100, Best
   Practices 96, SEO 100, LCP 936–945 ms, CLS 0.
 
