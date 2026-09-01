@@ -11,6 +11,7 @@ const readArg = (name, fallback) => {
 const root = normalize(readArg("root", "out"));
 const basePath = readArg("base-path", "");
 const port = Number(readArg("port", "4173"));
+const host = readArg("host", "127.0.0.1");
 
 const contentTypes = {
   ".html": "text/html; charset=utf-8",
@@ -61,6 +62,6 @@ const server = createServer(async (request, response) => {
   }
 });
 
-server.listen(port, "127.0.0.1", () => {
-  console.log(`Serving ${root} at http://127.0.0.1:${port}${basePath}/`);
+server.listen(port, host, () => {
+  console.log(`Serving ${root} at http://${host}:${port}${basePath}/`);
 });
