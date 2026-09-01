@@ -123,23 +123,29 @@ With GSAP/ScrollTrigger initialization deliberately blocked:
 
 ### Manual on Mac and iPhone
 
-- [ ] Keyboard-only navigation reaches skip and project links in logical order.
-- [ ] Focus remains visible and is never hidden by pinned content.
-- [ ] Heading and landmark order is logical.
+- [x] Keyboard-only navigation reaches skip and project links in logical order.
+- [x] Focus remains visible and is never hidden by pinned content.
+- [x] Heading and landmark order is logical.
 - [ ] VoiceOver reads the complete causal story in a meaningful order.
-- [ ] Meaningful SVG has an accessible name; decorative SVG is hidden.
-- [ ] Evidence meaning does not depend on color.
-- [ ] Content remains usable at 200% browser zoom.
+- [x] Meaningful SVG has an accessible name; decorative SVG is hidden.
+- [x] Evidence meaning does not depend on color.
+- [x] Content remains usable at 200% browser zoom.
 - [ ] Touch scrolling remains native on iPhone.
+
+Mac evidence: physical MacBook Pro (`Mac16,8`, Apple M4 Pro, macOS `26.6.2`),
+2026-09-01. Safari requires Option-Tab when its default “Tab highlights each
+item” preference is disabled; the observed order was skip link, SettleDiff
+source, then Vault Steward source. Safari and Chrome both retained usable,
+unclipped content at 200% zoom.
 
 ## Browser and device matrix
 
 | Environment | Availability | Result |
 |---|---|---|
-| Safari on owner Mac | available | pending |
-| Chrome on owner Mac | available/installable | pending |
-| Firefox on owner Mac | available/installable | pending |
-| Edge on owner Mac | available/installable | pending |
+| Safari `26.6.2` on owner Mac | available | PASS — production export, 2026-09-01 |
+| Chrome `152.0.7977.65` on owner Mac | available | PASS — production export, 2026-09-01 |
+| Firefox on owner Mac | not installed | pending — installation/owner review required |
+| Edge on owner Mac | not installed | pending — installation/owner review required |
 | iOS Safari on owner iPhone | available | pending |
 
 Android is outside the supported Phase 1 device scope. Do not infer or report
@@ -166,7 +172,7 @@ Also record:
 - [ ] slow-scroll performance trace;
 - [ ] fast-scroll performance trace;
 - [ ] absence of persistent scroll-linked long tasks;
-- [ ] no obvious desktop frame drops;
+- [x] no obvious desktop frame drops — Safari and Chrome manual pass;
 - [ ] acceptable owner-iPhone scrolling;
 - [ ] bundle analyzer review showing no Three.js, duplicate animation library,
       component framework, or accidental large dependency.

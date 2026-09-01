@@ -57,6 +57,11 @@ Record current Safari, Chrome, Firefox, and Edge versions and results for
 keyboard order, focus visibility, 200% zoom, reduced motion, mid-story refresh,
 back/forward navigation, and console cleanliness.
 
+Safari `26.6.2` and Chrome `152.0.7977.65` passed the available physical-Mac
+visual, reverse-scroll, refresh/navigation, keyboard-order, focus, and 200%
+zoom checks on 2026-09-01. Firefox and Edge are not installed; their checks and
+the physical Safari reduced-motion confirmation remain pending.
+
 ### A2 — Physical iPhone acceptance
 
 Record iPhone model, iOS/Safari version, portrait/landscape behavior, dynamic
