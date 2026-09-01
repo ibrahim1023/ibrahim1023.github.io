@@ -101,6 +101,15 @@
   color: var(--color-text-secondary);
 }
 
+/* Successful animation hands ownership over spatially: the scrubbed Vault
+   composition scrolls out during this lead-in, then the stable section enters.
+   The fallback keeps the compact, immediately readable layout above. */
+[data-animated="ready"] .section {
+  min-height: 179dvh;
+  justify-content: flex-start;
+  padding-block-start: 79dvh;
+}
+
 @media (max-width: 32rem) {
   .preview {
     grid-template-columns: minmax(0, 1fr);

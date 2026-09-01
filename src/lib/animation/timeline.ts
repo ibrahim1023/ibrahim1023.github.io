@@ -226,6 +226,19 @@ export function appendAttemptSegment(
     (target): target is HTMLElement => target !== null,
   );
 
+  if (elements.transaction) {
+    tl.to(
+      elements.transaction,
+      {
+        id: layout === "mobile" ? "mobile-request-exit" : "desktop-request-exit",
+        opacity: layout === "mobile" ? 0 : 0.12,
+        duration: duration * 0.24,
+        ease: "power1.in",
+      },
+      start,
+    );
+  }
+
   if (elements.token) {
     tl.to(
       elements.token,
@@ -260,6 +273,21 @@ export function appendEvidenceSegment(
   layout: NarrativeLayout,
 ) {
   const { start, duration } = segmentTiming("evidence-expanded");
+  const priorFrames = [elements.transaction, elements.attempt, elements.attemptStatus].filter(
+    (target): target is HTMLElement => target !== null,
+  );
+  if (priorFrames.length) {
+    tl.to(
+      priorFrames,
+      {
+        id: layout === "mobile" ? "mobile-activity-exit" : "desktop-activity-exit",
+        opacity: 0,
+        duration: duration * 0.2,
+        ease: "power1.in",
+      },
+      start,
+    );
+  }
   if (elements.evidence) {
     tl.fromTo(elements.evidence, { opacity: 0 }, { opacity: 1, duration: duration * 0.35 }, start);
   }
@@ -301,7 +329,7 @@ export function appendComparisonSegment(
     tl.to(backgroundTargets, { opacity: 0, duration: duration * 0.32 }, start);
   }
   if (elements.evidence) {
-    tl.to(elements.evidence, { opacity: 0.06, duration: duration * 0.36 }, start);
+    tl.to(elements.evidence, { opacity: 0, duration: duration * 0.3 }, start);
   }
   if (layout === "desktop" && elements.evidenceItems) {
     tl.to(
@@ -438,21 +466,37 @@ function appendVaultTransitionTweens(
   const [, endTime] = stateTime("vault-steward-arrival");
   const available = endTime - startTime;
   const finalStateEnd = startTime + available;
+  const contentSettledTime = startTime + available * 0.82;
 
   const obsoleteFrames = [
+    settle.header,
     settle.transaction,
     settle.attempt,
     settle.attemptStatus,
     settle.comparison,
     settle.mismatch,
     settle.verdict,
+    settle.chain,
   ].filter((target): target is HTMLElement => target !== null);
   if (obsoleteFrames.length) {
     tl.to(obsoleteFrames, { opacity: 0, duration: available * 0.16 }, startTime);
   }
 
   if (settle.evidence) {
-    tl.to(settle.evidence, { opacity: 1, duration: available * 0.16 }, startTime + available * 0.2);
+    tl.to(
+      settle.evidence,
+      layout === "mobile"
+        ? {
+          opacity: 1,
+          scale: 0.78,
+          yPercent: -8,
+          transformOrigin: "50% 50%",
+          duration: available * 0.3,
+          ease: "power1.out",
+        }
+        : { opacity: 1, duration: available * 0.16 },
+      startTime + available * 0.2,
+    );
   }
 
   if (settle.evidenceItems) {
@@ -560,9 +604,9 @@ function appendVaultTransitionTweens(
       vault.transition,
       layout === "desktop" ? { opacity: 0, y: 14 } : { opacity: 0, yPercent: 8 },
       layout === "desktop"
-        ? { opacity: 1, y: 0, duration: available * 0.3, ease: "power1.out" }
-        : { opacity: 1, yPercent: 0, duration: available * 0.3, ease: "power1.out" },
-      startTime + available * 0.38,
+        ? { opacity: 1, y: 0, duration: available * 0.22, ease: "power1.out" }
+        : { opacity: 1, yPercent: 0, duration: available * 0.22, ease: "power1.out" },
+      startTime + available * 0.28,
     );
   }
 
@@ -570,14 +614,14 @@ function appendVaultTransitionTweens(
     tl.fromTo(
       vault.connectors,
       { opacity: 0 },
-      { opacity: 1, duration: available * 0.28, ease: "power1.out" },
-      startTime + available * 0.4,
+      { opacity: 1, duration: available * 0.22, ease: "power1.out" },
+      startTime + available * 0.3,
     );
   }
 
   if (vault.railItems) {
-    const railStart = startTime + available * 0.46;
-    const railTiming = staggerTiming(railStart, finalStateEnd, vault.railItems.length);
+    const railStart = startTime + available * 0.42;
+    const railTiming = staggerTiming(railStart, contentSettledTime, vault.railItems.length);
     tl.fromTo(
       vault.railItems,
       layout === "desktop" ? { opacity: 0, x: -16 } : { opacity: 0, yPercent: 8 },
@@ -612,8 +656,8 @@ function appendVaultTransitionTweens(
     (t): t is HTMLElement => t !== null,
   );
   if (headlineTargets.length) {
-    const headlineStart = startTime + available * 0.68;
-    const headlineTiming = staggerTiming(headlineStart, finalStateEnd, headlineTargets.length);
+    const headlineStart = startTime + available * 0.46;
+    const headlineTiming = staggerTiming(headlineStart, contentSettledTime, headlineTargets.length);
     tl.fromTo(
       headlineTargets,
       layout === "desktop" ? { opacity: 0, y: 24 } : { opacity: 0 },
@@ -628,6 +672,7 @@ function appendVaultTransitionTweens(
       headlineStart,
     );
   }
+
 }
 
 function staggerTiming(start: number, end: number, targetCount: number) {

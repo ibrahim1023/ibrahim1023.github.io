@@ -30,7 +30,7 @@ const MOBILE_STATES = [
   [0.78, "[data-mismatch]"],
   [0.88, "[data-verdict]"],
   [0.95, "[data-chain]"],
-  [0.997, "[data-vault-transition]"],
+  [0.992, "[data-vault-transition]"],
 ] as const;
 
 async function expectMobileStateChildren(state: Locator, selector: string) {
@@ -108,6 +108,27 @@ test("mobile uses the vertical narrative without horizontal overflow", async ({ 
   expect(errors).toEqual([]);
 });
 
+test("mobile holds one sticky viewport instead of spacing scenes down a long page", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/portfolio/");
+  await expectRuntimeLayout(page, "mobile");
+
+  const geometry = await activeLayout(page, "mobile").locator("[data-stage]").evaluate((stage) => {
+    const bounds = stage.getBoundingClientRect();
+    const narrative = stage.closest("[data-narrative]")?.getBoundingClientRect();
+    return {
+      position: getComputedStyle(stage).position,
+      stageHeight: bounds.height,
+      narrativeHeight: narrative?.height ?? 0,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(geometry.position).toBe("sticky");
+  expect(geometry.stageHeight).toBeLessThanOrEqual(geometry.viewportHeight * 1.05);
+  expect(geometry.narrativeHeight).toBeGreaterThanOrEqual(geometry.viewportHeight * 5.7);
+});
+
 test("mobile remains exclusive and overflow-free at 360 pixels", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -139,7 +160,7 @@ test("mobile traverses every semantic state forward and in reverse", async ({ pa
     await expectMobileStateChildren(state, selector);
   }
 
-  await scrollNarrativeTo(page, "mobile", 0.997);
+  await scrollNarrativeTo(page, "mobile", 0.992);
   const transition = activeNarrativeLocator(page, "mobile", "[data-vault-transition]");
   await expectMostlyVisible(transition, { viewportRatio: 0.03 });
   await expectMostlyVisible(transition.locator("[data-vault-transition-title]"), { requireViewport: false });

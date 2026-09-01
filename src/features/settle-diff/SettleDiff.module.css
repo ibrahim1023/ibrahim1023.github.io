@@ -31,6 +31,7 @@
 
   .mobileBranch {
     display: block;
+    min-height: 575dvh;
   }
 }
 

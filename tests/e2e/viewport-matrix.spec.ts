@@ -25,7 +25,7 @@ const DESKTOP_CHECKPOINTS = [
   [0.795, "[data-mismatch]"],
   [0.895, "[data-verdict]"],
   [0.955, "[data-chain]"],
-  [0.997, "[data-vault-transition]"],
+  [0.992, "[data-vault-transition]"],
 ] as const;
 
 const MOBILE_CHECKPOINTS = [
@@ -34,7 +34,7 @@ const MOBILE_CHECKPOINTS = [
   [0.78, "[data-mismatch]"],
   [0.88, "[data-verdict]"],
   [0.95, "[data-chain]"],
-  [0.997, "[data-vault-transition]"],
+  [0.992, "[data-vault-transition]"],
 ] as const;
 
 const TABLET_PORTRAIT_CHECKPOINTS = MOBILE_CHECKPOINTS.map(([progress, selector]) =>

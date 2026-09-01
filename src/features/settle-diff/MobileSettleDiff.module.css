@@ -398,9 +398,14 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .stage {
-    position: relative;
+    position: sticky;
+    top: 0;
     display: block;
-    min-height: 475dvh;
+    width: 100%;
+    height: 100svh;
+    min-height: 100svh;
+    max-height: 100dvh;
+    overflow: hidden;
     padding: 0;
   }
 
@@ -419,13 +424,88 @@
     inline-size: auto;
   }
 
-  .header { top: 0%; }
-  .requestPath { top: 17%; }
-  .activity { top: 28%; }
-  .evidenceRail { top: 43%; }
-  .comparison { top: 60%; }
-  .conflict { top: 74%; }
-  .verdict { top: 85%; }
-  .reasoning { top: 95%; }
-  .transition { top: 98.5%; }
+  .header {
+    top: max(var(--space-5), env(safe-area-inset-top));
+  }
+
+  .requestPath,
+  .activity,
+  .conflict,
+  .verdict,
+  .reasoning {
+    inset-block: 0;
+    justify-content: center;
+    padding-block: max(7rem, 18svh) max(3rem, 10svh);
+    border-top: 0;
+  }
+
+  .evidenceRail,
+  .comparison {
+    inset-block: max(6.5rem, 16svh) max(2rem, 6svh);
+    align-content: center;
+    overflow: hidden;
+    border-top: 0;
+  }
+
+  .evidenceRail {
+    gap: 0.4rem;
+  }
+
+  .evidenceRail li {
+    gap: 1px;
+    padding: 0.55rem 0.75rem;
+  }
+
+  .evidenceRail strong,
+  .evidenceRail small {
+    line-height: 1.25;
+  }
+
+  .comparison {
+    justify-content: center;
+  }
+
+  .comparison dl {
+    gap: 0;
+  }
+
+  .comparison dl > div {
+    grid-template-columns: 4.5rem repeat(2, minmax(0, 1fr));
+    gap: 0.2rem 0.55rem;
+    padding-block: 0.5rem;
+  }
+
+  .comparison dt {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .comparison dd {
+    flex-direction: column;
+    gap: 1px;
+    line-height: 1.25;
+  }
+
+  .comparison dd:nth-of-type(1) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .comparison dd:nth-of-type(2) {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+
+  .comparison dd:nth-of-type(3) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .transition {
+    inset-block: 0;
+    min-height: 0;
+    justify-content: flex-end;
+    padding-block: max(7rem, 18svh) max(2.5rem, 8svh);
+    border-top: 0;
+  }
 }

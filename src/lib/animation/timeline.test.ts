@@ -177,6 +177,22 @@ describe("animation timeline builders", () => {
     expect(mobileVerdict!.vars).not.toHaveProperty("scale");
   });
 
+  test("gives mobile request and activity scenes explicit exits", () => {
+    const root = buildRoot();
+    const elements = queryTimelineElements(root, "mobile");
+    const timeline = buildNarrativeTimeline(elements, "mobile");
+
+    const requestExit = timeline.getById("mobile-request-exit");
+    const activityExit = timeline.getById("mobile-activity-exit");
+
+    expect(requestExit).toBeTruthy();
+    expect(requestExit!.targets()).toContain(elements.settle.transaction);
+    expect(requestExit!.vars.opacity).toBe(0);
+    expect(activityExit).toBeTruthy();
+    expect(activityExit!.targets()).toContain(elements.settle.attempt);
+    expect(activityExit!.vars.opacity).toBe(0);
+  });
+
   test("clears prior focus frames before each new narrative frame enters", () => {
     const root = buildRoot();
     const elements = queryTimelineElements(root, "desktop");
@@ -192,6 +208,18 @@ describe("animation timeline builders", () => {
     expect(hasExitTween(elements.settle.verdict)).toBe(true);
     expect(hasExitTween(elements.settle.chain)).toBe(true);
     expect(hasExitTween(elements.settle.evidence)).toBe(true);
+  });
+
+  test("keeps the scrubbed Vault composition visible through its release", () => {
+    const root = buildRoot();
+    const elements = queryTimelineElements(root, "desktop");
+    const timeline = buildNarrativeTimeline(elements, "desktop");
+    const stageExit = timeline.getChildren(true, true, true).find((child) =>
+      child.targets().includes(elements.settle.stage!) && child.vars.opacity === 0,
+    );
+
+    expect(stageExit).toBeUndefined();
+    expect(timeline.duration()).toBeCloseTo(seconds(1), 6);
   });
 
   test("repositions persistent evidence while hidden before revealing the Vault grid", () => {

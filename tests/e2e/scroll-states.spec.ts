@@ -18,7 +18,7 @@ const DESKTOP_STATES = [
   [0.74, "[data-mismatch]"],
   [0.85, "[data-verdict]"],
   [0.95, "[data-chain]"],
-  [0.985, "[data-vault-transition]"],
+  [0.992, "[data-vault-transition]"],
 ] as const;
 
 const EVIDENCE = [
@@ -111,10 +111,10 @@ async function expectDesktopStateChildren(state: Locator, selector: string) {
   }
 }
 
-async function waitForAnimationReady(page: Page) {
+async function waitForAnimationReady(page: Page, layout: "desktop" | "mobile" = "desktop") {
   await expect(page.locator('[data-portfolio-experience][data-animated="ready"]')).toBeVisible();
-  await expect(page.locator('[data-animated-layout="desktop"]')).toBeVisible();
-  await expect(page.locator('[data-animated-layout="mobile"]')).toBeHidden();
+  await expect(page.locator(`[data-animated-layout="${layout}"]`)).toBeVisible();
+  await expect(page.locator(`[data-animated-layout="${layout === "desktop" ? "mobile" : "desktop"}"]`)).toBeHidden();
 }
 
 test("desktop exposes every semantic state forward and in reverse", async ({ page }) => {
@@ -143,7 +143,7 @@ test("desktop exposes every semantic state forward and in reverse", async ({ pag
     await expectDesktopStateChildren(state, selector);
   }
 
-  await scrollNarrativeTo(page, "desktop", 0.997);
+  await scrollNarrativeTo(page, "desktop", 0.992);
   const transition = activeNarrativeLocator(page, "desktop", "[data-vault-transition]");
   await expectMostlyVisible(transition);
   await expect(transition.locator("[data-vault-transition-title]")).toHaveText("Vault Steward");
@@ -201,10 +201,57 @@ test("desktop keeps one foreground frame readable at every narrative handoff", a
   expect(await opacity("[data-verdict]")).toBeLessThanOrEqual(0.02);
   expect(await opacity("[data-evidence]")).toBeLessThanOrEqual(0.02);
 
-  await scrollNarrativeTo(page, "desktop", 0.997);
+  await scrollNarrativeTo(page, "desktop", 0.992);
   expect(await opacity("[data-vault-transition]")).toBeGreaterThanOrEqual(0.9);
   expect(await opacity("[data-chain]")).toBeLessThanOrEqual(0.02);
   expect(await opacity("[data-verdict]")).toBeLessThanOrEqual(0.02);
+});
+
+test("mobile retires each foreground scene before the next scene settles", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/portfolio/");
+  await waitForAnimationReady(page, "mobile");
+
+  const opacity = async (selector: string) => activeNarrativeLocator(page, "mobile", selector)
+    .evaluate((node) => Number.parseFloat(getComputedStyle(node).opacity));
+
+  await scrollNarrativeTo(page, "mobile", 0.35);
+  expect(await opacity("[data-attempt]")).toBeGreaterThanOrEqual(0.9);
+  expect(await opacity("[data-transaction]")).toBeLessThanOrEqual(0.02);
+
+  await scrollNarrativeTo(page, "mobile", 0.515);
+  expect(await opacity("[data-evidence]")).toBeGreaterThanOrEqual(0.9);
+  expect(await opacity("[data-attempt]")).toBeLessThanOrEqual(0.02);
+  expect(await opacity("[data-transaction]")).toBeLessThanOrEqual(0.02);
+
+  await scrollNarrativeTo(page, "mobile", 0.675);
+  expect(await opacity("[data-comparison]")).toBeGreaterThanOrEqual(0.9);
+  expect(await opacity("[data-evidence]")).toBeLessThanOrEqual(0.08);
+  expect(await opacity("[data-attempt]")).toBeLessThanOrEqual(0.02);
+
+  await scrollNarrativeTo(page, "mobile", 0.795);
+  expect(await opacity("[data-mismatch]")).toBeGreaterThanOrEqual(0.9);
+  expect(await opacity("[data-comparison]")).toBeLessThanOrEqual(0.02);
+
+  await scrollNarrativeTo(page, "mobile", 0.895);
+  expect(await opacity("[data-verdict]")).toBeGreaterThanOrEqual(0.9);
+  expect(await opacity("[data-mismatch]")).toBeLessThanOrEqual(0.02);
+
+  await scrollNarrativeTo(page, "mobile", 0.955);
+  expect(await opacity("[data-chain]")).toBeGreaterThanOrEqual(0.9);
+  expect(await opacity("[data-verdict]")).toBeLessThanOrEqual(0.02);
+
+  await scrollNarrativeTo(page, "mobile", 0.992);
+  expect(await opacity("[data-vault-transition]")).toBeGreaterThanOrEqual(0.9);
+  expect(await opacity("[data-chain]")).toBeLessThanOrEqual(0.02);
+  expect(await opacity("[data-stage-header]")).toBeLessThanOrEqual(0.02);
+
+  const evidenceBottom = await activeNarrativeLocator(page, "mobile", "[data-evidence-item]")
+    .evaluateAll((items) => Math.max(...items.map((item) => item.getBoundingClientRect().bottom)));
+  const titleTop = await activeNarrativeLocator(page, "mobile", "[data-vault-transition-title]")
+    .evaluate((title) => title.getBoundingClientRect().top);
+  expect(titleTop).toBeGreaterThan(evidenceBottom);
 });
 
 test("the persistent Vault arrival releases from the pinned scene", async ({ page }) => {
@@ -255,6 +302,27 @@ test("the persistent Vault arrival releases from the pinned scene", async ({ pag
   expect(arrivalDelta).toBeLessThanOrEqual(32);
   expect(Math.abs(stageDelta - scrollDelta)).toBeLessThanOrEqual(20);
   expect(Math.abs(arrivalDelta - scrollDelta)).toBeLessThanOrEqual(20);
+
+  const vaultTitles = page.locator(
+    '[data-animated-layout="desktop"] [data-vault-transition-title], [data-vault-arrival] h2',
+  );
+  for (const offset of [0, 100, 200, 300, 400, 500, 600, 700, 750, 800, 850]) {
+    await page.evaluate(([end, delta]) => window.scrollTo(0, end + delta), [narrativeEnd, offset]);
+    await waitForAnimationFrames(page);
+    const visibleTitles = await vaultTitles.evaluateAll((titles) => titles.filter((title) => {
+      const bounds = title.getBoundingClientRect();
+      const style = getComputedStyle(title);
+      let effectiveOpacity = 1;
+      for (let current: Element | null = title; current; current = current.parentElement) {
+        effectiveOpacity *= Number(getComputedStyle(current).opacity);
+      }
+      return effectiveOpacity > 0.25
+        && style.visibility !== "hidden"
+        && bounds.bottom > 0
+        && bounds.top < window.innerHeight;
+    }).length);
+    expect(visibleTitles, `release offset ${offset}px must expose exactly one Vault title`).toBe(1);
+  }
 
   const documentHeight = await page.evaluate(() => document.body.scrollHeight);
   await page.evaluate((target) => window.scrollTo(0, target), documentHeight);
