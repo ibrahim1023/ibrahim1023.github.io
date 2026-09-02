@@ -6,14 +6,17 @@ portfolio.
 
 ## Read order
 
-1. `docs/REQUIREMENTS.md` — authoritative product and experience requirements.
-2. `docs/DECISIONS.md` — owner-approved factual and creative decisions.
-3. `docs/STORYBOARD.md` — target scroll states and object continuity.
-4. `docs/BUILD_SPEC.md` — architecture, implementation constraints, and target
+1. `docs/DECISIONS.md` — owner-approved factual and creative decisions.
+2. `docs/specs/2026-09-02-settlediff-story-redesign.md` — authoritative
+   SettleDiff redesign; it supersedes conflicting incident-only sections.
+3. `docs/plans/2026-09-02-settlediff-story-redesign.md` — implementation order
+   and verification gates. Do not use Superpowers during implementation.
+4. `docs/REQUIREMENTS.md` — remaining product and experience requirements.
+5. `docs/STORYBOARD.md` — implemented baseline pending redesign reconciliation.
+6. `docs/BUILD_SPEC.md` — architecture, implementation constraints, and target
    technical shape.
-5. `docs/IMPLEMENTATION_STATUS.md` — what is complete, partial, or missing.
-6. `docs/ACCEPTANCE_RUNBOOK.md` — how completion must be demonstrated.
-7. The relevant design and plan under `docs/superpowers/` before changing code.
+7. `docs/IMPLEMENTATION_STATUS.md` — what is complete, partial, or missing.
+8. `docs/ACCEPTANCE_RUNBOOK.md` — how completion must be demonstrated.
 
 ## Authority order
 
@@ -26,8 +29,11 @@ When sources disagree, use this order:
 5. The local, historical `product-spec.md`.
 
 The local product spec contains an obsolete `$0.04 / PAID` story. Do not restore
-it. The approved source-backed story is `0.01 USDC / ACTIVITY RECORDED /
-UNVERIFIABLE`.
+it. The 2026-08-21 `0.01 USDC / ACTIVITY RECORDED / UNVERIFIABLE` incident is
+still factual, but it is now the origin example inside the broader independent
+verification story. The current climax is the public x402 testnet cycle:
+provider receipt, independently matched settlement, 12/12 deterministic checks,
+and `VERIFIED`.
 
 ## Product boundary
 
@@ -36,9 +42,17 @@ Build exactly this narrative:
 ```text
 Intro
   ↓
-SettleDiff incident reconstruction
+SettleDiff purchase uncertainty
   ↓
-Continuous object transformation
+Promised / Executed / Recorded reconstruction
+  ↓
+Original incident: UNVERIFIABLE
+  ↓
+Rail-neutral evolution and independent x402 proof
+  ↓
+12 deterministic checks: VERIFIED
+  ↓
+Verified artifact becomes one evidence packet
   ↓
 Stable Vault Steward arrival
 ```
@@ -50,7 +64,7 @@ Vault Steward case study.
 The two featured projects are:
 
 - [SettleDiff](https://github.com/ibrahim1023/SettleDiff), reviewed at commit
-  `380c30cc759a7eab0a27c7f8587c93ac3c42f8ce`.
+  `9372c8a06e77d75a6ab0482adf5479964ad2913b`.
 - [Vault Steward](https://github.com/ibrahim1023/vault-steward), reviewed at
   commit `21655f0bfc1972601570ff9cf38efd663cfdfac3`.
 
@@ -79,6 +93,11 @@ or product-page compositions.
   completed capability without evidence that it is defective.
 - Preserve source-backed uncertainty. `UNKNOWN` is not `DIFF`, and an Activity
   record is not proof of settlement.
+- A provider receipt is not independent proof. Keep provider-asserted and
+  independently observed settlement evidence visually and semantically
+  separate.
+- Keep protocol and network names in the secondary evidence layer; the
+  foreground story must remain understandable without them.
 - Do not imply that `base → tempo` alone caused the `UNVERIFIABLE` verdict.
 - Keep factual copy in `src/content/portfolioContent.ts`, away from animation
   code.

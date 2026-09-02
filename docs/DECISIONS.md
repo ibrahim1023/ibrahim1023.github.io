@@ -4,6 +4,41 @@ This file records owner-approved decisions that affect factual claims, scope,
 choreography, or acceptance. New entries are appended; historical decisions
 are not silently rewritten.
 
+## 2026-09-02 — SettleDiff evolves from incident reconstruction to independent verification
+
+**Decision:** Replace the incident-only cinematic story with the approved
+evolution described in
+`docs/specs/2026-09-02-settlediff-story-redesign.md`. Keep the 2026-08-21
+failed Perflo incident as the product's origin and regression example, then
+show the rail-neutral architecture and the successful public x402 testnet cycle
+as the current product capability. The final visual climax is `VERIFIED`, with
+the line `Don’t trust the receipt. Verify the settlement.`
+
+Use plain-language foreground copy and place Perflo, x402, Base Sepolia,
+EIP-3009, and protocol-specific facts in a secondary evidence layer. The
+homepage remains dark; SettleDiff progresses from charcoal ambiguity to a
+bright paper-like verification workspace. The final verified artifact becomes
+one evidence packet for the Vault Steward handoff. Retire the old six-object
+relabel transition.
+
+**Reason:** SettleDiff now implements a rail-neutral adapter boundary and has
+independently verified two successful x402 cycles. The older narrative remains
+factual but no longer represents the product's scope or strongest engineering
+result. A single persistent artifact and mutually exclusive scenes also address
+the overlap failures observed in the earlier transition.
+
+**Sources:**
+
+- [SettleDiff repository](https://github.com/ibrahim1023/SettleDiff) at
+  `9372c8a06e77d75a6ab0482adf5479964ad2913b`.
+- [Rail-neutral canonical payment evidence ADR](https://github.com/ibrahim1023/SettleDiff/blob/main/docs/decisions/0007-rail-neutral-canonical-payment-evidence.md).
+- [Controlled x402 live cycle](https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/x402-live-cycle.md).
+- [Public x402 endpoint validation](https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/x402-public-endpoint-validation.md).
+
+This decision supersedes the SettleDiff narrative and six-object transition
+decisions below where they conflict. Historical entries remain as records of
+the previous approved baseline.
+
 ## 2026-08-25 — Source-backed project narrative
 
 **Decision:** Replace the historical `$0.04 / PAID` story with the sanitized
