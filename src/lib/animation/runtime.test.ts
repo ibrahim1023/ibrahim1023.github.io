@@ -127,6 +127,7 @@ describe("portfolio animation runtime", () => {
   });
 
   test("sets up media-scoped timelines and tears down their context", () => {
+    vi.useFakeTimers();
     const root = buildRoot();
     const { create, gsapApi, mediaContext, scrollTriggerApi } = animationApis();
 
@@ -142,10 +143,14 @@ describe("portfolio animation runtime", () => {
     expect(gsapApi.registerPlugin).toHaveBeenCalledOnce();
     expect(mediaContext.add).toHaveBeenCalledWith(NARRATIVE_MEDIA.desktop, expect.any(Function));
     expect(mediaContext.add).toHaveBeenCalledWith(NARRATIVE_MEDIA.mobile, expect.any(Function));
+    expect(root).not.toHaveAttribute("data-animated");
+
+    vi.runAllTimers();
+
     expect(root).toHaveAttribute("data-animated", "ready");
     expect(create).toHaveBeenCalled();
     expect((create.mock.calls[0]![0] as { end: () => string }).end()).toBe(
-      "+=5600",
+      "+=6080",
     );
 
     cleanup();
@@ -153,6 +158,7 @@ describe("portfolio animation runtime", () => {
 
     expect(mediaContext.revert).toHaveBeenCalledOnce();
     expect(root).not.toHaveAttribute("data-animated");
+    vi.useRealTimers();
   });
 
   test("pins the desktop scene but keeps the tall mobile narrative in normal scroll flow", () => {
@@ -231,7 +237,7 @@ describe("portfolio animation runtime", () => {
 
     debugUpdate({ progress: 0.15 });
 
-    expect(debugStage).toHaveAttribute("data-state", "request-in-flight");
+    expect(debugStage).toHaveAttribute("data-state", "purchase-in-flight");
     debugCleanup();
     expect(debugStage).toHaveAttribute("data-state", "project-established");
   });
@@ -289,12 +295,7 @@ describe("portfolio animation runtime", () => {
 
   test("clears animation properties and keeps the story readable when setup fails", () => {
     const root = buildRoot();
-    const failingPath = root.querySelector('[data-layout="desktop"] [data-path-line]') as SVGPathElement;
-    Object.defineProperty(failingPath, "getTotalLength", {
-      value: () => {
-        throw new Error("path unavailable");
-      },
-    });
+    root.querySelector("[data-intro]")?.remove();
     const { gsapApi, scrollTriggerApi } = animationApis();
 
     const cleanup = initializePortfolioAnimations({
@@ -315,12 +316,7 @@ describe("portfolio animation runtime", () => {
 
   test("clears stage custom properties and Vault transition targets on setup failure", () => {
     const root = buildRoot();
-    const failingPath = root.querySelector('[data-layout="desktop"] [data-path-line]') as SVGPathElement;
-    Object.defineProperty(failingPath, "getTotalLength", {
-      value: () => {
-        throw new Error("path unavailable");
-      },
-    });
+    root.querySelector("[data-intro]")?.remove();
     const { gsapApi, scrollTriggerApi } = animationApis();
 
     initializePortfolioAnimations({
@@ -337,7 +333,7 @@ describe("portfolio animation runtime", () => {
       '[data-vault-transition]',
       '[data-vault-transition-title]',
       '[data-vault-transition-step]',
-      '[data-vault-transition-connector]',
+      '[data-vault-transition-headline]',
     ];
 
     for (const selector of targetSelectors) {
@@ -351,12 +347,7 @@ describe("portfolio animation runtime", () => {
     animatableTargets.forEach((target) => {
       (target as HTMLElement).style.cssText = "opacity: 0; transform: translateX(8px)";
     });
-    const failingPath = root.querySelector('[data-layout="desktop"] [data-path-line]') as SVGPathElement;
-    Object.defineProperty(failingPath, "getTotalLength", {
-      value: () => {
-        throw new Error("path unavailable");
-      },
-    });
+    root.querySelector("[data-intro]")?.remove();
     const { gsapApi, scrollTriggerApi } = animationApis();
     const clearSet = vi.fn((targets: NodeListOf<Element>, vars: { clearProps?: string }) => {
       if (vars.clearProps === "all") {

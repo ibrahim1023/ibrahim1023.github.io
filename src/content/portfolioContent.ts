@@ -1,8 +1,3 @@
-import type {
-  EvidenceClassification,
-  EvidenceObjectId,
-} from "@/features/settle-diff/settleDiffTypes";
-
 export const identity = {
   name: "Ibrahim Arshad",
   role: "AI Systems Engineer",
@@ -20,149 +15,57 @@ export const settleDiff = {
   descriptor: "Transaction forensics for agent purchases.",
   agentLabel: "AGENT",
   serviceLabel: "SERVICE",
-  requestAmount: "0.01 USDC",
-  maxBudget: "0.02 USDC",
-  returnLabel: "HTTP 402",
-  returnDetail: "Payment Required",
-  attemptLabel: "ACTIVITY RECORDED",
-  activityStatus: "broadcast_failed",
-  attemptQualifier: "attempt found — settlement not established",
+  openingAmount: "0.001 USDC",
+  openingPrompt: "A service returns a payment receipt.",
+  uncertainty: "But a receipt is not proof that money moved.",
+  closingThesis: "Don’t trust the receipt. Verify the settlement.",
+} as const;
+
+export const reconstructionLayers = [
+  { id: "promised", label: "PROMISED", title: "Exact terms", detail: "Price, recipient, asset, network, method, and resource are bound before execution." },
+  { id: "executed", label: "EXECUTED", title: "One authorized attempt", detail: "Any term drift requires fresh authorization. Ambiguous failures are never retried blindly." },
+  { id: "recorded", label: "RECORDED", title: "Independent evidence", detail: "Provider claims remain separate from independently observed settlement." },
+] as const;
+
+export const originIncident = {
+  eyebrow: "ORIGIN INCIDENT · SANITIZED REGRESSION",
+  headline: "Different execution path.",
+  decisiveFinding: "No confirmed settlement.",
+  technical: ["base → tempo", "HTTP 402", "broadcast_failed", "transaction hash absent"],
   verdict: "UNVERIFIABLE",
-  verdictReason:
-    "Settlement could not be established: no confirmed charge, no transaction hash.",
+  amount: "0.01 USDC",
+  maxBudget: "0.02 USDC",
 } as const;
 
-export const evidenceObjects = [
-  {
-    id: "request",
-    label: "REQUEST",
-    primary: "0.01 USDC",
-    detail: "0.02 USDC max",
-    vaultRole: "NOTE",
-  },
-  {
-    id: "payment",
-    label: "PAYMENT",
-    primary: "charge unknown",
-    detail: "settlement not established",
-    vaultRole: "PROPOSED CHANGE",
-  },
-  {
-    id: "vendor",
-    label: "VENDOR",
-    primary: "synthetic-search",
-    detail: "sanitized fixture identity",
-    vaultRole: "EVIDENCE SOURCE",
-  },
-  {
-    id: "chain",
-    label: "CHAIN",
-    primary: "base → tempo",
-    detail: "advertised vs executed",
-    vaultRole: "POLICY",
-  },
-  {
-    id: "response",
-    label: "RESPONSE",
-    primary: "HTTP 402",
-    detail: "Payment Required",
-    vaultRole: "CURRENT / AFTER",
-  },
-  {
-    id: "activity",
-    label: "ACTIVITY",
-    primary: "broadcast_failed",
-    detail: "no transaction hash",
-    vaultRole: "AUDIT / RECHECK",
-  },
-] as const satisfies readonly {
-  id: EvidenceObjectId;
-  label: string;
-  primary: string;
-  detail: string;
-  vaultRole: string;
-}[];
-
-export const comparisonRows = [
-  {
-    id: "chain",
-    aspect: "Chain",
-    expected: "base",
-    observed: "tempo",
-    classification: "DIFF",
-    matches: false,
-  },
-  {
-    id: "charge",
-    aspect: "Charge",
-    expected: "confirmed evidence",
-    observed: "unknown",
-    classification: "UNKNOWN",
-    matches: false,
-  },
-  {
-    id: "protocol",
-    aspect: "Protocol",
-    expected: "mpp",
-    observed: "mpp",
-    classification: "PASS",
-    matches: true,
-  },
-  {
-    id: "vendor",
-    aspect: "Vendor",
-    expected: "synthetic-search",
-    observed: "synthetic-search",
-    classification: "PASS",
-    matches: true,
-  },
-  {
-    id: "service",
-    aspect: "Service",
-    expected: "successful response",
-    observed: "HTTP 402",
-    classification: "FAIL",
-    matches: false,
-  },
-  {
-    id: "transactionHash",
-    aspect: "Transaction hash",
-    expected: "present",
-    observed: "absent",
-    classification: "UNKNOWN",
-    matches: false,
-  },
-] as const satisfies readonly {
-  id: string;
-  aspect: string;
-  expected: string;
-  observed: string;
-  classification: EvidenceClassification;
-  matches: boolean;
-}[];
-
-export const mismatch = {
-  expected: "base",
-  observed: "tempo",
-  explanation: "Advertised chain differs from executed chain.",
+export const verificationSystem = {
+  eyebrow: "ONE CANONICAL EVIDENCE MODEL",
+  headline: "The investigation became a verification system.",
+  detail: "Different payment rails enter through the same deterministic boundary.",
+  rails: ["Perflo", "x402"],
 } as const;
 
-export const reasoningChain = [
-  { id: "claim", label: "CLAIM", text: "A paid request was attempted and recorded." },
-  { id: "evidence", label: "EVIDENCE", text: "Contract, execution, activity, and response artifacts." },
-  {
-    id: "finding",
-    label: "FINDING",
-    text: "Chain drifted base → tempo; vendor returned HTTP 402; settlement proof is absent.",
-  },
-  { id: "verdict", label: "VERDICT", text: "UNVERIFIABLE" },
+export const publicVerification = {
+  eyebrow: "PUBLIC TESTNET VALIDATION",
+  headline: "One purchase. Two records.",
+  amount: "0.001 USDC",
+  provider: { label: "PROVIDER RECEIPT", title: "Settlement reported", detail: "HTTP 200 · transaction reference returned", provenance: "provider PAYMENT-RESPONSE" },
+  independent: { label: "INDEPENDENT RECORD", title: "Exact transfer confirmed", detail: "payer · recipient · token · amount matched", provenance: "Base Sepolia USDC Transfer" },
+  verdict: "VERIFIED",
+  checkSummary: "12 / 12 deterministic checks",
+  modelSummary: "0 model requests for the fallback explanation",
+  scope: "x402 v2 · exact · Base Sepolia testnet · EIP-3009",
+} as const;
+
+export const verificationChecks = [
+  "budget", "price", "asset", "asset identity", "protocol", "network",
+  "recipient", "settlement", "service execution", "paid failure",
+  "ledger outcome", "activity persistence",
 ] as const;
 
 export const vaultSteward = {
   title: "Vault Steward",
   headline: "Keep your vault trustworthy",
-  descriptor:
-    "Local-first, evidence-backed vault maintenance with explicit approval before every edit.",
+  descriptor: "Local-first, evidence-backed vault maintenance with explicit approval before every edit.",
   rail: ["FIND", "PREVIEW", "APPROVE", "VERIFY"],
   continuationCue: "Case study continues",
   preview: {
@@ -170,8 +73,4 @@ export const vaultSteward = {
     after: "[[Guides/Partner Onboarding Checklist]]",
     expectedResult: "1 issue resolved · 1 note edited · vault checked again",
   },
-  objectMapping: evidenceObjects.map(({ label, vaultRole }) => ({
-    from: label,
-    to: vaultRole,
-  })),
 } as const;

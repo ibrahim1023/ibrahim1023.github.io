@@ -41,8 +41,8 @@ describe("PortfolioExperience shell", () => {
     expect(screen.getByRole("region", { name: "SettleDiff" })).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "Vault Steward" })).toBeInTheDocument();
     expect(screen.getAllByRole("region")).toHaveLength(3);
-    expect(container.querySelectorAll('[data-layout="desktop"]')).toHaveLength(1);
-    expect(container.querySelectorAll('[data-layout="mobile"]')).toHaveLength(1);
+    expect(container.querySelectorAll('[data-stage][data-layout="desktop"]')).toHaveLength(1);
+    expect(container.querySelectorAll('[data-stage][data-layout="mobile"]')).toHaveLength(1);
     expect(container.querySelectorAll('[data-branch="reduced"]')).toHaveLength(1);
     expect(container.querySelectorAll("[data-no-js-narrative]")).toHaveLength(1);
   });

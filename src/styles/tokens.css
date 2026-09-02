@@ -12,6 +12,15 @@
   --color-fail: #c96a5a;
   --color-unknown: #9b968c;
   --color-vault: #6fa889;
+  --scene-bg-dark: #0a0a0b;
+  --scene-bg-evidence: #181b1d;
+  --scene-bg-paper: #e9e7e1;
+  --scene-bg-vault: #dedfd7;
+  --scene-ink-on-dark: #f2efe9;
+  --scene-ink-on-paper: #171918;
+  --scene-muted-on-paper: #5f645f;
+  --scene-accent-uncertain: #c9a25a;
+  --scene-accent-verified: #39745d;
 
   /* Typography */
   --font-sans:

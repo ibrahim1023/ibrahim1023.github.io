@@ -1,8 +1,8 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export const RUNWAY_MULTIPLIER = {
-  desktop: 7,
-  mobile: 4.75,
+  desktop: 7.6,
+  mobile: 5.8,
 } as const;
 
 export type NarrativeLayout = keyof typeof RUNWAY_MULTIPLIER;

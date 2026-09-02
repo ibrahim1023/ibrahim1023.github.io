@@ -8,10 +8,10 @@ procedure, and result.
 
 | Field | Required evidence | Result |
 |---|---|---|
-| Reviewed implementation commit | full Git commit SHA | `4fadac81d5ce3fdf1b572be054e0039ae4b2863f` |
+| Reviewed implementation commit | full Git commit SHA | pending final redesign commit |
 | Deployed commit | full Git commit SHA | pending |
 | Production URL | `https://ibrahim1023.github.io/portfolio/` | pending |
-| Review date | ISO date | `2026-09-01` local automated review; final review pending |
+| Review date | ISO date | `2026-09-02` redesign review in progress; final review pending |
 | Reviewer | name/agent plus owner sign-off | Codex automated review; Ibrahim approved the local transition preview; final sign-off pending |
 
 The reviewed and deployed commits must match.
@@ -35,37 +35,38 @@ intentionally ignored by Git.
 | Frozen lockfile install | exit 0 | PASS — `pnpm install --frozen-lockfile`, 2026-09-01 |
 | Lint | exit 0 | PASS — `pnpm validate`, 2026-09-01 |
 | Strict types | exit 0 | PASS — `pnpm validate`, 2026-09-01 |
-| Unit/component tests | all pass | PASS — 16 files, 74 tests |
+| Unit/component tests | all pass | PASS — 16 files, 64 tests, 2026-09-02 redesign |
 | Root export | `out/` produced | PASS — `pnpm build` |
 | `/portfolio` export | `out/` produced | PASS — clean production rebuild after E2E |
-| Chromium E2E | all pass | PASS — 28 tests, including the 8-viewport matrix |
+| Chromium E2E | all pass | PASS — 29 tests, including the 8-viewport matrix, 2026-09-02 redesign |
 | Production console | no errors or hydration warnings | PASS — diagnostics assertions across E2E matrix |
 
 ## Narrative acceptance
 
 Record a screen capture or timestamped reviewer notes for desktop and mobile.
 
-- [ ] Intro cue line visibly becomes the SettleDiff transaction path.
-- [ ] Project-establishment hold is readable.
-- [x] `0.01 USDC` request and `0.02 USDC MAX` are legible during travel.
-- [x] HTTP 402 is shown without implying acknowledgement or payment success.
-- [x] `ACTIVITY RECORDED` and `broadcast_failed` receive a deliberate hold.
-- [x] All six evidence objects retain visible lineage to the request.
-- [x] `DIFF`, `FAIL`, and `UNKNOWN` are semantically distinct.
-- [x] `base ≠ tempo` is prominent without being presented as the sole verdict
-      cause.
-- [x] `UNVERIFIABLE` is the visual peak and cites absent settlement proof.
-- [x] Reverse scrolling reconstructs every preceding state.
-- [x] Fast forward/reverse scrolling leaves no orphaned or stale object.
-- [x] Six SettleDiff objects visibly transform into their Vault Steward roles.
-- [x] The Vault rail reads `FIND → PREVIEW → APPROVE → VERIFY`.
-- [x] The pinned stage releases without a jump.
-- [x] The stable Vault arrival remains legible in normal flow.
-- [x] No out-of-scope portfolio section appears.
+- [ ] The project-establishment hold and persistent transaction artifact are readable.
+- [ ] `0.01 USDC`, `0.02 USDC max`, HTTP 402, and `broadcast_failed` describe
+      the historical attempt without implying settlement.
+- [ ] Reconstructed evidence layers remain spatially related and do not overlap
+      the foreground conclusion.
+- [ ] Historical `UNVERIFIABLE` cites absent confirmed charge and transaction hash.
+- [ ] The visual workspace progresses from dark incident to bright verification.
+- [ ] Current `0.001 USDC` and HTTP 200 evidence is legible.
+- [ ] Provider `PAYMENT-RESPONSE` and independent Base Sepolia transfer proof
+      are simultaneously visible, distinct, and non-overlapping.
+- [ ] `12 / 12`, `0 model requests`, and `VERIFIED` receive deliberate holds.
+- [ ] Reverse scrolling reconstructs every preceding state.
+- [ ] Fast forward/reverse scrolling leaves no orphaned or stale scene.
+- [ ] One evidence packet crosses an explicit Vault Steward boundary.
+- [ ] The Vault rail reads `FIND → PREVIEW → APPROVE → VERIFY`.
+- [ ] The pinned stage releases without a jump.
+- [ ] The stable Vault arrival remains legible in normal flow.
+- [ ] No out-of-scope portfolio section appears.
 
 Evidence: `tests/e2e/scroll-states.spec.ts`, `tests/e2e/lifecycle.spec.ts`, and
-owner review of the local preview on 2026-08-31. The intro-line continuity and
-project-establishment hold remain part of the final cross-browser visual pass.
+automated redesign review on 2026-09-02. All visual items remain unchecked
+until the owner repeats the Mac and iPhone pass against the redesigned story.
 
 ## Required viewport matrix
 
@@ -104,8 +105,8 @@ With operating-system reduced motion enabled:
 - [x] Only the static branch participates in layout and the accessibility tree.
 - [x] No long pin, path travel, parallax, scale sweep, or object reorganization
       initializes.
-- [x] All evidence, classifications, reasoning, mapping, and Vault arrival are
-      present in normal reading order.
+- [x] The historical incident, current independent proof, verification result,
+      evidence-packet handoff, and Vault arrival are in normal reading order.
 
 With GSAP/ScrollTrigger initialization deliberately blocked:
 
@@ -142,11 +143,11 @@ unclipped content at 200% zoom.
 
 | Environment | Availability | Result |
 |---|---|---|
-| Safari `26.6.2` on owner Mac | available | RETEST REQUIRED — recorded handoff defect fixed in `f574c37`; automated release regression and local frame review pass |
-| Chrome `152.0.7977.65` on owner Mac | available | RETEST REQUIRED — shared handoff fix in `f574c37`; prior interaction checks passed |
+| Safari `26.6.2` on owner Mac | available | RETEST REQUIRED — new verification story and handoff |
+| Chrome `152.0.7977.65` on owner Mac | available | RETEST REQUIRED — new verification story and handoff |
 | Firefox on owner Mac | not installed | pending — installation/owner review required |
 | Edge on owner Mac | not installed | pending — installation/owner review required |
-| iOS Safari on owner iPhone | available | RETEST REQUIRED — recording confirmed motion setting enabled and exposed long-flow choreography defect; sticky single-viewport fix in `f574c37` passes automated 320–390px checks |
+| iOS Safari on owner iPhone | available | RETEST REQUIRED — new vertical proof stack and handoff; automated 320–390px checks cover geometry only |
 
 Android is outside the supported Phase 1 device scope. Do not infer or report
 Android compatibility from responsive desktop emulation.
@@ -162,10 +163,10 @@ version, commit, URL, viewport, device/browser, date, and raw report path.
 | Lighthouse Accessibility | ≥ 95 | PASS — 100 in all 3 runs |
 | Lighthouse Best Practices | ≥ 95 | PASS — 96 in all 3 runs |
 | Lighthouse SEO | ≥ 95 | PASS — 100 in all 3 runs |
-| LCP | ≤ 2.5 s | PASS — 936–945 ms |
+| LCP | ≤ 2.5 s | PASS — 896–901 ms |
 | CLS | ≤ 0.1 | PASS — 0 in all 3 runs |
 | INP | ≤ 200 ms | pending |
-| Route JS + animation dependencies | ≤ 180 KiB gzip | PASS — 180,895 bytes / 184,320-byte limit |
+| Route JS + animation dependencies | ≤ 180 KiB gzip | PASS — 180,599 bytes / 184,320-byte limit |
 
 Also record:
 
@@ -193,11 +194,9 @@ Any budget exception requires a dated owner decision with measured evidence.
 
 Phase 1 result: `PENDING`
 
-Known supported-scope limitations: physical Mac browser/iPhone acceptance,
-INP/scroll traces, deployed-commit agreement, and owner final sign-off remain
-pending. The two defects found in the owner recordings have implementation and
-regression fixes in `f574c37`, but remain acceptance findings until the owner
-repeats the physical Mac and iPhone checks.
+Known supported-scope limitations: final automated redesign gates, physical Mac
+browser/iPhone acceptance, INP/scroll traces, deployed-commit agreement, and
+owner final sign-off remain pending.
 
 Do not change the result to `PASS` while a blocking implementation item or
 required Mac/iPhone check remains incomplete. Record any discovered limitation

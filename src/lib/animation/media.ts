@@ -9,8 +9,8 @@ export const NARRATIVE_MEDIA = {
 } as const;
 
 export const RUNWAY_VH: Record<NarrativeLayout, number> = {
-  desktop: 700,
-  mobile: 475,
+  desktop: 760,
+  mobile: 580,
 };
 
 export function runwayPixels(layout: NarrativeLayout, viewportHeight: number): number {

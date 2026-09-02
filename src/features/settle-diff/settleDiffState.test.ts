@@ -1,71 +1,22 @@
 import { describe, expect, test } from "vitest";
-
-import {
-  ORDERED_STATES,
-  progressToSettleDiffState,
-  STATE_RANGES,
-} from "./settleDiffState";
+import { progressToSettleDiffState, STATE_RANGES } from "./settleDiffState";
 import { SETTLE_DIFF_STATES } from "./settleDiffTypes";
 
-describe("progressToSettleDiffState", () => {
-  test("uses the approved storyboard timing contract", () => {
-    expect(STATE_RANGES).toEqual({
-      "project-established": [0, 0.1],
-      "request-in-flight": [0.1, 0.24],
-      "attempt-recorded": [0.24, 0.36],
-      "evidence-expanded": [0.36, 0.52],
-      "comparison-visible": [0.52, 0.68],
-      "mismatch-isolated": [0.68, 0.8],
-      unverifiable: [0.8, 0.9],
-      "reasoning-chain": [0.9, 0.96],
-      "vault-steward-arrival": [0.96, 1],
-    });
-    expect(ORDERED_STATES).toEqual(SETTLE_DIFF_STATES);
+describe("SettleDiff state contract", () => {
+  test("uses the approved ten contiguous states", () => {
+    expect(Object.keys(STATE_RANGES)).toEqual([...SETTLE_DIFF_STATES]);
+    let end = 0;
+    for (const state of SETTLE_DIFF_STATES) { expect(STATE_RANGES[state][0]).toBe(end); end = STATE_RANGES[state][1]; }
+    expect(end).toBe(1);
   });
-
-  test("maps range starts to the required states in narrative order", () => {
-    const starts: Array<[number, string]> = [
-      [0, "project-established"],
-      [0.1, "request-in-flight"],
-      [0.24, "attempt-recorded"],
-      [0.36, "evidence-expanded"],
-      [0.52, "comparison-visible"],
-      [0.68, "mismatch-isolated"],
-      [0.8, "unverifiable"],
-      [0.9, "reasoning-chain"],
-      [0.96, "vault-steward-arrival"],
-    ];
-
-    for (const [progress, state] of starts) {
-      expect(progressToSettleDiffState(progress)).toBe(state);
-    }
-  });
-
-  test("keeps mid-range progress inside its state", () => {
-    expect(progressToSettleDiffState(0.17)).toBe("request-in-flight");
-    expect(progressToSettleDiffState(0.43)).toBe("evidence-expanded");
-    expect(progressToSettleDiffState(0.8)).toBe("unverifiable");
-    expect(progressToSettleDiffState(0.999)).toBe("vault-steward-arrival");
-    expect(progressToSettleDiffState(0.24)).toBe("attempt-recorded");
-    expect(progressToSettleDiffState(0.96)).toBe("vault-steward-arrival");
-  });
-
-  test("clamps out-of-range progress to the boundary states", () => {
-    expect(progressToSettleDiffState(-0.5)).toBe("project-established");
-    expect(progressToSettleDiffState(1.5)).toBe("vault-steward-arrival");
+  test.each([
+    [0, "project-established"], [0.08, "purchase-in-flight"], [0.18, "outcome-uncertain"],
+    [0.29, "evidence-reconstructed"], [0.42, "origin-incident"], [0.54, "system-evolved"],
+    [0.65, "independent-proof"], [0.77, "checks-complete"], [0.88, "verified"], [0.96, "vault-handoff"],
+  ])("maps %s to %s", (progress, state) => expect(progressToSettleDiffState(progress as number)).toBe(state));
+  test("clamps invalid progress", () => {
+    expect(progressToSettleDiffState(-1)).toBe("project-established");
     expect(progressToSettleDiffState(Number.NaN)).toBe("project-established");
-  });
-
-  test("declares exactly one range per state, in order, without gaps", () => {
-    expect(Object.keys(STATE_RANGES)).toHaveLength(SETTLE_DIFF_STATES.length);
-
-    let previousEnd = 0;
-    for (const state of SETTLE_DIFF_STATES) {
-      const range = STATE_RANGES[state];
-      expect(range[0]).toBe(previousEnd);
-      expect(range[1]).toBeGreaterThanOrEqual(range[0]);
-      previousEnd = range[1];
-    }
-    expect(previousEnd).toBe(1);
+    expect(progressToSettleDiffState(2)).toBe("vault-handoff");
   });
 });

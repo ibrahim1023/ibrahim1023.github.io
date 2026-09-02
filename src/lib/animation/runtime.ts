@@ -166,11 +166,15 @@ export function initializePortfolioAnimations(
       );
       registerProbeTrigger("intro");
 
-      root.dataset.animated = "ready";
-
       refreshFrame = window.requestAnimationFrame(() => {
-        refreshFrame = undefined;
-        scrollTriggerApi.refresh();
+        refreshFrame = window.requestAnimationFrame(() => {
+          refreshFrame = undefined;
+          scrollTriggerApi.refresh();
+          // A reload can restore scrollY before the pin spacer has its final
+          // geometry. Only expose the animated branch after refresh has
+          // reconciled that restored position with the rebuilt timeline.
+          root.dataset.animated = "ready";
+        });
       });
 
       return () => {

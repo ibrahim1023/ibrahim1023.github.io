@@ -1,52 +1,19 @@
-import { projectLinks, settleDiff } from "@/content/portfolioContent";
 import { ProjectSourceLink } from "@/components/projects/ProjectSourceLink";
-
-import { EvidenceMap } from "./EvidenceMap";
-import { ReasoningRail } from "./ReasoningRail";
+import { projectLinks, settleDiff } from "@/content/portfolioContent";
+import { VaultTransitionOverlay } from "@/features/vault-steward/VaultTransitionOverlay";
+import { EvidenceReconstruction } from "./EvidenceReconstruction";
+import { IndependentProof } from "./IndependentProof";
 import styles from "./SettleDiff.module.css";
 import type { SettleDiffState } from "./settleDiffTypes";
-import { TransactionPath } from "./TransactionPath";
-import { VaultTransitionOverlay } from "../vault-steward/VaultTransitionOverlay";
+import { TransactionArtifact } from "./TransactionArtifact";
 
-export function SettleDiffStage({
-  state,
-}: {
-  state?: SettleDiffState;
-}) {
-  return (
-    <div
-      className={styles.stage}
-      data-animatable
-      data-layout="desktop"
-      data-state={state === undefined ? undefined : state}
-      data-stage
-    >
-      <header className={styles.stageHeader} data-stage-header>
-        <div className={styles.titleRow}>
-          <h2 className={styles.stageTitle}>{settleDiff.title}</h2>
-          <ProjectSourceLink href={projectLinks.settleDiff} project={settleDiff.title} />
-        </div>
-        <p className={styles.stageDescriptor}>{settleDiff.descriptor}</p>
-      </header>
-      <p className={styles.attemptBadge} data-attempt data-animatable>
-        <strong>{settleDiff.attemptLabel}</strong>
-        <span className={styles.attemptStatus} data-attempt-status data-animatable>
-          {settleDiff.activityStatus}
-        </span>
-        <span>{settleDiff.attemptQualifier}</span>
-      </p>
-      <TransactionPath />
-      <EvidenceMap />
-      <div className={styles.verdict} data-verdict data-animatable>
-        <p className={styles.verdictLabel}>{settleDiff.verdict}</p>
-        <p className={styles.verdictReason}>{settleDiff.verdictReason}</p>
-      </div>
-      <ReasoningRail />
-      <VaultTransitionOverlay
-        className={styles.transition}
-        connectorClassName={styles.transitionConnectors}
-        connectorPathClassName={styles.transitionConnector}
-      />
-    </div>
-  );
+export function SettleDiffStage({ state }: { state?: SettleDiffState }) {
+  return <div className={styles.stage} data-animatable data-layout="desktop" data-state={state} data-stage>
+    <div className={styles.sceneSurface} data-animatable data-scene-surface />
+    <header className={styles.stageHeader} data-stage-header data-animatable><div className={styles.titleRow}><h2 className={styles.stageTitle}>{settleDiff.title}</h2><ProjectSourceLink href={projectLinks.settleDiff} project={settleDiff.title} /></div><p>{settleDiff.descriptor}</p></header>
+    <TransactionArtifact layout="desktop" />
+    <p className={styles.uncertainty} data-animatable data-uncertainty>{settleDiff.uncertainty}</p>
+    <EvidenceReconstruction layout="desktop" /><IndependentProof layout="desktop" />
+    <VaultTransitionOverlay className={styles.transition} layout="desktop" />
+  </div>;
 }

@@ -19,9 +19,8 @@ The repository already provides:
 - GitHub Pages workflow;
 - Vitest component/unit tests and Playwright E2E tests.
 
-The current implementation passes lint, strict type checking, 31 unit/component
-tests, both static exports, and 7 Chromium E2E tests as of 2026-08-25. This is a
-healthy baseline, not Phase 1 acceptance: see `docs/IMPLEMENTATION_STATUS.md`.
+Current gate counts and acceptance evidence live in
+`docs/IMPLEMENTATION_STATUS.md`; do not copy them into architecture docs.
 
 ## Target composition
 
@@ -30,7 +29,7 @@ src/app/page.tsx                         semantic page shell only
   └─ PortfolioExperience                client lifecycle owner
       ├─ IntroSection                   intro composition
       └─ NarrativeStage                 media-aware scroll owner
-          ├─ SettleDiff desktop stage   wide evidence map
+          ├─ SettleDiff desktop stage   persistent artifact + proof workspace
           ├─ SettleDiff mobile stage    vertical/compact composition
           └─ Vault Steward arrival      stable normal-flow destination
 ```
@@ -68,14 +67,15 @@ The lifecycle must:
 ```ts
 type SettleDiffState =
   | "project-established"
-  | "request-in-flight"
-  | "attempt-recorded"
-  | "evidence-expanded"
-  | "comparison-visible"
-  | "mismatch-isolated"
-  | "unverifiable"
-  | "reasoning-chain"
-  | "vault-steward-arrival";
+  | "purchase-in-flight"
+  | "outcome-uncertain"
+  | "evidence-reconstructed"
+  | "origin-incident"
+  | "system-evolved"
+  | "independent-proof"
+  | "checks-complete"
+  | "verified"
+  | "vault-handoff";
 ```
 
 The state names are semantic test/debug labels. Production must not expose a
@@ -88,37 +88,28 @@ CSS, state mapping, tests, and GSAP labels cannot drift.
 
 ## Object continuity
 
-The current layer fade is insufficient. The target transition reuses visible
-objects or shared wrapper geometry so the user can track each role change:
-
-```text
-REQUEST   → NOTE
-PAYMENT   → PROPOSED CHANGE
-VENDOR    → EVIDENCE SOURCE
-CHAIN     → POLICY
-RESPONSE  → CURRENT / AFTER
-ACTIVITY  → AUDIT / RECHECK
-```
-
-The reasoning chain contracts into `FIND → PREVIEW → APPROVE → VERIFY` before
-the Vault Steward title becomes dominant. Crossfades may support label changes,
-but they cannot be the transition's entire visual logic.
+One transaction artifact persists from the origin request through the verified
+result. Evidence scenes are mutually exclusive foreground frames; a prior frame
+must exit before the next settles. At the end, the verified evidence compresses
+into one packet that crosses an explicit boundary into Vault Steward. The full
+SettleDiff interface does not relabel into the next product.
 
 ## Responsive composition
 
 ### Desktop and tablet landscape
 
 - Pinned full-viewport stage.
-- Approximately `650–800vh` SettleDiff runway.
-- Wide transaction path, evidence map, aligned comparison, and spatial object
-  transformation.
+- `760vh` SettleDiff runway.
+- Persistent artifact, reconstructed evidence layers, separated provider and
+  independent proof records, compact checks, and evidence-packet handoff.
 - Critical text fits `1024×768` and `1280×720` without clipping.
 
 ### Tablet portrait and mobile
 
 - Separate composition and timeline branch.
-- Approximately `400–550vh` SettleDiff runway.
-- Vertical evidence lineage and compact expected/observed alignment.
+- `580vh` SettleDiff runway inside a `680dvh` narrative container.
+- Vertical artifact travel, reconstruction layers, separated proof records,
+  compact checks, and evidence-packet handoff.
 - Selective pinning only when the usable dynamic viewport can contain the
   stage.
 - No horizontal overflow at `320px`; body text remains at least `16px`.

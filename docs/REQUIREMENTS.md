@@ -8,9 +8,10 @@
 ## Objective
 
 Create a production-quality, Apple-like scroll narrative that demonstrates
-Ibrahim's ability to build reliable agentic systems. The page must explain one
-real SettleDiff incident through evidence, then transform those same visual
-objects into the trust model of Vault Steward.
+Ibrahim's ability to build reliable agentic systems. The page must use one real
+SettleDiff failure as the origin, show the product's evolution, demonstrate a
+current independently verified purchase, then pass one evidence packet into
+the trust model of Vault Steward.
 
 The prototype validates:
 
@@ -33,8 +34,8 @@ The prototype validates:
 Include only:
 
 1. Intro.
-2. Complete SettleDiff incident sequence.
-3. Continuous SettleDiff → Vault Steward transformation.
+2. Complete SettleDiff origin-to-verification sequence.
+3. Continuous evidence-packet handoff from SettleDiff to Vault Steward.
 4. Minimal stable Vault Steward arrival.
 5. Understated accessible links from the two project titles to their source
    repositories.
@@ -71,8 +72,10 @@ enabled.
 
 ## SettleDiff factual contract
 
-The narrative represents a real paid-test incident through a sanitized
-regression fixture. It must not present sanitized names as live-party names.
+The narrative combines a historical paid-test incident from a sanitized
+regression fixture with a current public x402 verification cycle. It must not
+present sanitized names as live-party names or combine provider-reported and
+independently observed proof.
 
 | Evidence | Approved value | Meaning |
 |---|---|---|
@@ -88,6 +91,18 @@ regression fixture. It must not present sanitized names as live-party names.
 | Transaction hash | absent | no settlement proof |
 | Verdict | `UNVERIFIABLE` | settlement could not be established safely |
 
+The current verification cycle uses these approved values:
+
+| Evidence | Approved value | Meaning |
+|---|---|---|
+| Request | `0.001 USDC` | public x402 purchase amount |
+| Service result | `HTTP 200` | the request completed |
+| Provider evidence | `PAYMENT-RESPONSE` | provider-reported payment record |
+| Independent evidence | Base Sepolia USDC `Transfer` | separately observed transfer proof |
+| Checks | `12 / 12` | deterministic verification checks completed |
+| Model requests | `0` | verification did not require model judgment |
+| Verdict | `VERIFIED` | the current evidence satisfied the public checks |
+
 Required interpretation:
 
 - An Activity record proves that an attempt was recorded, not that money
@@ -97,6 +112,8 @@ Required interpretation:
 - `charge unknown` is unresolved evidence, not a proven amount mismatch.
 - The decisive uncertainty is the absence of confirmed settlement evidence.
 - Never use `$0.04`, `PAID`, or language that claims a successful charge.
+- Never use the historical failure as the current product conclusion.
+- Never merge `PAYMENT-RESPONSE` and the Base Sepolia transfer into one source.
 - Do not expose implementation/provider names in the cinematic copy.
 
 Approved SettleDiff descriptor:
@@ -123,19 +140,10 @@ Approved title and copy:
 - Descriptor: `Local-first, evidence-backed vault maintenance with explicit approval before every edit.`
 - Continuation cue: `Case study continues`
 
-The transition mapping is:
-
-| SettleDiff object | Vault Steward role |
-|---|---|
-| `REQUEST` | `NOTE` |
-| `PAYMENT` | `PROPOSED CHANGE` |
-| `VENDOR` | `EVIDENCE SOURCE` |
-| `CHAIN` | `POLICY` |
-| `RESPONSE` | `CURRENT / AFTER` |
-| `ACTIVITY` | `AUDIT / RECHECK` |
-
-Represent the real workflow abstractly in the portfolio's visual language.
-Do not reproduce an Obsidian screenshot as the transition scene.
+The transition carries one compact verified evidence packet across an explicit
+boundary. Represent the real workflow abstractly in the portfolio's visual
+language; do not morph the full SettleDiff interface into Vault Steward and do
+not reproduce an Obsidian screenshot as the transition scene.
 
 ## Scroll architecture
 
@@ -143,8 +151,8 @@ Use normalized progress from `0` to `1` and one master narrative timeline built
 from named segments.
 
 - Intro runway: approximately `100–140vh`.
-- Desktop SettleDiff runway: approximately `650–800vh`.
-- Mobile SettleDiff runway: approximately `400–550vh`.
+- Desktop SettleDiff runway: `760vh`.
+- Mobile SettleDiff runway: `580vh`.
 - Stable Vault Steward arrival: approximately `100–140vh` after the pinned
   transformation releases.
 
@@ -158,11 +166,13 @@ timeline.
 
 ## Visual system
 
-- Near-black canvas and warm off-white primary text.
+- Dark introduction and origin incident, progressively brighter evidence
+  workspace, paper-light verification scene, and warm Vault Steward arrival.
 - Muted neutral secondary text.
 - Restrained SettleDiff accent.
 - Warm amber for differences and controlled red for `UNVERIFIABLE`.
-- Transition gradually toward Vault Steward's restrained green.
+- Cool verification blue and restrained green for `VERIFIED`, followed by a
+  gradual transition toward Vault Steward's warmer green.
 - Never communicate meaning by color alone.
 - System-first sans-serif and restrained monospaced technical labels.
 - No runtime font downloads unless Ibrahim later supplies licensed local files.

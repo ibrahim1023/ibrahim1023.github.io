@@ -1,722 +1,146 @@
 import { gsap } from "gsap";
-
 import { STATE_RANGES } from "@/features/settle-diff/settleDiffState";
-import {
-  SETTLE_DIFF_STATES,
-  type SettleDiffState,
-} from "@/features/settle-diff/settleDiffTypes";
+import { SETTLE_DIFF_STATES, type SettleDiffState } from "@/features/settle-diff/settleDiffTypes";
 import type { NarrativeLayout } from "./media";
 
 export interface PortfolioTimelineElements {
-  intro: {
-    section: HTMLElement | null;
-    role: HTMLElement | null;
-    name: HTMLElement | null;
-    rule: HTMLElement | null;
-    framing: HTMLElement | null;
-    cue: HTMLElement | null;
-    cueLine: HTMLElement | null;
-    pathOrigin: HTMLElement | null;
-  };
+  intro: { section: HTMLElement | null; role: HTMLElement | null; name: HTMLElement | null; rule: HTMLElement | null; framing: HTMLElement | null; cue: HTMLElement | null; cueLine: HTMLElement | null; pathOrigin: HTMLElement | null };
   narrative: HTMLElement | null;
   settle: SettleDiffTimelineElements;
   vault: VaultTimelineElements;
 }
 
 export interface SettleDiffTimelineElements {
-  stage: HTMLElement | null;
-  header: HTMLElement | null;
-  transaction: HTMLElement | null;
-  pathLine: SVGPathElement | null;
-  token: HTMLElement | null;
-  return: HTMLElement | null;
-  attempt: HTMLElement | null;
-  attemptStatus: HTMLElement | null;
-  evidence: HTMLElement | null;
-  evidenceItems: Element[] | null;
-  settleLabels: Element[] | null;
-  vaultLabels: Element[] | null;
-  connectors: SVGPathElement[] | null;
-  comparison: HTMLElement | null;
-  mismatch: HTMLElement | null;
-  verdict: HTMLElement | null;
-  chain: HTMLElement | null;
-  chainItems: Element[] | null;
+  stage: HTMLElement | null; header: HTMLElement | null; surface: HTMLElement | null;
+  artifactScene: HTMLElement | null; artifact: HTMLElement | null; openingPrompt: HTMLElement | null;
+  uncertainty: HTMLElement | null; reconstruction: HTMLElement | null; layers: Element[] | null;
+  originIncident: HTMLElement | null; systemBoundary: HTMLElement | null; railLabels: Element[] | null;
+  proof: HTMLElement | null; proofHeader: HTMLElement | null; providerRecord: HTMLElement | null;
+  proofLink: HTMLElement | null; independentRecord: HTMLElement | null; checks: HTMLElement | null;
+  checkItems: Element[] | null; verified: HTMLElement | null; thesis: HTMLElement | null;
 }
 
 export interface VaultTimelineElements {
-  transition: HTMLElement | null;
-  title: HTMLElement | null;
-  rail: HTMLElement | null;
-  railItems: Element[] | null;
-  connectors: SVGPathElement[] | null;
+  transition: HTMLElement | null; packet: HTMLElement | null; boundary: HTMLElement | null;
+  title: HTMLElement | null; headline: HTMLElement | null; rail: HTMLElement | null; railItems: Element[] | null;
 }
 
-export function queryTimelineElements(
-  root: HTMLElement,
-  layout: NarrativeLayout,
-): PortfolioTimelineElements {
-  const layoutScope = `[data-animated-layout="${layout}"]`;
-  const query = <ElementType extends Element>(selector: string): ElementType | null =>
-    root.querySelector(`${layoutScope} ${selector}`) as ElementType | null;
-  const toArray = (selector: string): Element[] | null => {
-    const found = root.querySelectorAll(`${layoutScope} ${selector}`);
+export function queryTimelineElements(root: HTMLElement, layout: NarrativeLayout): PortfolioTimelineElements {
+  const scope = `[data-animated-layout="${layout}"]`;
+  const query = <T extends Element>(selector: string) => root.querySelector(`${scope} ${selector}`) as T | null;
+  const all = (selector: string) => {
+    const found = root.querySelectorAll(`${scope} ${selector}`);
     return found.length ? Array.from(found) : null;
   };
   return {
     intro: {
-      section: root.querySelector('[data-intro]') as HTMLElement | null,
-      role: root.querySelector('[data-intro] [data-intro-role]') as HTMLElement | null,
-      name: root.querySelector('[data-intro] [data-intro-name]') as HTMLElement | null,
-      rule: root.querySelector('[data-intro] [data-intro-rule]') as HTMLElement | null,
-      framing: root.querySelector('[data-intro] [data-intro-framing]') as HTMLElement | null,
-      cue: root.querySelector('[data-intro] [data-intro-cue]') as HTMLElement | null,
-      cueLine: root.querySelector('[data-intro] [data-intro-cue-line]') as HTMLElement | null,
-      pathOrigin: query<HTMLElement>('[data-path-origin]'),
+      section: root.querySelector("[data-intro]"), role: root.querySelector("[data-intro-role]"),
+      name: root.querySelector("[data-intro-name]"), rule: root.querySelector("[data-intro-rule]"),
+      framing: root.querySelector("[data-intro-framing]"), cue: root.querySelector("[data-intro-cue]"),
+      cueLine: root.querySelector("[data-intro-cue-line]"), pathOrigin: query("[data-path-origin]"),
     },
-    narrative: root.querySelector('[data-narrative]') as HTMLElement | null,
+    narrative: root.querySelector("[data-narrative]"),
     settle: {
-      stage: query<HTMLElement>('[data-stage]'),
-      header: query<HTMLElement>('[data-stage-header]'),
-      transaction: query<HTMLElement>('[data-transaction]'),
-      pathLine: query<SVGPathElement>('[data-path-line]'),
-      token: query<HTMLElement>('[data-token]'),
-      return: query<HTMLElement>('[data-return]'),
-      attempt: query<HTMLElement>('[data-attempt]'),
-      attemptStatus: query<HTMLElement>('[data-attempt-status]'),
-      evidence: query<HTMLElement>('[data-evidence]'),
-      evidenceItems: toArray('[data-evidence-item]'),
-      settleLabels: toArray('[data-object-label="settle"]'),
-      vaultLabels: toArray('[data-object-label="vault"]'),
-      connectors: toArray('[data-evidence-connector]') as SVGPathElement[] | null,
-      comparison: query<HTMLElement>('[data-comparison]'),
-      mismatch: query<HTMLElement>('[data-mismatch]'),
-      verdict: query<HTMLElement>('[data-verdict]'),
-      chain: query<HTMLElement>('[data-chain]'),
-      chainItems: toArray('[data-chain-item]'),
+      stage: query("[data-stage]"), header: query("[data-stage-header]"), surface: query("[data-scene-surface]"),
+      artifactScene: query("[data-artifact-scene]"), artifact: query("[data-artifact]"), openingPrompt: query("[data-opening-prompt]"),
+      uncertainty: query("[data-uncertainty]"), reconstruction: query("[data-reconstruction]"), layers: all("[data-reconstruction-layer]"),
+      originIncident: query("[data-origin-incident]"), systemBoundary: query("[data-system-boundary]"), railLabels: all("[data-rail-label]"),
+      proof: query("[data-proof]"), proofHeader: query("[data-proof-header]"), providerRecord: query("[data-provider-record]"),
+      proofLink: query("[data-proof-link]"), independentRecord: query("[data-independent-record]"), checks: query("[data-checks]"),
+      checkItems: all("[data-check]"), verified: query("[data-verified]"), thesis: query("[data-closing-thesis]"),
     },
     vault: {
-      transition: query<HTMLElement>('[data-vault-transition]'),
-      title: query<HTMLElement>('[data-vault-transition-title]'),
-      rail: query<HTMLElement>('[data-vault-transition-rail]'),
-      railItems: toArray('[data-vault-transition-step]'),
-      connectors: toArray('[data-vault-transition-connector]') as SVGPathElement[] | null,
+      transition: query("[data-vault-transition]"), packet: query("[data-evidence-packet]"), boundary: query("[data-vault-boundary]"),
+      title: query("[data-vault-transition-title]"), headline: query("[data-vault-transition-headline]"),
+      rail: query("[data-vault-transition-rail]"), railItems: all("[data-vault-transition-step]"),
     },
   };
 }
 
 const RUNWAY_SECONDS = 12;
-
 export const seconds = (progress: number) => progress * RUNWAY_SECONDS;
+export const stateTime = (state: SettleDiffState): readonly [number, number] => STATE_RANGES[state].map(seconds) as unknown as readonly [number, number];
+const timing = (state: SettleDiffState) => { const [start, end] = stateTime(state); return { start, end, duration: end - start }; };
+const present = <T extends Element>(targets: Array<T | null | undefined>): T[] => targets.filter((target): target is T => Boolean(target));
 
-export const stateTime = (
-  state: SettleDiffState,
-): readonly [number, number] => STATE_RANGES[state].map(seconds) as unknown as readonly [number, number];
-
-export function buildNarrativeTimeline(
-  elements: PortfolioTimelineElements,
-  layout: NarrativeLayout,
-): gsap.core.Timeline {
-  const master = gsap.timeline({
-    defaults: { ease: "none" },
-    paused: true,
-  });
-
-  appendSettleDiffTweens(master, elements.settle, layout);
-
-  const [vaultStart] = stateTime("vault-steward-arrival");
-  appendVaultTransitionTweens(master, elements.settle, elements.vault, vaultStart, layout);
-
-  return master;
-}
-
-export function buildSettleDiffTimeline(
-  elements: SettleDiffTimelineElements,
-): gsap.core.Timeline {
+export function buildNarrativeTimeline(elements: PortfolioTimelineElements, layout: NarrativeLayout): gsap.core.Timeline {
   const tl = gsap.timeline({ defaults: { ease: "none" }, paused: true });
-  appendSettleDiffTweens(tl, elements, "desktop");
+  appendSettleDiffTweens(tl, elements.settle, elements.vault, layout);
   return tl;
 }
 
-function appendSettleDiffTweens(
-  tl: gsap.core.Timeline,
-  elements: SettleDiffTimelineElements,
-  layout: NarrativeLayout,
-) {
-  addStateLabels(tl);
-  appendRequestSegment(tl, elements, layout);
-  appendAttemptSegment(tl, elements, layout);
-  appendEvidenceSegment(tl, elements, layout);
-  appendComparisonSegment(tl, elements, layout);
-  appendConflictSegment(tl, elements, layout);
-  appendVerdictSegment(tl, elements, layout);
-  appendReasoningSegment(tl, elements, layout);
-
-  const [vaultStart, vaultEnd] = stateTime("vault-steward-arrival");
-  tl.to({}, { duration: vaultEnd - vaultStart }, vaultStart);
-}
-
-function addStateLabels(tl: gsap.core.Timeline) {
-  SETTLE_DIFF_STATES.forEach((state) => tl.addLabel(state, stateTime(state)[0]));
-}
-
-const segmentTiming = (state: SettleDiffState) => {
-  const [start, end] = stateTime(state);
-  return { start, end, duration: end - start };
-};
-
-export function appendRequestSegment(
-  tl: gsap.core.Timeline,
-  elements: SettleDiffTimelineElements,
-  layout: NarrativeLayout,
-) {
-  const { start, duration } = segmentTiming("request-in-flight");
-
-  if (layout === "mobile" && elements.transaction) {
-    tl.fromTo(
-      elements.transaction,
-      { opacity: 0.45, yPercent: -24 },
-      {
-        id: "mobile-request",
-        opacity: 1,
-        yPercent: 0,
-        duration,
-        ease: "power1.out",
-      },
-      start,
-    );
-  }
-
-  if (layout === "desktop" && elements.pathLine && typeof elements.pathLine.getTotalLength === "function") {
-    const length = elements.pathLine.getTotalLength();
-    gsap.set(elements.pathLine, { strokeDasharray: length, strokeDashoffset: length });
-    tl.to(elements.pathLine, { strokeDashoffset: 0, duration }, start);
-  }
-
-  if (elements.token) {
-    tl.fromTo(
-      elements.token,
-      { "--token-progress": "8%", opacity: 1 },
-      layout === "desktop"
-        ? { "--token-progress": "86%", opacity: 1, duration }
-        : { opacity: 1, duration },
-      start,
-    );
-  }
-
-  if (elements.return) {
-    tl.fromTo(
-      elements.return,
-      layout === "desktop" ? { opacity: 0, y: 12 } : { opacity: 0 },
-      layout === "desktop"
-        ? { opacity: 1, y: 0, duration: duration * 0.38, ease: "power1.out" }
-        : { opacity: 1, duration: duration * 0.38, ease: "power1.out" },
-      start + duration * 0.62,
-    );
-  }
-}
-
-export function appendAttemptSegment(
-  tl: gsap.core.Timeline,
-  elements: SettleDiffTimelineElements,
-  layout: NarrativeLayout,
-) {
-  const { start, duration } = segmentTiming("attempt-recorded");
-  const targets = [elements.attempt, elements.attemptStatus].filter(
-    (target): target is HTMLElement => target !== null,
-  );
-
-  if (elements.transaction) {
-    tl.to(
-      elements.transaction,
-      {
-        id: layout === "mobile" ? "mobile-request-exit" : "desktop-request-exit",
-        opacity: layout === "mobile" ? 0 : 0.12,
-        duration: duration * 0.24,
-        ease: "power1.in",
-      },
-      start,
-    );
-  }
-
-  if (elements.token) {
-    tl.to(
-      elements.token,
-      layout === "desktop"
-        ? { opacity: 0.2, y: -10, duration: duration * 0.45 }
-        : { opacity: 0.2, duration: duration * 0.45 },
-      start,
-    );
-  }
-  if (targets.length) {
-    tl.fromTo(
-      targets,
-      layout === "desktop" ? { opacity: 0, y: 16 } : { opacity: 0, yPercent: 12 },
-      layout === "desktop"
-        ? { opacity: 1, y: 0, stagger: 0.06, duration: duration * 0.6, ease: "power1.out" }
-        : {
-          id: "mobile-activity",
-          opacity: 1,
-          yPercent: 0,
-          stagger: 0.06,
-          duration: duration * 0.6,
-          ease: "power1.out",
-        },
-      start,
-    );
-  }
-}
-
-export function appendEvidenceSegment(
-  tl: gsap.core.Timeline,
-  elements: SettleDiffTimelineElements,
-  layout: NarrativeLayout,
-) {
-  const { start, duration } = segmentTiming("evidence-expanded");
-  const priorFrames = [elements.transaction, elements.attempt, elements.attemptStatus].filter(
-    (target): target is HTMLElement => target !== null,
-  );
-  if (priorFrames.length) {
-    tl.to(
-      priorFrames,
-      {
-        id: layout === "mobile" ? "mobile-activity-exit" : "desktop-activity-exit",
-        opacity: 0,
-        duration: duration * 0.2,
-        ease: "power1.in",
-      },
-      start,
-    );
-  }
-  if (elements.evidence) {
-    tl.fromTo(elements.evidence, { opacity: 0 }, { opacity: 1, duration: duration * 0.35 }, start);
-  }
-  if (elements.evidenceItems) {
-    tl.fromTo(
-      elements.evidenceItems,
-      layout === "desktop" ? { opacity: 0, y: 24, scale: 0.96 } : { opacity: 0, yPercent: 18 },
-      layout === "desktop"
-        ? { opacity: 1, y: 0, scale: 1, stagger: 0.08, duration: duration * 0.55, ease: "power1.out" }
-        : {
-          id: "mobile-evidence",
-          opacity: 1,
-          yPercent: 0,
-          stagger: 0.055,
-          duration: duration * 0.55,
-          ease: "power1.out",
-        },
-      start + duration * 0.1,
-    );
-  }
-  elements.connectors?.forEach((connector) => {
-    if (typeof connector.getTotalLength !== "function") return;
-    const length = connector.getTotalLength();
-    gsap.set(connector, { strokeDasharray: length, strokeDashoffset: length });
-    tl.to(connector, { strokeDashoffset: 0, duration: duration * 0.55 }, start + duration * 0.1);
-  });
-}
-
-export function appendComparisonSegment(
-  tl: gsap.core.Timeline,
-  elements: SettleDiffTimelineElements,
-  layout: NarrativeLayout,
-) {
-  const { start, duration } = segmentTiming("comparison-visible");
-  const backgroundTargets = [elements.transaction, elements.attempt, elements.attemptStatus].filter(
-    (target): target is HTMLElement => target !== null,
-  );
-  if (backgroundTargets.length) {
-    tl.to(backgroundTargets, { opacity: 0, duration: duration * 0.32 }, start);
-  }
-  if (elements.evidence) {
-    tl.to(elements.evidence, { opacity: 0, duration: duration * 0.3 }, start);
-  }
-  if (layout === "desktop" && elements.evidenceItems) {
-    tl.to(
-      elements.evidenceItems,
-      {
-        x: (index) => (index % 2 === 0 ? -54 : 54),
-        y: (index) => (Math.floor(index / 2) - 1) * 30,
-        opacity: 0.22,
-        duration: duration * 0.65,
-        ease: "power1.out",
-      },
-      start,
-    );
-  }
-  if (elements.comparison) {
-    tl.fromTo(
-      elements.comparison,
-      layout === "desktop" ? { opacity: 0, y: 28 } : { opacity: 0, yPercent: 12 },
-      layout === "desktop"
-        ? { opacity: 1, y: 0, duration: duration * 0.6, ease: "power1.out" }
-        : {
-          id: "mobile-comparison",
-          opacity: 1,
-          yPercent: 0,
-          duration: duration * 0.6,
-          ease: "power1.out",
-        },
-      start + duration * 0.16,
-    );
-  }
-}
-
-export function appendConflictSegment(
-  tl: gsap.core.Timeline,
-  elements: SettleDiffTimelineElements,
-  layout: NarrativeLayout,
-) {
-  const { start, duration } = segmentTiming("mismatch-isolated");
-  const supportingTargets = [elements.transaction, elements.attempt, elements.attemptStatus, elements.comparison, elements.evidence].filter(
-    (target): target is HTMLElement => target !== null,
-  );
-  if (supportingTargets.length) {
-    tl.to(supportingTargets, { opacity: 0, duration: duration * 0.36 }, start);
-  }
-  if (elements.mismatch) {
-    tl.fromTo(
-      elements.mismatch,
-      layout === "desktop" ? { opacity: 0, y: 18, scale: 0.96 } : { opacity: 0, yPercent: 10 },
-      layout === "desktop"
-        ? { opacity: 1, y: 0, scale: 1, duration: duration * 0.55, ease: "power1.out" }
-        : {
-          id: "mobile-conflict",
-          opacity: 1,
-          yPercent: 0,
-          duration: duration * 0.55,
-          ease: "power1.out",
-        },
-      start + duration * 0.12,
-    );
-  }
-}
-
-export function appendVerdictSegment(
-  tl: gsap.core.Timeline,
-  elements: SettleDiffTimelineElements,
-  layout: NarrativeLayout,
-) {
-  const { start, duration } = segmentTiming("unverifiable");
-  const surroundingTargets = [elements.transaction, elements.attempt, elements.attemptStatus, elements.comparison, elements.mismatch, elements.evidence].filter(
-    (target): target is HTMLElement => target !== null,
-  );
-  if (surroundingTargets.length) {
-    tl.to(surroundingTargets, { opacity: 0, duration: duration * 0.34 }, start);
-  }
-  if (elements.verdict) {
-    tl.fromTo(
-      elements.verdict,
-      layout === "desktop" ? { opacity: 0, y: 12, scale: 0.92 } : { opacity: 0, yPercent: 10 },
-      layout === "desktop"
-        ? { opacity: 1, y: 0, scale: 1, duration: duration * 0.55, ease: "power1.out" }
-        : {
-          id: "mobile-verdict",
-          opacity: 1,
-          yPercent: 0,
-          duration: duration * 0.55,
-          ease: "power1.out",
-        },
-      start + duration * 0.12,
-    );
-  }
-}
-
-export function appendReasoningSegment(
-  tl: gsap.core.Timeline,
-  elements: SettleDiffTimelineElements,
-  layout: NarrativeLayout,
-) {
-  const { start, duration } = segmentTiming("reasoning-chain");
-  const priorFrames = [elements.comparison, elements.mismatch, elements.verdict, elements.evidence].filter(
-    (target): target is HTMLElement => target !== null,
-  );
-  if (priorFrames.length) {
-    tl.to(priorFrames, { opacity: 0, duration: duration * 0.3 }, start);
-  }
-  if (elements.chain) {
-    tl.fromTo(
-      elements.chain,
-      layout === "desktop" ? { opacity: 0, y: 28 } : { opacity: 0, yPercent: 10 },
-      layout === "desktop"
-        ? { opacity: 1, y: 0, duration: duration * 0.55, ease: "power1.out" }
-        : { id: "mobile-reasoning", opacity: 1, yPercent: 0, duration: duration * 0.55, ease: "power1.out" },
-      start + duration * 0.18,
-    );
-  }
-  if (elements.chainItems) {
-    tl.fromTo(
-      elements.chainItems,
-      layout === "desktop" ? { opacity: 0, y: 16 } : { opacity: 0, yPercent: 8 },
-      layout === "desktop"
-        ? { opacity: 1, y: 0, stagger: 0.06, duration: duration * 0.4, ease: "power1.out" }
-        : { opacity: 1, yPercent: 0, stagger: 0.055, duration: duration * 0.4, ease: "power1.out" },
-      start + duration * 0.28,
-    );
-  }
-}
-
-function appendVaultTransitionTweens(
-  tl: gsap.core.Timeline,
-  settle: SettleDiffTimelineElements,
-  vault: VaultTimelineElements,
-  startTime: number,
-  layout: NarrativeLayout,
-) {
-  const [, endTime] = stateTime("vault-steward-arrival");
-  const available = endTime - startTime;
-  const finalStateEnd = startTime + available;
-  const contentSettledTime = startTime + available * 0.82;
-
-  const obsoleteFrames = [
-    settle.header,
-    settle.transaction,
-    settle.attempt,
-    settle.attemptStatus,
-    settle.comparison,
-    settle.mismatch,
-    settle.verdict,
-    settle.chain,
-  ].filter((target): target is HTMLElement => target !== null);
-  if (obsoleteFrames.length) {
-    tl.to(obsoleteFrames, { opacity: 0, duration: available * 0.16 }, startTime);
-  }
-
-  if (settle.evidence) {
-    tl.to(
-      settle.evidence,
-      layout === "mobile"
-        ? {
-          opacity: 1,
-          scale: 0.78,
-          yPercent: -8,
-          transformOrigin: "50% 50%",
-          duration: available * 0.3,
-          ease: "power1.out",
-        }
-        : { opacity: 1, duration: available * 0.16 },
-      startTime + available * 0.2,
-    );
-  }
-
-  if (settle.evidenceItems) {
-    tl.to(
-      settle.evidenceItems,
-      layout === "desktop"
-        ? {
-          "--evidence-left": (index: number) => `${20 + (index % 3) * 30}%`,
-          "--evidence-top": (index: number) => `${42 + Math.floor(index / 3) * 20}%`,
-          opacity: 0,
-          scale: 0.84,
-          x: 0,
-          y: 0,
-          xPercent: -50,
-          duration: available * 0.42,
-          ease: "power1.out",
-        }
-        : {
-          opacity: 0,
-          yPercent: 0,
-          duration: available * 0.3,
-          ease: "power1.out",
-        },
-      startTime,
-    );
-    tl.to(
-      settle.evidenceItems,
-      {
-        opacity: 1,
-        stagger: available * 0.018,
-        duration: available * 0.22,
-        ease: "power1.out",
-      },
-      startTime + available * 0.3,
-    );
-  }
-
-  if (settle.settleLabels) {
-    tl.to(
-      settle.settleLabels,
-      {
-        opacity: 0,
-        visibility: "hidden",
-        duration: available * 0.24,
-        ease: "power1.out",
-      },
-      startTime + available * 0.12,
-    );
-  }
-
-  if (settle.vaultLabels) {
-    tl.fromTo(
-      settle.vaultLabels,
-      layout === "desktop"
-        ? { opacity: 0, visibility: "hidden", y: 8 }
-        : { opacity: 0, visibility: "hidden", yPercent: 8 },
-      layout === "desktop"
-        ? {
-          opacity: 1,
-          visibility: "visible",
-          y: 0,
-          duration: available * 0.28,
-          ease: "power1.out",
-        }
-        : {
-          opacity: 1,
-          visibility: "visible",
-          yPercent: 0,
-          duration: available * 0.28,
-          ease: "power1.out",
-        },
-      startTime + available * 0.18,
-    );
-  }
-
-  if (settle.connectors) {
-    tl.to(
-      settle.connectors,
-      {
-        opacity: 0,
-        scale: layout === "desktop" ? 0.01 : 1,
-        transformOrigin: "50% 50%",
-        duration: available * 0.24,
-        ease: "power1.out",
-      },
-      startTime + available * 0.08,
-    );
-  }
-
-  if (settle.stage) {
-    tl.to(
-      settle.stage,
-      {
-        "--stage-accent": "var(--color-vault)",
-        "--stage-line": "var(--color-vault)",
-        duration: available * 0.38,
-        ease: "power1.out",
-      },
-      startTime + available * 0.1,
-    );
-  }
-
-  if (vault.transition) {
-    tl.fromTo(
-      vault.transition,
-      layout === "desktop" ? { opacity: 0, y: 14 } : { opacity: 0, yPercent: 8 },
-      layout === "desktop"
-        ? { opacity: 1, y: 0, duration: available * 0.22, ease: "power1.out" }
-        : { opacity: 1, yPercent: 0, duration: available * 0.22, ease: "power1.out" },
-      startTime + available * 0.28,
-    );
-  }
-
-  if (vault.connectors) {
-    tl.fromTo(
-      vault.connectors,
-      { opacity: 0 },
-      { opacity: 1, duration: available * 0.22, ease: "power1.out" },
-      startTime + available * 0.3,
-    );
-  }
-
-  if (vault.railItems) {
-    const railStart = startTime + available * 0.42;
-    const railTiming = staggerTiming(railStart, contentSettledTime, vault.railItems.length);
-    tl.fromTo(
-      vault.railItems,
-      layout === "desktop" ? { opacity: 0, x: -16 } : { opacity: 0, yPercent: 8 },
-      layout === "desktop"
-        ? { opacity: 1, x: 0, stagger: railTiming.stagger, duration: railTiming.duration }
-        : { opacity: 1, yPercent: 0, stagger: railTiming.stagger, duration: railTiming.duration },
-      railStart,
-    );
-  }
-
-  if (settle.chainItems) {
-    const chainStart = startTime + available * 0.28;
-    const chainTiming = staggerTiming(chainStart, finalStateEnd, settle.chainItems.length);
-    tl.to(
-      settle.chainItems,
-      layout === "desktop"
-        ? { opacity: 0, x: 16, stagger: chainTiming.stagger, duration: chainTiming.duration }
-        : { opacity: 0, yPercent: -6, stagger: chainTiming.stagger, duration: chainTiming.duration },
-      chainStart,
-    );
-  }
-
-  if (settle.chain) {
-    tl.to(
-      settle.chain,
-      { opacity: 0, duration: available * 0.2 },
-      startTime + available * 0.3,
-    );
-  }
-
-  const headlineTargets = [vault.title].filter(
-    (t): t is HTMLElement => t !== null,
-  );
-  if (headlineTargets.length) {
-    const headlineStart = startTime + available * 0.46;
-    const headlineTiming = staggerTiming(headlineStart, contentSettledTime, headlineTargets.length);
-    tl.fromTo(
-      headlineTargets,
-      layout === "desktop" ? { opacity: 0, y: 24 } : { opacity: 0 },
-      layout === "desktop"
-        ? {
-          opacity: 1,
-          y: 0,
-          stagger: headlineTiming.stagger,
-          duration: headlineTiming.duration,
-        }
-        : { opacity: 1, stagger: headlineTiming.stagger, duration: headlineTiming.duration },
-      headlineStart,
-    );
-  }
-
-}
-
-function staggerTiming(start: number, end: number, targetCount: number) {
-  const available = Math.max(0, end - start);
-  const duration = available * 0.7;
-  const stagger = targetCount > 1 ? (available - duration) / (targetCount - 1) : 0;
-  return { duration, stagger };
-}
-
-export function buildIntroTimeline(
-  elements: PortfolioTimelineElements["intro"],
-): gsap.core.Timeline {
+export function buildSettleDiffTimeline(elements: SettleDiffTimelineElements): gsap.core.Timeline {
   const tl = gsap.timeline({ defaults: { ease: "none" }, paused: true });
+  appendSettleDiffTweens(tl, elements, { transition: null, packet: null, boundary: null, title: null, headline: null, rail: null, railItems: null }, "desktop");
+  return tl;
+}
 
-  const targets = [elements.role, elements.name, elements.rule, elements.framing, elements.cue].filter(
-    (t): t is HTMLElement => t !== null,
-  );
+function appendSettleDiffTweens(tl: gsap.core.Timeline, e: SettleDiffTimelineElements, vault: VaultTimelineElements, layout: NarrativeLayout) {
+  SETTLE_DIFF_STATES.forEach((state) => tl.addLabel(state, stateTime(state)[0]));
+  const hidden = present([e.uncertainty, e.reconstruction, e.originIncident, e.systemBoundary, e.proof, e.checks, e.verified, vault.transition]);
+  if (hidden.length) tl.set(hidden, { opacity: 0, visibility: "hidden" }, 0);
 
-  if (targets.length) {
-    tl.fromTo(
-      targets,
-      { opacity: 1, y: 0 },
-      { opacity: 0.15, y: -40, stagger: 0.02, duration: 0.6 },
-      0,
-    );
-  }
+  const purchase = timing("purchase-in-flight");
+  if (e.artifact) tl.fromTo(e.artifact, layout === "desktop" ? { xPercent: -190, opacity: 1 } : { yPercent: -75, opacity: 1 }, layout === "desktop" ? { id: "purchase-flight", xPercent: 0, opacity: 1, duration: purchase.duration * .65, ease: "power2.out" } : { id: "mobile-purchase-flight", yPercent: 0, opacity: 1, duration: purchase.duration * .65, ease: "power2.out" }, purchase.start);
+  if (e.openingPrompt) tl.fromTo(e.openingPrompt, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: purchase.duration * .35 }, purchase.start + purchase.duration * .6);
 
-  if (elements.cueLine) {
-    tl.fromTo(
-      elements.cueLine,
-      { scaleX: 1, transformOrigin: "left center" },
-      { scaleX: 1.7, duration: 0.6 },
-      0,
-    );
-  }
+  const uncertain = timing("outcome-uncertain");
+  const opening = present([e.artifactScene, e.openingPrompt]);
+  if (opening.length) tl.to(opening, { opacity: 0, visibility: "hidden", duration: uncertain.duration * .25 }, uncertain.start);
+  if (e.uncertainty) tl.fromTo(e.uncertainty, { opacity: 0, visibility: "hidden", y: 18 }, { id: layout === "mobile" ? "mobile-outcome-uncertain" : "outcome-uncertain", opacity: 1, visibility: "visible", y: 0, duration: uncertain.duration * .55 }, uncertain.start + uncertain.duration * .2);
 
-  if (elements.pathOrigin) {
-    tl.fromTo(
-      elements.pathOrigin,
-      { opacity: 0.2, scaleX: 0.4, transformOrigin: "left center" },
-      { opacity: 1, scaleX: 1, duration: 0.6 },
-      0,
-    );
-  }
+  const reconstruction = timing("evidence-reconstructed");
+  if (e.uncertainty) tl.to(e.uncertainty, { opacity: 0, visibility: "hidden", duration: reconstruction.duration * .2 }, reconstruction.start);
+  if (e.surface) tl.to(e.surface, { backgroundColor: "#181b1d", duration: reconstruction.duration * .65 }, reconstruction.start);
+  if (e.reconstruction) tl.fromTo(e.reconstruction, { opacity: 0, visibility: "hidden" }, { opacity: 1, visibility: "visible", duration: reconstruction.duration * .25 }, reconstruction.start + reconstruction.duration * .16);
+  if (e.layers) tl.fromTo(e.layers, layout === "desktop" ? { opacity: 0, y: 28 } : { opacity: 0, yPercent: 18 }, layout === "desktop" ? { id: "evidence-layers", opacity: 1, y: 0, stagger: .1, duration: reconstruction.duration * .45 } : { id: "mobile-evidence-layers", opacity: 1, yPercent: 0, stagger: .08, duration: reconstruction.duration * .45 }, reconstruction.start + reconstruction.duration * .25);
 
+  const origin = timing("origin-incident");
+  if (e.reconstruction) tl.to(e.reconstruction, { opacity: 0, visibility: "hidden", duration: origin.duration * .2 }, origin.start);
+  if (e.originIncident) tl.fromTo(e.originIncident, { opacity: 0, visibility: "hidden", y: 16 }, { id: "origin-incident", opacity: 1, visibility: "visible", y: 0, duration: origin.duration * .5 }, origin.start + origin.duration * .2);
+
+  const evolved = timing("system-evolved");
+  if (e.originIncident) tl.to(e.originIncident, { opacity: 0, visibility: "hidden", duration: evolved.duration * .2 }, evolved.start);
+  if (e.systemBoundary) tl.fromTo(e.systemBoundary, { opacity: 0, visibility: "hidden", scale: .94 }, { id: "system-evolved", opacity: 1, visibility: "visible", scale: 1, duration: evolved.duration * .5 }, evolved.start + evolved.duration * .18);
+  if (e.railLabels) tl.fromTo(e.railLabels, { opacity: 0, x: (i) => i ? 30 : -30 }, { opacity: 1, x: 0, stagger: .08, duration: evolved.duration * .35 }, evolved.start + evolved.duration * .42);
+
+  const proof = timing("independent-proof");
+  if (e.systemBoundary) tl.to(e.systemBoundary, { opacity: 0, visibility: "hidden", duration: proof.duration * .2 }, proof.start);
+  if (e.surface) tl.to(e.surface, { backgroundColor: "#e9e7e1", duration: proof.duration * .7 }, proof.start);
+  if (e.header) tl.to(e.header, { opacity: .18, duration: proof.duration * .4 }, proof.start);
+  if (e.proof) tl.set(e.proof, { opacity: 1, visibility: "visible" }, proof.start + proof.duration * .14);
+  if (e.proofHeader) tl.fromTo(e.proofHeader, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: proof.duration * .35 }, proof.start + proof.duration * .18);
+  if (e.providerRecord) tl.fromTo(e.providerRecord, layout === "desktop" ? { opacity: 0, x: -35 } : { opacity: 0, yPercent: 12 }, layout === "desktop" ? { id: "provider-record", opacity: 1, x: 0, duration: proof.duration * .4 } : { id: "mobile-provider-record", opacity: 1, yPercent: 0, duration: proof.duration * .35 }, proof.start + proof.duration * .3);
+  if (e.independentRecord) tl.fromTo(e.independentRecord, layout === "desktop" ? { opacity: 0, x: 35 } : { opacity: 0, yPercent: 12 }, layout === "desktop" ? { id: "independent-record", opacity: 1, x: 0, duration: proof.duration * .4 } : { id: "mobile-independent-record", opacity: 1, yPercent: 0, duration: proof.duration * .35 }, proof.start + proof.duration * .48);
+  if (e.proofLink) tl.fromTo(e.proofLink, { opacity: 0 }, { opacity: 1, duration: proof.duration * .2 }, proof.start + proof.duration * .62);
+
+  const checks = timing("checks-complete");
+  if (e.proof) tl.to(e.proof, { opacity: 0, visibility: "hidden", duration: checks.duration * .2 }, checks.start);
+  if (e.checks) tl.fromTo(e.checks, { opacity: 0, visibility: "hidden" }, { opacity: 1, visibility: "visible", duration: checks.duration * .25 }, checks.start + checks.duration * .14);
+  if (e.checkItems) tl.fromTo(e.checkItems, { opacity: 0, y: 8 }, { id: "deterministic-checks", opacity: 1, y: 0, stagger: .035, duration: checks.duration * .35 }, checks.start + checks.duration * .25);
+
+  const verified = timing("verified");
+  if (e.checks) tl.to(e.checks, { opacity: 0, visibility: "hidden", duration: verified.duration * .2 }, verified.start);
+  if (e.header) tl.to(e.header, { opacity: 0, visibility: "hidden", duration: verified.duration * .2 }, verified.start);
+  if (e.verified) tl.fromTo(e.verified, { opacity: 0, visibility: "hidden", scale: .96 }, { id: "verified-result", opacity: 1, visibility: "visible", scale: 1, duration: verified.duration * .45 }, verified.start + verified.duration * .15);
+  if (e.thesis) tl.fromTo(e.thesis, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: verified.duration * .35 }, verified.start + verified.duration * .5);
+
+  const handoff = timing("vault-handoff");
+  if (e.verified) tl.to(e.verified, { opacity: 0, visibility: "hidden", duration: handoff.duration * .18 }, handoff.start);
+  if (e.surface) tl.to(e.surface, { backgroundColor: "#dedfd7", duration: handoff.duration * .7 }, handoff.start);
+  if (vault.transition) tl.set(vault.transition, { opacity: 1, visibility: "visible" }, handoff.start + handoff.duration * .16);
+  if (vault.packet) tl.fromTo(vault.packet, { opacity: 0, scale: 1.45 }, { id: "evidence-packet", opacity: 1, scale: 1, duration: handoff.duration * .35 }, handoff.start + handoff.duration * .16);
+  if (vault.boundary) tl.fromTo(vault.boundary, { opacity: 0, scaleX: .2 }, { opacity: 1, scaleX: 1, duration: handoff.duration * .38 }, handoff.start + handoff.duration * .34);
+  const vaultCopy = present([vault.title, vault.headline, vault.rail]);
+  if (vaultCopy.length) tl.fromTo(vaultCopy, { opacity: 0, y: 12 }, { opacity: 1, y: 0, stagger: .05, duration: handoff.duration * .28 }, handoff.start + handoff.duration * .5);
+  tl.to({}, { duration: handoff.end - handoff.start }, handoff.start);
+}
+
+export function buildIntroTimeline(elements: PortfolioTimelineElements["intro"]): gsap.core.Timeline {
+  const tl = gsap.timeline({ defaults: { ease: "none" }, paused: true });
+  const targets = present([elements.role, elements.name, elements.rule, elements.framing, elements.cue]);
+  if (targets.length) tl.fromTo(targets, { opacity: 1, y: 0 }, { opacity: .15, y: -40, stagger: .02, duration: .6 }, 0);
+  if (elements.cueLine) tl.fromTo(elements.cueLine, { scaleX: 1, transformOrigin: "left center" }, { scaleX: 1.7, duration: .6 }, 0);
+  if (elements.pathOrigin) tl.fromTo(elements.pathOrigin, { opacity: .2, scaleX: .4, transformOrigin: "left center" }, { opacity: 1, scaleX: 1, duration: .6 }, 0);
   return tl;
 }

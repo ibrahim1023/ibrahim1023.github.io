@@ -1,49 +1,23 @@
 import { describe, expect, test } from "vitest";
-
-import {
-  comparisonRows,
-  evidenceObjects,
-  projectLinks,
-  settleDiff,
-  vaultSteward,
-} from "./portfolioContent";
+import { originIncident, projectLinks, publicVerification, settleDiff, verificationChecks, verificationSystem, vaultSteward } from "./portfolioContent";
 
 describe("portfolio factual contract", () => {
-  test("uses only the approved failed-broadcast evidence", () => {
-    const serialized = JSON.stringify({ settleDiff, evidenceObjects, comparisonRows });
-
-    expect(settleDiff.requestAmount).toBe("0.01 USDC");
-    expect(settleDiff.maxBudget).toBe("0.02 USDC");
-    expect(settleDiff.returnLabel).toBe("HTTP 402");
-    expect(settleDiff.activityStatus).toBe("broadcast_failed");
-    expect(serialized).not.toContain("$0.04");
-    expect(serialized).not.toContain('"PAID"');
-    expect(serialized).not.toContain("acknowledged");
+  test("keeps the failed incident as the factual origin example", () => {
+    expect(originIncident).toMatchObject({ amount: "0.01 USDC", maxBudget: "0.02 USDC", verdict: "UNVERIFIABLE" });
+    expect(originIncident.technical).toEqual(["base → tempo", "HTTP 402", "broadcast_failed", "transaction hash absent"]);
   });
-
-  test("separates DIFF, FAIL, PASS, and UNKNOWN", () => {
-    expect(Object.fromEntries(comparisonRows.map((row) => [row.id, row.classification])))
-      .toEqual({
-        chain: "DIFF",
-        charge: "UNKNOWN",
-        protocol: "PASS",
-        vendor: "PASS",
-        service: "FAIL",
-        transactionHash: "UNKNOWN",
-      });
+  test("presents the public success as bounded independent testnet proof", () => {
+    expect(publicVerification).toMatchObject({ amount: "0.001 USDC", verdict: "VERIFIED", checkSummary: "12 / 12 deterministic checks" });
+    expect(publicVerification.scope).toContain("Base Sepolia testnet");
+    expect(publicVerification.provider.provenance).toBe("provider PAYMENT-RESPONSE");
+    expect(publicVerification.independent.provenance).toBe("Base Sepolia USDC Transfer");
+    expect(publicVerification.modelSummary).toContain("0 model requests");
+    expect(verificationChecks).toHaveLength(12);
   });
-
-  test("pins project sources and the Vault mapping", () => {
+  test("keeps plain foreground copy and implemented rail names", () => {
+    expect(settleDiff.closingThesis).toBe("Don’t trust the receipt. Verify the settlement.");
+    expect(verificationSystem.rails).toEqual(["Perflo", "x402"]);
     expect(projectLinks.settleDiff).toBe("https://github.com/ibrahim1023/SettleDiff");
-    expect(projectLinks.vaultSteward).toBe("https://github.com/ibrahim1023/vault-steward");
     expect(vaultSteward.rail).toEqual(["FIND", "PREVIEW", "APPROVE", "VERIFY"]);
-    expect(evidenceObjects.map(({ id, vaultRole }) => [id, vaultRole])).toEqual([
-      ["request", "NOTE"],
-      ["payment", "PROPOSED CHANGE"],
-      ["vendor", "EVIDENCE SOURCE"],
-      ["chain", "POLICY"],
-      ["response", "CURRENT / AFTER"],
-      ["activity", "AUDIT / RECHECK"],
-    ]);
   });
 });

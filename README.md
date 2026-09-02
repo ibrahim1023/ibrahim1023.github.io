@@ -1,8 +1,9 @@
 # Ibrahim Arshad — Portfolio
 
-Phase 1 prototype: an Apple-like, scroll-directed narrative that follows one
-source-backed SettleDiff incident from request to `UNVERIFIABLE` verdict and
-transforms continuously into a minimal Vault Steward approval-preview arrival.
+Phase 1 prototype: an Apple-like, scroll-directed narrative that begins with a
+real SettleDiff failure, shows how the system evolved, and culminates in an
+independently verified x402 purchase before one evidence packet passes into a
+minimal Vault Steward approval-preview arrival.
 
 Built with Next.js (App Router, static export), TypeScript, and GSAP
 ScrollTrigger. No server features, no CMS, no external assets at runtime.
@@ -78,9 +79,10 @@ For a root (`username.github.io`) or custom-domain deployment, set
 
 Only the Intro, the SettleDiff cinematic sequence, and the SettleDiff →
 Vault Steward transition with a minimal arrival frame exist in this phase.
-Factual copy comes from the `failed-broadcast` regression fixture and the
-public project repositories. The story uses a sanitized fixture identity and
-never claims that the failed attempt settled.
+Factual copy combines the historical `failed-broadcast` regression fixture
+with the current public x402 verification evidence. The story uses a sanitized
+fixture identity, never claims that the failed attempt settled, and keeps the
+provider receipt distinct from the independent Base Sepolia transfer proof.
 
 ## Documentation
 

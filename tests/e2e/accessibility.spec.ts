@@ -36,6 +36,10 @@ for (const mode of AXE_MODES) {
 
     expect(
       blocking.map((violation) => violation.id),
+      JSON.stringify(blocking.map((violation) => ({
+        id: violation.id,
+        nodes: violation.nodes.map((node) => node.target),
+      }))),
     ).toEqual([]);
 
     const visibleProjectLinks = page.locator('a[aria-label^="View "]:visible');
