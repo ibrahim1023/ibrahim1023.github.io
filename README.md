@@ -77,8 +77,10 @@ For a root (`username.github.io`) or custom-domain deployment, set
 
 ## Phase 1 scope
 
-Only the Intro, the SettleDiff cinematic sequence, and the SettleDiff →
-Vault Steward transition with a minimal arrival frame exist in this phase.
+The implemented page currently contains the Intro, SettleDiff cinematic
+sequence, and SettleDiff → Vault Steward transition. The next approved order is
+SettleDiff → CaseZero → Vault Steward; its design is documented but not yet
+implemented.
 Factual copy combines the historical `failed-broadcast` regression fixture
 with the current public x402 verification evidence. The story uses a sanitized
 fixture identity, never claims that the failed attempt settled, and keeps the
@@ -90,6 +92,7 @@ Codex agents should start with [`docs/AGENT_GUIDE.md`](docs/AGENT_GUIDE.md).
 
 - [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md) — authoritative Phase 1 target
 - [`docs/DECISIONS.md`](docs/DECISIONS.md) — approved factual and creative decisions
+- [`CaseZero chapter design`](docs/superpowers/specs/2026-09-03-casezero-portfolio-chapter-design.md) — approved three-project expansion
 - [`docs/STORYBOARD.md`](docs/STORYBOARD.md) — scroll states and choreography
 - [`docs/BUILD_SPEC.md`](docs/BUILD_SPEC.md) — current and target architecture
 - [`docs/IMPLEMENTATION_STATUS.md`](docs/IMPLEMENTATION_STATUS.md) — completed and missing work

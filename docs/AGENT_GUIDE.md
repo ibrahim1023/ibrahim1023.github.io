@@ -7,16 +7,18 @@ portfolio.
 ## Read order
 
 1. `docs/DECISIONS.md` — owner-approved factual and creative decisions.
-2. `docs/specs/2026-09-02-settlediff-story-redesign.md` — authoritative
+2. `docs/superpowers/specs/2026-09-03-casezero-portfolio-chapter-design.md` —
+   authoritative three-project expansion and Context.dev attribution contract.
+3. `docs/specs/2026-09-02-settlediff-story-redesign.md` — authoritative
    SettleDiff redesign; it supersedes conflicting incident-only sections.
-3. `docs/plans/2026-09-02-settlediff-story-redesign.md` — implementation order
-   and verification gates. Do not use Superpowers during implementation.
-4. `docs/REQUIREMENTS.md` — remaining product and experience requirements.
-5. `docs/STORYBOARD.md` — implemented baseline pending redesign reconciliation.
-6. `docs/BUILD_SPEC.md` — architecture, implementation constraints, and target
+4. `docs/plans/2026-09-02-settlediff-story-redesign.md` — implemented SettleDiff
+   order and verification gates. Do not use Superpowers during implementation.
+5. `docs/REQUIREMENTS.md` — remaining product and experience requirements.
+6. `docs/STORYBOARD.md` — implemented baseline pending expansion reconciliation.
+7. `docs/BUILD_SPEC.md` — architecture, implementation constraints, and target
    technical shape.
-7. `docs/IMPLEMENTATION_STATUS.md` — what is complete, partial, or missing.
-8. `docs/ACCEPTANCE_RUNBOOK.md` — how completion must be demonstrated.
+8. `docs/IMPLEMENTATION_STATUS.md` — what is complete, partial, or missing.
+9. `docs/ACCEPTANCE_RUNBOOK.md` — how completion must be demonstrated.
 
 ## Authority order
 
@@ -37,7 +39,8 @@ and `VERIFIED`.
 
 ## Product boundary
 
-Build exactly this narrative:
+The implemented baseline currently ends at Vault Steward. The next approved
+expansion must build exactly this narrative:
 
 ```text
 Intro
@@ -54,6 +57,12 @@ Rail-neutral evolution and independent x402 proof
   ↓
 Verified artifact becomes one evidence packet
   ↓
+CaseZero: public docket → typed evidence
+  ↓
+Official finding sealed behind the blind boundary
+  ↓
+BLIND BY CONSTRUCTION → lock infrastructure
+  ↓
 Stable Vault Steward arrival
 ```
 
@@ -61,10 +70,12 @@ Stop there. Do not add About, Contact, a footer, project cards, writing,
 experience, a résumé, a CMS, analytics, forms, additional routes, or a complete
 Vault Steward case study.
 
-The two featured projects are:
+The three featured projects are:
 
 - [SettleDiff](https://github.com/ibrahim1023/SettleDiff), reviewed at commit
-  `9372c8a06e77d75a6ab0482adf5479964ad2913b`.
+  `03d0bf4f5a652f33e90186e7fe2eaed819c3002e`.
+- [CaseZero](https://github.com/ibrahim1023/CaseZero), reviewed at commit
+  `73755b19cb0fcf7cc58a43b7d4707c3ea19f4732`.
 - [Vault Steward](https://github.com/ibrahim1023/vault-steward), reviewed at
   commit `21655f0bfc1972601570ff9cf38efd663cfdfac3`.
 

@@ -4,6 +4,31 @@ This file records owner-approved decisions that affect factual claims, scope,
 choreography, or acceptance. New entries are appended; historical decisions
 are not silently rewritten.
 
+## 2026-09-03 — Add CaseZero as a compact implemented-state chapter
+
+**Decision:** The project order becomes SettleDiff → CaseZero → Vault Steward.
+CaseZero receives a compact but complete chapter covering only its implemented
+acquisition, typed evidence, temporal-blindness, auditing, and lock
+infrastructure. The full planned investigation, official-finding comparison,
+and polished UI remain out of scope until their repositories contain validated
+implementation evidence.
+
+The three-project thesis is: SettleDiff verifies what happened; CaseZero
+protects how evidence is interpreted; Vault Steward protects what may be
+changed. Project transitions share visual governance language without implying
+that the underlying transaction, aviation, and vault data are the same.
+
+Context.dev appears as supporting technical evidence in both applicable
+chapters. SettleDiff uses it conditionally for eligible public status-page
+evidence. CaseZero uses it for schema-constrained docket discovery only; the
+live comparison against the curated CaseZero manifest is still pending.
+
+**Design:**
+`docs/superpowers/specs/2026-09-03-casezero-portfolio-chapter-design.md`
+
+**Sources:** CaseZero `73755b19cb0fcf7cc58a43b7d4707c3ea19f4732` and
+SettleDiff `03d0bf4f5a652f33e90186e7fe2eaed819c3002e`.
+
 ## 2026-09-02 — SettleDiff evolves from incident reconstruction to independent verification
 
 **Decision:** Replace the incident-only cinematic story with the approved
