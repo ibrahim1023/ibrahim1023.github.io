@@ -21,7 +21,9 @@
     /* The scrub consumes 580vh. One additional viewport keeps the sticky
        stage contained until the scrub ends, so the stable arrival cannot
        enter underneath the final animated frames. */
-    min-height: 680dvh;
+    min-height: 620dvh;
   }
+
+  .caseZeroNarrative { min-height: 440dvh; }
 
 }

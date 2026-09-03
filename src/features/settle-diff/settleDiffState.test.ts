@@ -12,11 +12,11 @@ describe("SettleDiff state contract", () => {
   test.each([
     [0, "project-established"], [0.08, "purchase-in-flight"], [0.18, "outcome-uncertain"],
     [0.29, "evidence-reconstructed"], [0.42, "origin-incident"], [0.54, "system-evolved"],
-    [0.65, "independent-proof"], [0.77, "checks-complete"], [0.88, "verified"], [0.96, "vault-handoff"],
+    [0.65, "independent-proof"], [0.77, "checks-complete"], [0.88, "verified"], [0.96, "casezero-handoff"],
   ])("maps %s to %s", (progress, state) => expect(progressToSettleDiffState(progress as number)).toBe(state));
   test("clamps invalid progress", () => {
     expect(progressToSettleDiffState(-1)).toBe("project-established");
     expect(progressToSettleDiffState(Number.NaN)).toBe("project-established");
-    expect(progressToSettleDiffState(2)).toBe("vault-handoff");
+    expect(progressToSettleDiffState(2)).toBe("casezero-handoff");
   });
 });

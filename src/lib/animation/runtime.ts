@@ -2,12 +2,14 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { progressToSettleDiffState } from "@/features/settle-diff/settleDiffState";
+import { progressToCaseZeroState } from "@/features/case-zero/caseZeroState";
 
 import { NARRATIVE_MEDIA, runwayPixels, type NarrativeLayout } from "./media";
 import {
   buildIntroTimeline,
-  buildNarrativeTimeline,
-  queryTimelineElements,
+  buildCaseZeroNarrativeTimeline,
+  buildSettleDiffNarrativeTimeline,
+  queryPortfolioTimelineElements,
 } from "./timeline";
 
 interface E2ELifecycleProbe {
@@ -16,7 +18,7 @@ interface E2ELifecycleProbe {
   registrations: Array<{
     generation: number;
     id: number;
-    role: "narrative" | "intro";
+    role: "settlediff" | "casezero" | "intro";
     active: boolean;
   }>;
   nextRegistrationId: number;
@@ -112,7 +114,7 @@ export function initializePortfolioAnimations(
     let refreshFrame: number | undefined;
     const probeRegistrations: E2ELifecycleProbe["registrations"] = [];
 
-    const registerProbeTrigger = (role: "narrative" | "intro") => {
+    const registerProbeTrigger = (role: "settlediff" | "casezero" | "intro") => {
       if (!lifecycleProbe) return;
       const registration: E2ELifecycleProbe["registrations"][number] = {
         generation: probeGeneration,
@@ -125,38 +127,61 @@ export function initializePortfolioAnimations(
     };
 
     try {
-      const elements = queryTimelineElements(root, layout);
-      if (!elements.narrative || !elements.intro.section) {
+      const elements = queryPortfolioTimelineElements(root, layout);
+      if (!elements.settlediff.narrative || !elements.casezero.narrative || !elements.intro.section || !elements.settlediff.stage || !elements.casezero.stage) {
         throw new Error("Portfolio animation targets are unavailable.");
       }
-      if (exposeState && elements.settle.stage) {
-        stageStates.set(elements.settle.stage, elements.settle.stage.getAttribute("data-state"));
+      if (exposeState) {
+        stageStates.set(elements.settlediff.stage, elements.settlediff.stage.getAttribute("data-state"));
+        stageStates.set(elements.casezero.stage, elements.casezero.stage.getAttribute("data-state"));
       }
 
-      const narrativeTimeline = buildNarrativeTimeline(elements, layout);
+      const settleTimeline = buildSettleDiffNarrativeTimeline(elements.settlediff, layout);
+      const caseZeroTimeline = buildCaseZeroNarrativeTimeline(elements.casezero, layout);
       const introTimeline = buildIntroTimeline(elements.intro);
-      timelines.push(narrativeTimeline, introTimeline);
+      timelines.push(settleTimeline, caseZeroTimeline, introTimeline);
 
       triggers.push(
         scrollTriggerApi.create({
-          trigger: elements.narrative,
+          id: "settlediff",
+          trigger: elements.settlediff.narrative,
           start: "top top",
-          end: () => `+=${runwayPixels(layout, viewportHeight())}`,
+          end: () => `+=${runwayPixels("settlediff", layout, viewportHeight())}`,
           pin: layout === "desktop",
           pinSpacing: layout === "desktop",
           scrub: layout === "mobile" ? true : 0.5,
-          animation: narrativeTimeline,
+          animation: settleTimeline,
           onUpdate: (self) => {
-            if (exposeState && elements.settle.stage) {
-              elements.settle.stage.dataset.state = progressToSettleDiffState(self.progress);
+            if (exposeState) {
+              elements.settlediff.stage!.dataset.state = progressToSettleDiffState(self.progress);
             }
           },
         }),
       );
-      registerProbeTrigger("narrative");
+      registerProbeTrigger("settlediff");
 
       triggers.push(
         scrollTriggerApi.create({
+          id: "casezero",
+          trigger: elements.casezero.narrative,
+          start: "top top",
+          end: () => `+=${runwayPixels("casezero", layout, viewportHeight())}`,
+          pin: layout === "desktop",
+          pinSpacing: layout === "desktop",
+          scrub: layout === "mobile" ? true : 0.5,
+          animation: caseZeroTimeline,
+          onUpdate: (self) => {
+            if (exposeState) {
+              elements.casezero.stage!.dataset.state = progressToCaseZeroState(self.progress);
+            }
+          },
+        }),
+      );
+      registerProbeTrigger("casezero");
+
+      triggers.push(
+        scrollTriggerApi.create({
+          id: "intro",
           trigger: elements.intro.section,
           start: "top top",
           end: "bottom top",

@@ -1,4 +1,5 @@
 export type NarrativeLayout = "desktop" | "mobile";
+export type NarrativeChapter = "settlediff" | "casezero";
 
 export const NARRATIVE_MEDIA = {
   desktop:
@@ -8,11 +9,11 @@ export const NARRATIVE_MEDIA = {
   reduce: "(prefers-reduced-motion: reduce)",
 } as const;
 
-export const RUNWAY_VH: Record<NarrativeLayout, number> = {
-  desktop: 760,
-  mobile: 580,
+export const RUNWAY_VH: Record<NarrativeChapter, Record<NarrativeLayout, number>> = {
+  settlediff: { desktop: 680, mobile: 520 },
+  casezero: { desktop: 360, mobile: 340 },
 };
 
-export function runwayPixels(layout: NarrativeLayout, viewportHeight: number): number {
-  return (RUNWAY_VH[layout] / 100) * viewportHeight;
+export function runwayPixels(chapter: NarrativeChapter, layout: NarrativeLayout, viewportHeight: number): number {
+  return (RUNWAY_VH[chapter][layout] / 100) * viewportHeight;
 }

@@ -18,48 +18,15 @@ function buildRoot() {
       <p data-intro-framing>Framing</p>
       <p data-intro-cue><span data-intro-cue-line></span>Selected work</p>
     </section>
-    <div data-narrative>
-      <div data-scene-layer="settle">
-        <div data-animated-layout="desktop">
-          <div data-stage data-layout="desktop" data-animatable>
-            <div data-transaction><svg><path data-path-line></path></svg><span data-token></span></div>
-            <div data-attempt></div>
-            <div data-evidence><div data-evidence-item="request"><span data-object-label="settle" data-animatable></span><span data-object-label="vault" data-animatable></span></div></div>
-            <div data-comparison></div>
-            <div data-mismatch></div>
-            <div data-verdict></div>
-            <ol data-chain><li data-chain-item="claim"></li></ol>
-            <section data-vault-transition data-animatable>
-              <svg data-vault-transition-connectors><path data-vault-transition-connector="boundary" data-animatable /><path data-vault-transition-connector="recheck" data-animatable /></svg>
-              <h3 data-vault-transition-title data-animatable>Vault Steward</h3>
-              <p data-vault-transition-headline data-animatable>Keep your vault trustworthy</p>
-              <ol data-vault-transition-rail data-animatable><li data-vault-transition-step data-animatable>FIND</li></ol>
-            </section>
-          </div>
-        </div>
-        <div data-animated-layout="mobile">
-          <div data-stage data-layout="mobile" data-animatable>
-            <div data-transaction><span data-token></span></div>
-            <div data-attempt></div>
-            <div data-evidence><div data-evidence-item="request"></div></div>
-            <div data-comparison></div>
-            <div data-mismatch></div>
-            <div data-verdict></div>
-            <ol data-chain><li data-chain-item="claim"></li></ol>
-          </div>
-        </div>
-      </div>
-      <div data-scene-layer="vault">
-        <section data-vault-arrival><h2>Vault Steward</h2><p data-vault-descriptor></p><ol data-vault-rail><li data-vault-rail-item></li></ol><p data-vault-cue></p></section>
-      </div>
+    <div data-narrative="settlediff">
+      <div data-animated-layout="desktop"><div data-stage data-layout="desktop" data-animatable><span data-path-origin></span><section data-settle-case-transition data-animatable><div data-verified-evidence-token data-animatable></div></section></div></div>
+      <div data-animated-layout="mobile"><div data-stage data-layout="mobile" data-animatable><section data-settle-case-transition data-animatable></section></div></div>
+    </div>
+    <div data-narrative="casezero">
+      <div data-animated-layout="desktop"><div data-casezero-stage data-layout="desktop" data-animatable><section data-vault-transition data-animatable><div data-lock-packet data-animatable></div><div data-vault-boundary data-animatable></div><h3 data-vault-transition-title data-animatable></h3><p data-vault-transition-headline data-animatable></p><ol data-vault-transition-rail data-animatable><li data-vault-transition-step data-animatable></li></ol></section></div></div>
+      <div data-animated-layout="mobile"><div data-casezero-stage data-layout="mobile" data-animatable></div></div>
     </div>
   `;
-
-  const desktopPath = root.querySelector('[data-layout="desktop"] [data-path-line]') as SVGPathElement;
-  Object.defineProperty(desktopPath, "getTotalLength", {
-    configurable: true,
-    value: () => 1000,
-  });
 
   return root;
 }
@@ -148,10 +115,11 @@ describe("portfolio animation runtime", () => {
     vi.runAllTimers();
 
     expect(root).toHaveAttribute("data-animated", "ready");
-    expect(create).toHaveBeenCalled();
-    expect((create.mock.calls[0]![0] as { end: () => string }).end()).toBe(
-      "+=6080",
-    );
+    expect(create).toHaveBeenCalledTimes(3);
+    const configs = create.mock.calls.map(([config]) => config as { id: string; end?: () => string });
+    expect(configs.find(({ id }) => id === "settlediff")?.end?.()).toBe("+=5440");
+    expect(configs.find(({ id }) => id === "casezero")?.end?.()).toBe("+=2880");
+    expect(configs.map(({ id }) => id).sort()).toEqual(["casezero", "intro", "settlediff"]);
 
     cleanup();
     cleanup();
@@ -185,7 +153,7 @@ describe("portfolio animation runtime", () => {
 
     desktopCleanup?.();
     const mobileCleanup = callbacks.get(NARRATIVE_MEDIA.mobile)!();
-    const mobileNarrativeTrigger = create.mock.calls[2]![0] as {
+    const mobileNarrativeTrigger = create.mock.calls[3]![0] as {
       pin: boolean;
       pinSpacing: boolean;
       scrub: boolean | number;
@@ -238,6 +206,10 @@ describe("portfolio animation runtime", () => {
     debugUpdate({ progress: 0.15 });
 
     expect(debugStage).toHaveAttribute("data-state", "purchase-in-flight");
+    const debugCaseStage = debugRoot.querySelector('[data-casezero-stage][data-layout="desktop"]') as HTMLElement;
+    const caseUpdate = (debugApis.create.mock.calls[1]![0] as { onUpdate: (trigger: { progress: number }) => void }).onUpdate;
+    caseUpdate({ progress: 0.72 });
+    expect(debugCaseStage).toHaveAttribute("data-state", "blind-by-construction");
     debugCleanup();
     expect(debugStage).toHaveAttribute("data-state", "project-established");
   });
@@ -258,9 +230,10 @@ describe("portfolio animation runtime", () => {
 
     expect(cleanup).toEqual(expect.any(Function));
     expect(mediaContext.revert).toHaveBeenCalledOnce();
-    expect(triggerKills).toHaveLength(2);
+    expect(triggerKills).toHaveLength(3);
     expect(triggerKills[0]).toHaveBeenCalledOnce();
     expect(triggerKills[1]).toHaveBeenCalledOnce();
+    expect(triggerKills[2]).toHaveBeenCalledOnce();
     expect(root).not.toHaveAttribute("data-animated");
   });
 
@@ -281,7 +254,7 @@ describe("portfolio animation runtime", () => {
     const mobileCleanup = callbacks.get(NARRATIVE_MEDIA.mobile)!();
 
     expect(mobileCleanup).toEqual(expect.any(Function));
-    expect(create).toHaveBeenCalledTimes(2);
+    expect(create).toHaveBeenCalledTimes(3);
     expect((scrollTriggerApi.refresh as unknown as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled();
 
     vi.runAllTimers();
@@ -330,6 +303,7 @@ describe("portfolio animation runtime", () => {
     const clearTargets = (gsapApi.set as unknown as ReturnType<typeof vi.fn>).mock.calls.at(-1)![0] as NodeListOf<Element>;
     const targetSelectors = [
       '[data-stage][data-layout="desktop"]',
+      '[data-casezero-stage][data-layout="desktop"]',
       '[data-vault-transition]',
       '[data-vault-transition-title]',
       '[data-vault-transition-step]',

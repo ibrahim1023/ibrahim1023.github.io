@@ -13,8 +13,9 @@ test("mobile uses one vertical story with the complete evidence path", () => {
   expect(container.querySelector("[data-evidence-item]")).toBeNull();
 });
 
-test("keeps the stable Vault arrival outside the mobile scrub", () => {
+test("keeps Vault out of the SettleDiff scrub and hands off to CaseZero", () => {
   const { container } = render(<MobileSettleDiffStage />);
   expect(container.querySelector("[data-vault-arrival]")).toBeNull();
-  expect(container.querySelector("[data-evidence-packet]")).not.toBeNull();
+  expect(container.querySelector("[data-evidence-packet]")).toBeNull();
+  expect(container.querySelector("[data-verified-evidence-token]")).not.toBeNull();
 });

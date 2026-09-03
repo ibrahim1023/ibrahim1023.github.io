@@ -10,8 +10,13 @@ describe("narrative media contract", () => {
   });
 
   test("converts approved viewport runways to pixels", () => {
-    expect(RUNWAY_VH).toEqual({ desktop: 760, mobile: 580 });
-    expect(runwayPixels("desktop", 720)).toBe(5472);
-    expect(runwayPixels("mobile", 800)).toBe(4640);
+    expect(RUNWAY_VH).toEqual({
+      settlediff: { desktop: 680, mobile: 520 },
+      casezero: { desktop: 360, mobile: 340 },
+    });
+    expect(RUNWAY_VH.settlediff.desktop + RUNWAY_VH.casezero.desktop).toBeLessThanOrEqual(1040);
+    expect(RUNWAY_VH.settlediff.mobile + RUNWAY_VH.casezero.mobile).toBeLessThanOrEqual(860);
+    expect(runwayPixels("settlediff", "desktop", 720)).toBe(4896);
+    expect(runwayPixels("casezero", "mobile", 844)).toBeCloseTo(2869.6);
   });
 });
