@@ -1,4 +1,4 @@
-import { originIncident, reconstructionLayers } from "@/content/portfolioContent";
+import { contextDevUsage, externalLinks, originIncident, reconstructionLayers } from "@/content/portfolioContent";
 import styles from "./SettleDiff.module.css";
 
 export function EvidenceReconstruction({ layout }: { layout: "desktop" | "mobile" }) {
@@ -10,6 +10,7 @@ export function EvidenceReconstruction({ layout }: { layout: "desktop" | "mobile
           <span>{layer.label}</span><strong>{layer.title}</strong><small>{layer.detail}</small>
         </li>
       ))}</ol>
+      <a className={styles.contextAttribution} data-contextdev-attribution href={externalLinks.contextDev} target="_blank" rel="noreferrer">{contextDevUsage.settleDiff}</a>
     </section>
     <section className={styles.originIncident} data-animatable data-origin-incident>
       <span>{originIncident.eyebrow}</span><h3>{originIncident.headline}</h3>

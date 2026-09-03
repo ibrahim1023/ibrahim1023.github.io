@@ -77,8 +77,43 @@
 .lockRecord li b { color: #3d7566; font-size: var(--type-label); letter-spacing: .1em; }
 .lockRecord > small { color: #666c68; font-family: var(--font-mono); }
 
+.settleTransition {
+  width: min(52rem, 100%);
+  min-height: 28rem;
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-3);
+  color: var(--scene-ink-on-paper);
+  text-align: center;
+}
+.settleTransition [data-verified-evidence-token] { padding: .8rem 1.1rem; border: 1px solid var(--scene-accent-verified); color: var(--scene-accent-verified); background: var(--scene-bg-paper); font: var(--type-label)/1 var(--font-mono); letter-spacing: .14em; }
+.settleTransition p { max-width: 30rem; font-size: clamp(1.3rem, 2.6vw, 2.2rem); letter-spacing: -.02em; }
+
+.vaultTransition { position: relative; min-height: 34rem; display: grid; place-items: center; align-content: center; gap: var(--space-2); text-align: center; }
+.vaultTransition [data-lock-packet] { z-index: 2; display: grid; gap: .35rem; min-width: 15rem; padding: var(--space-2); border: 1px solid #587762; background: #e9e5dc; }
+.vaultTransition [data-lock-packet] span { color: #3d7566; font: var(--type-label)/1 var(--font-mono); letter-spacing: .13em; }
+.vaultTransition [data-vault-boundary] { position: absolute; width: min(52rem, 92%); height: 19rem; border: 1px solid #587762; }
+.vaultTransition h3 { font-size: clamp(2rem, 5vw, 4rem); }
+.vaultTransition p { max-width: 42rem; color: #5d635f; }
+.vaultTransition ol { list-style: none; padding: 0; display: flex; gap: var(--space-2); color: #476b55; font: var(--type-label)/1 var(--font-mono); letter-spacing: .12em; }
+.vaultTransition li + li::before { content: "→"; margin-right: var(--space-2); color: #777b76; }
+
+:global([data-animated="ready"]) .settleTransition,
+:global([data-animated="ready"]) .vaultTransition {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  min-height: 0;
+  margin: 0;
+  padding-inline: 6vw;
+}
+
 @media (width < 768px), (orientation: portrait) and (max-width: 1024px) {
   .section { padding-inline: 0; }
   .desktopBranch { display: none; }
   .mobileBranch { display: block; }
+  .vaultTransition ol { gap: .45rem; font-size: .65rem; }
+  .vaultTransition li + li::before { margin-right: .45rem; }
 }

@@ -1,6 +1,6 @@
 import { ProjectSourceLink } from "@/components/projects/ProjectSourceLink";
 import { projectLinks, settleDiff } from "@/content/portfolioContent";
-import { VaultTransitionOverlay } from "@/features/vault-steward/VaultTransitionOverlay";
+import { SettleToCaseZeroTransition } from "@/features/case-zero/SettleToCaseZeroTransition";
 import { EvidenceReconstruction } from "./EvidenceReconstruction";
 import { IndependentProof } from "./IndependentProof";
 import styles from "./SettleDiff.module.css";
@@ -13,6 +13,6 @@ export function MobileSettleDiffStage() {
     <header className={`${styles.stageHeader} ${mobileStyles.header}`} data-stage-header data-animatable><div className={styles.titleRow}><h2 className={styles.stageTitle}>{settleDiff.title}</h2><ProjectSourceLink href={projectLinks.settleDiff} project={settleDiff.title} /></div><p>{settleDiff.descriptor}</p></header>
     <TransactionArtifact layout="mobile" /><p className={styles.uncertainty} data-animatable data-uncertainty>{settleDiff.uncertainty}</p>
     <EvidenceReconstruction layout="mobile" /><IndependentProof layout="mobile" />
-    <VaultTransitionOverlay className={styles.transition} layout="mobile" />
+    <SettleToCaseZeroTransition layout="mobile" />
   </div>;
 }

@@ -1,6 +1,6 @@
 import { ProjectSourceLink } from "@/components/projects/ProjectSourceLink";
 import { projectLinks, settleDiff } from "@/content/portfolioContent";
-import { VaultTransitionOverlay } from "@/features/vault-steward/VaultTransitionOverlay";
+import { SettleToCaseZeroTransition } from "@/features/case-zero/SettleToCaseZeroTransition";
 import { EvidenceReconstruction } from "./EvidenceReconstruction";
 import { IndependentProof } from "./IndependentProof";
 import styles from "./SettleDiff.module.css";
@@ -14,6 +14,6 @@ export function SettleDiffStage({ state }: { state?: SettleDiffState }) {
     <TransactionArtifact layout="desktop" />
     <p className={styles.uncertainty} data-animatable data-uncertainty>{settleDiff.uncertainty}</p>
     <EvidenceReconstruction layout="desktop" /><IndependentProof layout="desktop" />
-    <VaultTransitionOverlay className={styles.transition} layout="desktop" />
+    <SettleToCaseZeroTransition layout="desktop" />
   </div>;
 }

@@ -3,6 +3,7 @@ import { caseZero, projectLinks } from "@/content/portfolioContent";
 import { BlindBoundary } from "./BlindBoundary";
 import { CaseFile } from "./CaseFile";
 import { LockRecord } from "./LockRecord";
+import { VaultTransitionOverlay } from "@/features/vault-steward/VaultTransitionOverlay";
 import styles from "./CaseZero.module.css";
 import type { CaseZeroState } from "./caseZeroTypes";
 
@@ -19,6 +20,7 @@ export function CaseZeroStage({ state }: { state?: CaseZeroState }) {
       <CaseFile layout="desktop" />
       <BlindBoundary layout="desktop" />
       <LockRecord layout="desktop" />
+      <VaultTransitionOverlay className={styles.vaultTransition} layout="desktop" />
     </div>
   );
 }
