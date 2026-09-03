@@ -1,0 +1,23 @@
+.narrative { display: flex; flex-direction: column; gap: clamp(6rem, 14vh, 10rem); max-width: 52rem; margin-inline: auto; padding-block: var(--space-8); }
+.chapter { display: grid; gap: var(--space-6); }
+.projectHeader { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: var(--space-1); }
+.projectHeader h2 { font-size: var(--type-display); line-height: 1; letter-spacing: -.04em; }
+.projectHeader p, .projectHeader small { grid-column: 1 / -1; color: var(--color-text-secondary); }
+.projectHeader small { font-family: var(--font-mono); }
+.panel { display: grid; gap: var(--space-2); padding-top: var(--space-3); border-top: 1px solid var(--color-line); }
+.panel h3 { color: var(--color-accent); font: var(--type-label)/1.4 var(--font-mono); letter-spacing: .13em; text-transform: uppercase; }
+.panel p, .panel li, .panel a { color: var(--color-text-secondary); line-height: 1.65; }
+.panel ol { display: grid; gap: .5rem; padding-left: 1.25rem; }
+.panel strong { color: var(--color-text-primary); }
+.verdict { padding: clamp(3rem, 8vw, 6rem); background: var(--scene-bg-paper); color: var(--scene-ink-on-paper); text-align: center; }
+.verdict h3 { color: var(--scene-accent-verified); font-size: clamp(3rem, 9vw, 7rem); }
+.caseZero { margin-inline: calc(-1 * var(--space-3)); padding: var(--space-5) var(--space-3); background: #e9e5dc; color: #171918; }
+.caseZero .projectHeader p, .caseZero .projectHeader small, .caseZero .panel p, .caseZero .panel a { color: #575d59; }
+.lineage { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: var(--space-3); border: 1px solid rgb(23 25 24 / 20%); font-family: var(--font-mono); letter-spacing: .1em; }
+.lineage i { color: #476b78; font-style: normal; }
+.sealed { display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch; border: 1px solid rgb(23 25 24 / 20%); }
+.sealed div { display: grid; gap: .5rem; padding: var(--space-3); }
+.sealed b { display: grid; place-items: center; max-width: 5rem; padding: 1rem; border-inline: 1px solid rgb(71 107 120 / 40%); color: #476b78; font: var(--type-label)/1.35 var(--font-mono); text-align: center; }
+.sealed small { color: #476b78; font-family: var(--font-mono); }
+.climax { font-size: clamp(3rem, 9vw, 7rem); line-height: .88; letter-spacing: -.055em; text-align: center; color: #1f3f49; }
+@media (width < 480px) { .sealed { grid-template-columns: 1fr; } .sealed b { max-width: none; border-inline: 0; border-block: 1px solid rgb(71 107 120 / 40%); } .lineage { font-size: .72rem; } }

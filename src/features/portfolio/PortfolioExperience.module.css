@@ -7,6 +7,14 @@
   min-height: 100dvh;
 }
 
+.caseZeroNarrative { position: relative; min-height: 100dvh; }
+.reducedBranch { display: none; padding-inline: var(--gutter); }
+
+@media (prefers-reduced-motion: reduce) {
+  .narrative, .caseZeroNarrative { display: none; }
+  .reducedBranch { display: block; }
+}
+
 @media (width < 768px) and (prefers-reduced-motion: no-preference),
   (orientation: portrait) and (max-width: 1024px) and (prefers-reduced-motion: no-preference) {
   .narrative {

@@ -34,15 +34,20 @@ afterEach(() => {
 });
 
 describe("PortfolioExperience shell", () => {
-  test("renders the three Phase 1 semantic sections exactly once", () => {
+  test("renders the three projects in the approved order", () => {
     const { container } = render(<PortfolioExperience />);
 
     expect(screen.getByRole("region", { name: "Intro" })).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "SettleDiff" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "CaseZero" })).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "Vault Steward" })).toBeInTheDocument();
-    expect(screen.getAllByRole("region")).toHaveLength(3);
+    expect(Array.from(container.querySelectorAll("[data-project-root]")).map((node) => node.getAttribute("data-project-root"))).toEqual(["settlediff", "casezero", "vault-steward"]);
     expect(container.querySelectorAll('[data-stage][data-layout="desktop"]')).toHaveLength(1);
     expect(container.querySelectorAll('[data-stage][data-layout="mobile"]')).toHaveLength(1);
+    expect(container.querySelectorAll('[data-casezero-stage][data-layout="desktop"]')).toHaveLength(1);
+    expect(container.querySelectorAll('[data-casezero-stage][data-layout="mobile"]')).toHaveLength(1);
+    expect(container.querySelectorAll('[data-narrative="settlediff"]')).toHaveLength(1);
+    expect(container.querySelectorAll('[data-narrative="casezero"]')).toHaveLength(1);
     expect(container.querySelectorAll('[data-branch="reduced"]')).toHaveLength(1);
     expect(container.querySelectorAll("[data-no-js-narrative]")).toHaveLength(1);
   });
