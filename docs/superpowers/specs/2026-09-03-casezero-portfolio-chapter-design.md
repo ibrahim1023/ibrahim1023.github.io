@@ -201,12 +201,17 @@ meaning, and deliberate holds are fixed.
 | `lock-ready` | `0.84–0.96` | Evidence and assessment hashes settle into an immutable lock record. | Label as implemented lock infrastructure; do not invent a real assessment. |
 | `vault-handoff` | `0.96–1.00` | The lock boundary clears, warms, and becomes an approval boundary. | Transition thesis, then Vault workflow. |
 
-Recommended runway targets:
+Runway targets prioritize momentum over exhaustive explanation:
 
-- desktop/tablet landscape: `460vh`;
-- iPhone/tablet portrait: `420vh` within a dynamic-viewport-safe sticky
+- desktop/tablet landscape: `360vh`;
+- iPhone/tablet portrait: `340vh` within a dynamic-viewport-safe sticky
   composition;
 - reduced motion: normal-flow semantic panels, no long runway.
+
+The combined SettleDiff and CaseZero animated runways must not exceed `1040vh`
+on desktop or `860vh` on mobile. Shorten the existing SettleDiff runway as part
+of implementation if needed; do not exceed the ceiling by compressing content
+until it overlaps or becomes unreadable.
 
 ## 6. Scene and visual design
 
@@ -224,6 +229,16 @@ verification surface and Vault Steward's warm approval surface.
   output.
 - No more than three meaningful foreground objects may be legible at one state
   hold.
+- Every named state must introduce a visible change in subject, composition,
+  boundary, or conclusion. No unchanged scene may occupy more than `0.12` of a
+  chapter timeline.
+- Each hold has one dominant sentence and one visual focal point. Technical
+  evidence enters as a short secondary reward, never as the only thing that
+  changes.
+- SettleDiff keeps its horizontal receipt-versus-proof vocabulary; CaseZero
+  uses layered case-file and sealing motion; Vault Steward uses warmer
+  approval-boundary motion. Reusing the same reveal effect across all three is
+  prohibited.
 - The official-finding surface and CaseZero-generated surface must remain
   structurally distinct; color alone is insufficient.
 
@@ -350,6 +365,11 @@ CaseZero must be tested in portrait and landscape with dynamic Safari chrome,
 native touch scrolling, reverse scrolling, 200% Mac zoom, reduced motion, and
 VoiceOver reading order.
 
+The experience must also pass a pacing review at ordinary trackpad and touch
+scroll speeds: no dead viewport, no hold whose purpose is only to increase
+length, no dense technical wall, and no transition that requires the visitor
+to stop scrolling to understand the main sentence.
+
 ## 11. Testing contract
 
 ### Content and component tests
@@ -385,6 +405,10 @@ VoiceOver reading order.
 
 - A non-technical visitor can explain the three-project progression after one
   viewing.
+- Every named hold introduces a distinct visual or conceptual payoff, and the
+  combined animated runway stays within the desktop/mobile ceilings.
+- A continuous ordinary-speed scroll has no blank, unchanged, or technically
+  dense interval.
 - CaseZero is clearly a real, evolving implementation—not a completed aviation
   investigator.
 - The official finding is visibly unavailable to the blind side of the system.
