@@ -8,11 +8,12 @@
 .narrative {
   position: relative;
   min-height: 100dvh;
+  background: var(--scene-bg-dark);
 }
 
 .caseZeroNarrative { position: relative; min-height: 100dvh; }
 .reducedBranch { display: none; padding-inline: var(--gutter); }
-.vaultArrival { display: block; }
+.vaultArrival { display: block; background: var(--scene-bg-paper); }
 
 @media (prefers-reduced-motion: reduce) {
   .narrative, .caseZeroNarrative { display: none; }

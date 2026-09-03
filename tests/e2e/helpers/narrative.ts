@@ -39,6 +39,10 @@ export async function scrollNarrativeTo(
     throw new Error(`Narrative progress must be between 0 and 1: ${progress}`);
   }
 
+  // Compact CSS is enabled before pins are measured. Do not sample geometry
+  // or set a restore position during that intermediate setup frame.
+  await expect(page.locator('[data-portfolio-experience][data-scroll-ready="true"]')).toBeVisible();
+
   const top = await page.locator(`[data-narrative="${chapter}"]`).evaluate((node) => {
     // ScrollTrigger pins the narrative itself, so use its spacer as the
     // document anchor once the pin is active.

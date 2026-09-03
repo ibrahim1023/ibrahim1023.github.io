@@ -24,9 +24,10 @@ export function ReducedMotionNarrative() {
       <div className={styles.panel}><h3>Lock record</h3><p>{caseZero.lock}</p><p>Assessment hash · evidence-set hash · model versions · prompt versions</p><small>Implemented lock infrastructure</small></div>
     </section>
 
-    <section className={styles.chapter} aria-label="Vault Steward reduced narrative">
+    <section className={`${styles.chapter} ${styles.caseZero}`} aria-label="Vault Steward reduced narrative">
       <header className={styles.projectHeader}><h2>{vaultSteward.title}</h2><ProjectSourceLink href={projectLinks.vaultSteward} project={vaultSteward.title} /><p>{vaultSteward.headline}</p></header>
       <div className={styles.panel}><p>{vaultSteward.descriptor}</p><p>{vaultSteward.rail.join(" → ")}</p></div>
+      <div className={styles.panel}><h3>Approval preview</h3><p>Current: {vaultSteward.preview.current}</p><p>After: {vaultSteward.preview.after}</p><p>Explicit approval · illustrative example</p><p>{vaultSteward.preview.expectedResult}</p></div>
     </section>
   </div>;
 }

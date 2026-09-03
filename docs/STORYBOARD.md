@@ -103,7 +103,15 @@ presented as literally flowing into another repository.
    transition thesis here; the Vault title and workflow appear once, in the
    stable section below.
 
-## Stable Vault Steward arrival (`100–140vh`, normal flow)
+## Vault Steward correction workbench (brief sticky sequence)
+
+The shared paper background continues through this section. A reversible,
+non-pinned scroll sequence presents the current note, proposed correction,
+illustrative explicit approval, and verification result. The workbench holds
+at 8% of the viewport for 320px of scrolling, so its changes happen while the
+example is visible. Short landscape viewports use normal flow. Reduced motion
+and no-JS retain the complete example without the sticky interval. A compact
+social-profile footer follows; it is not another chapter.
 
 - Vault Steward title and source link.
 - `Keep your vault trustworthy`.

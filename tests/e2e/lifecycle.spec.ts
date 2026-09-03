@@ -14,9 +14,10 @@ test("fast forward and reverse returns to one readable SettleDiff stage", async 
 
 test("mid-story refresh restores independent proof", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 }); await page.goto("/"); await scrollNarrativeTo(page, "desktop", .73);
-  const before = await page.evaluate(() => window.scrollY); await expectMostlyVisible(activeNarrativeLocator(page, "desktop", "[data-proof]"), { viewportRatio: .02 });
+  await expectMostlyVisible(activeNarrativeLocator(page, "desktop", "[data-proof]"), { viewportRatio: .02 });
+  const before = await page.evaluate(() => window.scrollY);
   await page.reload({ waitUntil: "load" });
-  await expect(page.locator('[data-portfolio-experience][data-animated="ready"]')).toBeVisible();
+  await expect(page.locator('[data-portfolio-experience][data-scroll-ready="true"]')).toBeVisible();
   await expect.poll(() => page.evaluate((value) => Math.abs(window.scrollY - value), before)).toBeLessThanOrEqual(8);
   await expectMostlyVisible(activeNarrativeLocator(page, "desktop", "[data-proof]"), { viewportRatio: .02 });
 });

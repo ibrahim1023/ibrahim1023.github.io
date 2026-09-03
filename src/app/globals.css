@@ -10,6 +10,9 @@
 
 html {
   scroll-behavior: auto;
+  /* Disable browser anchor compensation at the scrolling element, including
+     measurements inserted outside the portfolio during pin initialization. */
+  overflow-anchor: none;
 }
 
 body {

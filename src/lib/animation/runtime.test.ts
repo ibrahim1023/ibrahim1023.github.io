@@ -72,6 +72,20 @@ function animationApis({
 }
 
 describe("portfolio animation runtime", () => {
+  test("adds a reversible normal-flow Vault sequence without another pin", () => {
+    vi.useFakeTimers();
+    const root = buildRoot();
+    root.insertAdjacentHTML("beforeend", '<div data-stable-vault><section data-vault-arrival><p data-vault-result data-animatable></p></section></div>');
+    const { create, gsapApi, scrollTriggerApi, triggerKills } = animationApis();
+    const cleanup = initializePortfolioAnimations({ root, gsapApi, scrollTriggerApi, viewportHeight: () => 900, exposeState: false });
+    expect(create).toHaveBeenCalledWith(expect.objectContaining({ id: "vault", pin: false, pinSpacing: false, scrub: true }));
+    vi.runAllTimers();
+    cleanup();
+    expect(triggerKills).toHaveLength(4);
+    triggerKills.forEach(kill => expect(kill).toHaveBeenCalledOnce());
+    expect(root).not.toHaveAttribute("data-animated");
+    vi.useRealTimers();
+  });
   test("exposes timeline state only for an explicit development debug session", () => {
     expect(
       shouldExposeTimelineState({

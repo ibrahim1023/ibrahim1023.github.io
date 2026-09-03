@@ -1,9 +1,9 @@
 # Ibrahim Arshad — Portfolio
 
-Phase 1 prototype: an Apple-like, scroll-directed narrative that begins with a
-real SettleDiff failure, shows how the system evolved, and culminates in an
-independently verified x402 purchase before one evidence packet passes into a
-minimal Vault Steward approval-preview arrival.
+A scroll-directed portfolio: SettleDiff verifies payment evidence, CaseZero
+protects investigations from hindsight, and Vault Steward previews a note
+correction through explicit approval and verification. Project stories share
+a continuous light workspace after SettleDiff's verified result.
 
 Built with Next.js (App Router, static export), TypeScript, and GSAP
 ScrollTrigger. No server features, no CMS, no external assets at runtime.
@@ -75,10 +75,20 @@ If port `4173` is occupied, choose another with `LHCI_PORT=4174 pnpm lighthouse`
 For a root (`username.github.io`) or custom-domain deployment, set
 `NEXT_PUBLIC_BASE_PATH=""` (the default) and adjust the workflow accordingly.
 
-## Phase 1 scope
+## Current scope
 
 The implemented page contains Intro → SettleDiff → CaseZero → Vault Steward,
 with independent cinematic chapters and a stable Vault Steward arrival.
+Vault's compact correction workbench stays briefly in view for 320px of scroll
+using CSS sticky positioning, without another ScrollTrigger pin. Short landscape
+viewports use normal flow. The approval example is illustrative, not a live file
+edit. A compact footer links to GitHub, X, Medium, and LinkedIn.
+
+“Phase 1” in historical planning documents names the original delivery
+milestone, not a product version. Portfolio Phases 2 and 3 have not been
+defined. Remaining work is tracked as concrete items: owner Mac/iPhone visual
+acceptance, updated project evidence as the repositories evolve, and any
+future portfolio sections only after their scope is agreed.
 Factual copy combines the historical `failed-broadcast` regression fixture
 with the current public x402 verification evidence. The story uses a sanitized
 fixture identity, never claims that the failed attempt settled, and keeps the

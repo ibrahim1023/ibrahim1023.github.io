@@ -110,6 +110,7 @@
 .transition li + li::before { content: "→"; margin-right: var(--space-2); color: #777b76; }
 
 [data-animated="ready"] .stage { overflow: clip; }
+[data-animated="ready"] .sceneSurface { background: transparent; }
 [data-animated="ready"] .stageHeader { position: absolute; top: 0; left: 0; }
 [data-animated="ready"] .artifactScene, [data-animated="ready"] .reconstruction,
 [data-animated="ready"] .originIncident, [data-animated="ready"] .systemBoundary,

@@ -1,0 +1,6 @@
+.footer { background: var(--scene-bg-paper); color: #171918; padding: 2rem var(--gutter) 3rem; }
+.inner { max-width: var(--content-max); margin-inline: auto; padding-top: 2rem; border-top: 1px solid #b4beb2; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; }
+.inner h2 { font-size: 1.1rem; font-weight: 500; }
+.inner nav { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; }
+.inner a { display: inline-flex; align-items: center; min-height: 44px; color: #2f604a; text-decoration-thickness: 1px; text-underline-offset: .3em; gap: .25rem; }
+.inner a:hover { color: #171918; }

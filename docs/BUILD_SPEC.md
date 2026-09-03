@@ -105,6 +105,13 @@ The closing transition does not repeat Vault's title or workflow; the stable
 arrival owns that introduction. Enable the compact animated CSS before creating
 ScrollTrigger pins, or fallback-flow heights become empty pin-space runways.
 CaseZero's opening remains readable as its section approaches the pin start.
+The verified SettleDiff background is painted on the full-width narrative,
+not only its clipped stage. CaseZero and Vault share that paper color, avoiding
+dark gutters and dark/light resets. Vault uses a separate non-pinned timeline
+inside its section; cleanup owns its targets and trigger. Its workbench uses
+CSS sticky positioning for 320px, starting at 8% of the viewport, rather than
+animating while still below the fold. At viewport heights of 650px or less,
+it uses ordinary flow and starts at 85%. Reduced motion adds no scroll distance.
 
 ## Responsive composition
 

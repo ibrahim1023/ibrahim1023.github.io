@@ -52,9 +52,12 @@ describe("VaultStewardArrival", () => {
     ).toBeInTheDocument();
   });
 
-  test("is stable normal-flow content rather than a scrub timeline target", () => {
+  test("marks the compact workflow for animation with readable fallback content", () => {
     const { container } = render(<VaultStewardArrival />);
 
-    expect(container.querySelectorAll("[data-animatable]")).toHaveLength(0);
+    expect(container.querySelector("[data-vault-approved]")).toHaveTextContent("illustrative example");
+    for (const target of ["current", "proposal", "approved", "result", "progress"]) {
+      expect(container.querySelector(`[data-vault-${target}]`)).toHaveAttribute("data-animatable");
+    }
   });
 });

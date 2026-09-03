@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { buildVaultTimeline } from "./vaultTimeline";
 
 import { progressToSettleDiffState } from "@/features/settle-diff/settleDiffState";
 import { progressToCaseZeroState } from "@/features/case-zero/caseZeroState";
@@ -18,7 +19,7 @@ interface E2ELifecycleProbe {
   registrations: Array<{
     generation: number;
     id: number;
-    role: "settlediff" | "casezero" | "intro";
+    role: "settlediff" | "casezero" | "intro" | "vault";
     active: boolean;
   }>;
   nextRegistrationId: number;
@@ -95,6 +96,7 @@ export function initializePortfolioAnimations(
       root.removeAttribute("data-state");
     }
     root.removeAttribute("data-animated");
+    root.removeAttribute("data-scroll-ready");
   };
 
   const cleanupBranch = (
@@ -114,7 +116,7 @@ export function initializePortfolioAnimations(
     let refreshFrame: number | undefined;
     const probeRegistrations: E2ELifecycleProbe["registrations"] = [];
 
-    const registerProbeTrigger = (role: "settlediff" | "casezero" | "intro") => {
+    const registerProbeTrigger = (role: "settlediff" | "casezero" | "intro" | "vault") => {
       if (!lifecycleProbe) return;
       const registration: E2ELifecycleProbe["registrations"][number] = {
         generation: probeGeneration,
@@ -127,6 +129,9 @@ export function initializePortfolioAnimations(
     };
 
     try {
+      // Preserve the browser's position before any immediate-render tween
+      // changes the fallback layout or its overflow bounds.
+      const restoredScrollY = window.scrollY;
       const elements = queryPortfolioTimelineElements(root, layout);
       if (!elements.settlediff.narrative || !elements.casezero.narrative || !elements.intro.section || !elements.settlediff.stage || !elements.casezero.stage) {
         throw new Error("Portfolio animation targets are unavailable.");
@@ -143,7 +148,6 @@ export function initializePortfolioAnimations(
 
       // Pin dimensions must come from the compact animated layout, not the
       // tall normal-flow fallback. Setup is synchronous; failure restores it.
-      const restoredScrollY = window.scrollY;
       root.dataset.animated = "ready";
 
       triggers.push(
@@ -196,6 +200,19 @@ export function initializePortfolioAnimations(
       );
       registerProbeTrigger("intro");
 
+      const vault = root.querySelector<HTMLElement>("[data-stable-vault] [data-vault-arrival]");
+      if (vault) {
+        const vaultTimeline = buildVaultTimeline(vault);
+        timelines.push(vaultTimeline);
+        triggers.push(scrollTriggerApi.create({
+          id: "vault", trigger: vault.querySelector("[data-vault-workflow]"),
+          start: () => viewportHeight() > 650 ? "top 8%" : "top 85%",
+          end: "+=320",
+          pin: false, pinSpacing: false, scrub: true, animation: vaultTimeline,
+        }));
+        registerProbeTrigger("vault");
+      }
+
 
       refreshFrame = window.requestAnimationFrame(() => {
         refreshFrame = window.requestAnimationFrame(() => {
@@ -206,6 +223,7 @@ export function initializePortfolioAnimations(
           if (restoredScrollY > 0 && window.scrollY !== restoredScrollY) {
             window.scrollTo(0, restoredScrollY);
           }
+          root.dataset.scrollReady = "true";
         });
       });
 

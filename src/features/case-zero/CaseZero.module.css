@@ -1,4 +1,4 @@
-.section { padding-inline: var(--gutter); background: #e9e5dc; }
+.section { padding-inline: var(--gutter); background: var(--scene-bg-paper); }
 .desktopBranch { display: block; }
 .mobileBranch { display: none; }
 
@@ -19,7 +19,7 @@
   background:
     linear-gradient(90deg, rgb(23 25 24 / 3%) 1px, transparent 1px) 0 0 / 5rem 5rem,
     linear-gradient(rgb(23 25 24 / 3%) 1px, transparent 1px) 0 0 / 5rem 5rem,
-    #e9e5dc;
+    var(--scene-bg-paper);
 }
 
 .header { position: relative; z-index: 10; }
@@ -92,7 +92,7 @@
 .settleTransition p { max-width: 30rem; font-size: clamp(1.3rem, 2.6vw, 2.2rem); letter-spacing: -.02em; }
 
 .vaultTransition { position: relative; min-height: 34rem; display: grid; place-items: center; align-content: center; gap: var(--space-2); text-align: center; }
-.vaultTransition [data-lock-packet] { z-index: 2; display: grid; gap: .35rem; min-width: 15rem; padding: var(--space-2); border: 1px solid #587762; background: #e9e5dc; }
+.vaultTransition [data-lock-packet] { z-index: 2; display: grid; gap: .35rem; min-width: 15rem; padding: var(--space-2); border: 1px solid #587762; background: var(--scene-bg-paper); }
 .vaultTransition [data-lock-packet] span { color: #3d7566; font: var(--type-label)/1 var(--font-mono); letter-spacing: .13em; }
 .vaultTransition [data-vault-boundary] { position: absolute; width: min(52rem, 92%); height: 19rem; border: 1px solid #587762; }
 .vaultTransition h3 { font-size: clamp(2rem, 5vw, 4rem); }
@@ -116,6 +116,8 @@
   display: grid;
   align-content: center;
 }
+/* Center the width-limited question itself, not just the text inside it. */
+:global([data-animated="ready"]) .question { margin-inline: auto; }
 :global([data-animated="ready"]) .caseFile { inset: 10vh 6vw 8vh; padding: 0; display: block; }
 :global([data-animated="ready"]) .blindScene { inset-inline: 5vw; }
 :global([data-animated="ready"]) .blindClimax { inset: 0; }
