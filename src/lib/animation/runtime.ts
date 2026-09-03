@@ -143,6 +143,7 @@ export function initializePortfolioAnimations(
 
       // Pin dimensions must come from the compact animated layout, not the
       // tall normal-flow fallback. Setup is synchronous; failure restores it.
+      const restoredScrollY = window.scrollY;
       root.dataset.animated = "ready";
 
       triggers.push(
@@ -195,10 +196,16 @@ export function initializePortfolioAnimations(
       );
       registerProbeTrigger("intro");
 
+
       refreshFrame = window.requestAnimationFrame(() => {
         refreshFrame = window.requestAnimationFrame(() => {
           refreshFrame = undefined;
           scrollTriggerApi.refresh();
+          // Timeline pins defer their spacer sizes until refresh. A reload's
+          // position can be clamped against the shorter interim document.
+          if (restoredScrollY > 0 && window.scrollY !== restoredScrollY) {
+            window.scrollTo(0, restoredScrollY);
+          }
         });
       });
 

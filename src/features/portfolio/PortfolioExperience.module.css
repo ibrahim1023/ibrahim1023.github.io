@@ -1,5 +1,8 @@
 .root {
   min-height: 100dvh;
+  /* Pins own scroll geometry; browser anchoring must not compensate again
+     when the fallback flow is replaced during a restored-page load. */
+  overflow-anchor: none;
 }
 
 .narrative {
