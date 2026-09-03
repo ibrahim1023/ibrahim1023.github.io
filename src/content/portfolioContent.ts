@@ -7,7 +7,17 @@ export const identity = {
 
 export const projectLinks = {
   settleDiff: "https://github.com/ibrahim1023/SettleDiff",
+  caseZero: "https://github.com/ibrahim1023/CaseZero",
   vaultSteward: "https://github.com/ibrahim1023/vault-steward",
+} as const;
+
+export const externalLinks = {
+  contextDev: "https://context.dev/",
+} as const;
+
+export const contextDevUsage = {
+  settleDiff: "Context.dev · conditional public status-page evidence",
+  caseZero: "Context.dev · schema-constrained docket discovery",
 } as const;
 
 export const settleDiff = {
@@ -61,6 +71,32 @@ export const verificationChecks = [
   "recipient", "settlement", "service execution", "paid failure",
   "ledger outcome", "activity persistence",
 ] as const;
+
+export const caseZero = {
+  title: "CaseZero",
+  descriptor: "Evidence-first AI investigations, blind to the official answer.",
+  qualifier: "Independent experimental project · not affiliated with the NTSB",
+  openingQuestion: "Can an investigation reason without seeing the answer?",
+  acquisition: "Public evidence in. Official finding held back.",
+  evidence: "Every claim stays attached to its source.",
+  blindness: "The answer is outside the room.",
+  climax: "BLIND BY CONSTRUCTION",
+  lock: "Lock the assessment before reveal.",
+  transition:
+    "Trustworthy conclusions resist hindsight. Trustworthy changes wait for approval.",
+} as const;
+
+export const caseZeroMetrics = {
+  caseId: "CEN22FA375",
+  measuredOn: "2026-09-01",
+  reviewedDocketItems: 15,
+  processedSources: 3,
+  evidenceItems: 951,
+  pdfLocated: 200,
+  tableLocated: 751,
+  provisionalCandidates: 171,
+  finalRunFailures: 0,
+} as const;
 
 export const vaultSteward = {
   title: "Vault Steward",
