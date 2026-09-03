@@ -5,8 +5,8 @@ test.use({ viewport: { width: 390, height: 844 } });
 
 test("iPhone composition is exclusive and overflow-free", async ({ page }) => {
   const diagnostics = capturePageDiagnostics(page); await page.goto("/portfolio/");
-  await expect(page.locator('[data-animated-layout="mobile"]')).toBeVisible();
-  await expect(page.locator('[data-animated-layout="desktop"]')).toBeHidden();
+  await expect(page.locator('[data-animated-layout="mobile"]:visible')).toHaveCount(2);
+  await expect(page.locator('[data-animated-layout="desktop"]:visible')).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   expect(diagnostics.pageErrors).toEqual([]); expect(diagnostics.consoleErrors).toEqual([]);
 });
@@ -22,9 +22,9 @@ test("iPhone stacks proof records and keeps them inside the usable viewport", as
 
 test("orientation changes rebuild one active layout", async ({ page }) => {
   const diagnostics = capturePageDiagnostics(page); await page.goto("/portfolio/");
-  await expect(page.locator('[data-animated-layout="mobile"]')).toBeVisible();
-  await page.setViewportSize({ width: 844, height: 390 }); await expect(page.locator('[data-animated-layout="desktop"]')).toBeVisible();
-  await page.setViewportSize({ width: 390, height: 844 }); await expect(page.locator('[data-animated-layout="mobile"]')).toBeVisible();
+  await expect(page.locator('[data-animated-layout="mobile"]:visible')).toHaveCount(2);
+  await page.setViewportSize({ width: 844, height: 390 }); await expect(page.locator('[data-animated-layout="desktop"]:visible')).toHaveCount(2);
+  await page.setViewportSize({ width: 390, height: 844 }); await expect(page.locator('[data-animated-layout="mobile"]:visible')).toHaveCount(2);
   expect(diagnostics.pageErrors).toEqual([]); expect(diagnostics.consoleErrors).toEqual([]);
 });
 
@@ -33,7 +33,7 @@ test("320px keeps the source focus ring and evidence packet in bounds", async ({
   await page.keyboard.press("Tab"); await page.keyboard.press("Tab");
   const source = page.getByRole("link", { name: "View SettleDiff source on GitHub" }); await expect(source).toBeFocused();
   const box = await source.boundingBox(); expect(box!.x).toBeGreaterThanOrEqual(3); expect(box!.x + box!.width).toBeLessThanOrEqual(317);
-  await scrollNarrativeTo(page, "mobile", .99); await expect(activeNarrativeLocator(page, "mobile", "[data-evidence-packet]")).toBeInViewport({ ratio: .02 });
+  await scrollNarrativeTo(page, "mobile", .99); await expect(activeNarrativeLocator(page, "mobile", "[data-verified-evidence-token]")).toBeInViewport({ ratio: .02 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 

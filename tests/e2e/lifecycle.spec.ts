@@ -25,13 +25,15 @@ test("back-forward navigation rebuilds a single lifecycle", async ({ page }) => 
   await page.setViewportSize({ width: 1440, height: 900 }); await page.goto("/portfolio/?e2eLifecycle=1");
   await scrollNarrativeTo(page, "desktop", .61); await page.goto("about:blank"); await page.goBack();
   await expect(page.locator('[data-portfolio-experience][data-animated="ready"]')).toHaveCount(1);
-  await expect(page.locator(".pin-spacer")).toHaveCount(1); await expect(page.locator("[data-stage]:visible")).toHaveCount(1);
+  await expect(page.locator(".pin-spacer")).toHaveCount(2); await expect(page.locator("[data-stage]:visible")).toHaveCount(1);
 });
 
 test("all timeline targets remain readable when animation styles are cleared", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 }); await page.goto("/portfolio/");
   await page.evaluate(() => { const root = document.querySelector<HTMLElement>("[data-portfolio-experience]")!; root.removeAttribute("data-animated"); document.querySelectorAll<HTMLElement>("[data-animatable]").forEach((node) => node.removeAttribute("style")); });
-  const desktop = page.locator('[data-animated-layout="desktop"]');
+  const desktop = page.locator('[data-narrative="settlediff"] [data-animated-layout="desktop"]');
   await expect(desktop.getByRole("heading", { name: "SettleDiff" })).toBeVisible();
-  await expect(desktop).toContainText("UNVERIFIABLE"); await expect(desktop).toContainText("VERIFIED"); await expect(desktop).toContainText("Vault Steward");
+  await expect(desktop).toContainText("UNVERIFIABLE"); await expect(desktop).toContainText("VERIFIED"); await expect(desktop).toContainText("Can an investigation stay blind to the answer?");
+  const caseZero = page.locator('[data-narrative="casezero"] [data-animated-layout="desktop"]');
+  await expect(caseZero).toContainText("BLIND BY CONSTRUCTION"); await expect(caseZero).toContainText("Vault Steward");
 });

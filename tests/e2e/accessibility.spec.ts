@@ -43,12 +43,16 @@ for (const mode of AXE_MODES) {
     ).toEqual([]);
 
     const visibleProjectLinks = page.locator('a[aria-label^="View "]:visible');
-    await expect(visibleProjectLinks).toHaveCount(mode.name === "reduced motion" ? 3 : 2);
+    await expect(visibleProjectLinks).toHaveCount(3);
     await expect(visibleProjectLinks.nth(0)).toHaveAttribute(
       "aria-label",
       "View SettleDiff source on GitHub",
     );
     await expect(visibleProjectLinks.nth(1)).toHaveAttribute(
+      "aria-label",
+      "View CaseZero source on GitHub",
+    );
+    await expect(visibleProjectLinks.nth(2)).toHaveAttribute(
       "aria-label",
       "View Vault Steward source on GitHub",
     );
@@ -61,13 +65,8 @@ for (const mode of AXE_MODES) {
     );
     expect(bounds.every(({ width, height }) => width >= 44 && height >= 44)).toBe(true);
 
-    const visibleLinks = await page.locator("a:visible").evaluateAll((links) =>
-      links.map((link) => link.getAttribute("aria-label") ?? link.textContent?.trim()),
-    );
-    expect(visibleLinks.slice(0, 3)).toEqual([
-      "Skip to content",
-      "View SettleDiff source on GitHub",
-      "View Vault Steward source on GitHub",
-    ]);
+    await expect(page.getByRole("link", { name: "Skip to content" })).toBeVisible();
+    await expect(page.locator('a[href="https://context.dev/"]').filter({ hasText: "conditional public status-page evidence" }).first()).toBeAttached();
+    await expect(page.locator('a[href="https://context.dev/"]').filter({ hasText: "schema-constrained docket discovery" }).first()).toBeAttached();
   });
 }

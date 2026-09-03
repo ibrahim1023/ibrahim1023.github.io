@@ -1,10 +1,10 @@
 # Phase 1 Implementation Status
 
-**Evidence date:** 2026-09-02
+**Evidence date:** 2026-09-03
 
 **Implementation branch:** `codex/phase-1-implementation`
 
-**Reviewed implementation commit:** pending final redesign commit
+**Reviewed implementation commit:** pending final CaseZero review commit
 
 **Legend:** complete, evidence pending
 
@@ -19,9 +19,10 @@ that Phase 1 has passed owner device acceptance or deployment sign-off.
 | Scope and factual content | complete | final owner factual scan of new public verification cycle |
 | Static deployment baseline | complete | deployed workflow run and URL |
 | Intro and SettleDiff narrative | complete | cross-browser Mac visual pass of redesigned story |
+| CaseZero narrative | complete | owner Mac/iPhone ordinary-speed visual acceptance |
 | Desktop choreography | complete | Safari/Firefox/Edge manual pass |
 | Mobile choreography | complete | physical iPhone Safari/VoiceOver pass |
-| Vault Steward transition | complete | physical-device evidence-packet handoff review |
+| Vault Steward transition | complete | physical-device locked-assessment handoff review |
 | Reduced motion and no-JS | complete | physical Safari confirmation |
 | Accessibility automation | complete | manual keyboard, zoom, and VoiceOver |
 | Automated testing | complete | clean CI runner result |
@@ -34,13 +35,15 @@ that Phase 1 has passed owner device acceptance or deployment sign-off.
 | Requirement | Evidence |
 |---|---|
 | Source-backed SettleDiff facts and prohibited-claim guards | `src/content/portfolioContent.ts`, content tests |
+| Source-backed CaseZero facts, qualification, and prohibited-claim guards | centralized content contract and state/component tests |
 | Shared state timing and exact causal order | `settleDiffState.ts`, timeline/state tests |
 | Separate desktop and mobile choreography | `SettleDiffStage.tsx`, `MobileSettleDiffStage.tsx`, media-aware runtime |
 | Historical incident plus current public x402 verification cycle | centralized content contract and prohibited-claim tests |
 | Persistent transaction artifact and mutually exclusive foreground scenes | `TransactionArtifact.tsx`, timeline ownership tests, overlap E2E |
 | Separate provider and independent proof records | `IndependentProof.tsx`, geometry and copy assertions |
 | Progressive dark → evidence → paper → warm visual system | shared tokens and desktop/mobile stage styles |
-| Evidence-packet SettleDiff → Vault handoff | transition overlay, boundary geometry, timeline regressions |
+| Verified-evidence SettleDiff → CaseZero seam | scoped transition component and timeline regressions |
+| CaseZero blindness, lock, and Vault handoff | case-file/boundary/lock components, separate timeline, browser state tests |
 | Stable normal-flow Vault arrival | `VaultStewardArrival.tsx`, release E2E |
 | Reduced-motion, no-JavaScript, and setup-failure fallbacks | runtime tests and reduced/no-JS E2E |
 | Production debug gating | no `data-state` in production export E2E |
@@ -72,9 +75,9 @@ Record iPhone model, iOS/Safari version, portrait/landscape behavior, dynamic
 browser chrome, native touch scrolling, iOS reduced motion, VoiceOver order,
 source links, and the complete mobile transformation.
 
-The redesigned mobile branch uses a native sticky viewport, explicit scene
-exits, a compact vertical proof stack, a `580vh` runway, and a single evidence
-packet handoff. Automated 320–390px, orientation, reverse-scroll, and geometry
+The redesigned mobile branches use native sticky viewports, explicit scene
+exits, a compact vertical proof stack, `520vh` SettleDiff plus `340vh` CaseZero
+runways, and a single locked-assessment handoff. Automated 320–390px, orientation, reverse-scroll, and geometry
 checks cover it; physical iPhone portrait/landscape, dynamic chrome, VoiceOver,
 and touch-scroll confirmation must be repeated by the owner.
 
@@ -94,12 +97,12 @@ reviewed and deployed SHAs must match before final sign-off.
 ## Current gate results
 
 - Lint and strict types: pass.
-- Unit/component tests: 16 files, 64 tests passed.
-- Browser suite: 29 tests passed, including the 8 required viewport checks.
+- Unit/component tests: 19 files, 71 tests passed.
+- Browser suite: 31 tests passed, including the 8 required viewport checks.
 - Root and `/portfolio` production exports: pass.
-- Page JavaScript: 180,599 bytes gzip; limit 184,320.
+- Page JavaScript: 181,694 bytes gzip; limit 184,320.
 - Lighthouse, three desktop runs: Performance 99, Accessibility 100, Best
-  Practices 96, SEO 100, LCP 896–901 ms, CLS 0.
+  Practices 96, SEO 100, LCP 937–938 ms, CLS 0.
 
 Phase 1 remains **evidence pending** until the owner Mac/iPhone matrix,
 interaction traces, deployment agreement, and final owner sign-off are

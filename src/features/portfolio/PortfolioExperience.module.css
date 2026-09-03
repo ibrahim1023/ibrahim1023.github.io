@@ -9,10 +9,12 @@
 
 .caseZeroNarrative { position: relative; min-height: 100dvh; }
 .reducedBranch { display: none; padding-inline: var(--gutter); }
+.vaultArrival { display: block; }
 
 @media (prefers-reduced-motion: reduce) {
   .narrative, .caseZeroNarrative { display: none; }
   .reducedBranch { display: block; }
+  .vaultArrival { display: none; }
 }
 
 @media (width < 768px) and (prefers-reduced-motion: no-preference),

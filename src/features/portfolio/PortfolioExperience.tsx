@@ -19,8 +19,8 @@ export function PortfolioExperience() {
         <CaseZeroSection />
       </div>
       <div className={styles.reducedBranch} data-branch="reduced" data-no-js-narrative><ReducedMotionNarrative /></div>
-      <div data-project-root="vault-steward"><VaultStewardArrival /></div>
-      <noscript><style>{`[data-animated-layout] { display: none !important; } [data-branch="reduced"] { display: block !important; }`}</style></noscript>
+      <div className={styles.vaultArrival} data-project-root="vault-steward" data-stable-vault><VaultStewardArrival /></div>
+      <noscript><style>{`[data-animated-layout], [data-stable-vault] { display: none !important; } [data-branch="reduced"] { display: block !important; }`}</style></noscript>
     </div>
   );
 }

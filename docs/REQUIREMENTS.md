@@ -3,22 +3,23 @@
 **Status:** approved target  
 **Audience:** Codex implementation and review agents  
 **Deployment:** GitHub Pages at `https://ibrahim1023.github.io/portfolio/`  
-**Scope:** Intro → SettleDiff → Vault Steward arrival
+**Scope:** Intro → SettleDiff → CaseZero → Vault Steward arrival
 
 ## Objective
 
 Create a production-quality, Apple-like scroll narrative that demonstrates
 Ibrahim's ability to build reliable agentic systems. The page must use one real
 SettleDiff failure as the origin, show the product's evolution, demonstrate a
-current independently verified purchase, then pass one evidence packet into
-the trust model of Vault Steward.
+current independently verified purchase, pass verified evidence into a blind
+investigation model, then carry a locked assessment into Vault Steward's
+approval boundary.
 
 The prototype validates:
 
 1. the portfolio's editorial and cinematic visual language;
 2. a reversible scroll-animation architecture;
 3. source-backed technical storytelling;
-4. continuous transformation between two projects;
+4. coherent trust relay across three projects;
 5. desktop, mobile, reduced-motion, accessibility, and static-deployment
    quality.
 
@@ -35,9 +36,10 @@ Include only:
 
 1. Intro.
 2. Complete SettleDiff origin-to-verification sequence.
-3. Continuous evidence-packet handoff from SettleDiff to Vault Steward.
-4. Minimal stable Vault Steward arrival.
-5. Understated accessible links from the two project titles to their source
+3. Compact CaseZero public-evidence, blindness, and lock sequence.
+4. Continuous SettleDiff → CaseZero → Vault Steward handoffs.
+5. Minimal stable Vault Steward arrival.
+6. Understated accessible links from the three project titles to their source
    repositories.
 
 Do not add generic portfolio sections, navigation, a footer, About, Contact,
@@ -120,6 +122,29 @@ Approved SettleDiff descriptor:
 
 > Transaction forensics for agent purchases.
 
+SettleDiff may credit Context.dev only as `Context.dev · conditional public
+status-page evidence`. It remains outside the deterministic financial verdict.
+
+## CaseZero factual contract
+
+CaseZero is an independent experimental evidence-first investigation system.
+The portfolio represents only capabilities implemented at source commit
+`73755b19cb0fcf7cc58a43b7d4707c3ea19f4732`: deterministic public docket
+acquisition, typed source locators, evidence extraction, blindness controls,
+and assessment/evidence/version lock infrastructure. It must not claim a
+completed autonomous investigation, an official cause, or NTSB approval.
+
+Required qualifier: `Independent experimental project · not affiliated with
+the NTSB`.
+
+The dated CEN22FA375 validation may show 15 reviewed docket items, 3 processed
+sources, 951 evidence items (200 PDF-located and 751 table-located), 171
+provisional candidates, and 0 final-run failures, measured 2026-09-01.
+
+Context.dev may be credited only as `Context.dev · schema-constrained docket
+discovery`. CaseZero itself validates URLs, downloads, hashes, classifies, and
+keeps Context.dev outside the blind runtime.
+
 ## Vault Steward factual contract
 
 Vault Steward is a local-first Obsidian plugin that finds integrity problems,
@@ -140,19 +165,18 @@ Approved title and copy:
 - Descriptor: `Local-first, evidence-backed vault maintenance with explicit approval before every edit.`
 - Continuation cue: `Case study continues`
 
-The transition carries one compact verified evidence packet across an explicit
-boundary. Represent the real workflow abstractly in the portfolio's visual
-language; do not morph the full SettleDiff interface into Vault Steward and do
-not reproduce an Obsidian screenshot as the transition scene.
+The transition carries one compact locked assessment across an explicit
+boundary. Represent the real workflow abstractly; do not morph either prior
+interface into Vault Steward or reproduce an Obsidian screenshot.
 
 ## Scroll architecture
 
-Use normalized progress from `0` to `1` and one master narrative timeline built
-from named segments.
+Use normalized progress from `0` to `1` inside two independent reversible
+chapter timelines under one media lifecycle.
 
 - Intro runway: approximately `100–140vh`.
-- Desktop SettleDiff runway: `760vh`.
-- Mobile SettleDiff runway: `580vh`.
+- Desktop runways: SettleDiff `680vh`, CaseZero `360vh`.
+- Mobile runways: SettleDiff `520vh`, CaseZero `340vh`.
 - Stable Vault Steward arrival: approximately `100–140vh` after the pinned
   transformation releases.
 
@@ -172,7 +196,7 @@ timeline.
 - Restrained SettleDiff accent.
 - Warm amber for differences and controlled red for `UNVERIFIABLE`.
 - Cool verification blue and restrained green for `VERIFIED`, followed by a
-  gradual transition toward Vault Steward's warmer green.
+  neutral evidence-paper CaseZero chapter, then Vault Steward's warmer green.
 - Never communicate meaning by color alone.
 - System-first sans-serif and restrained monospaced technical labels.
 - No runtime font downloads unless Ibrahim later supplies licensed local files.

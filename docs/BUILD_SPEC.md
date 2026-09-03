@@ -11,8 +11,8 @@ The repository already provides:
 - Next.js App Router with strict TypeScript and static export;
 - React 19, GSAP, and ScrollTrigger;
 - one page and one client boundary, `PortfolioExperience`;
-- Intro, animated SettleDiff, reduced-motion SettleDiff, and minimal Vault
-  Steward arrival components;
+- Intro, independent animated SettleDiff and CaseZero chapters, a complete
+  portfolio-level reduced-motion story, and minimal Vault Steward arrival;
 - centralized factual copy;
 - CSS Modules and shared design tokens;
 - root and `/portfolio` builds;
@@ -28,10 +28,10 @@ Current gate counts and acceptance evidence live in
 src/app/page.tsx                         semantic page shell only
   └─ PortfolioExperience                client lifecycle owner
       ├─ IntroSection                   intro composition
-      └─ NarrativeStage                 media-aware scroll owner
-          ├─ SettleDiff desktop stage   persistent artifact + proof workspace
-          ├─ SettleDiff mobile stage    vertical/compact composition
-          └─ Vault Steward arrival      stable normal-flow destination
+      ├─ SettleDiff chapter             desktop/mobile verification timeline
+      ├─ CaseZero chapter               desktop/mobile blind-investigation timeline
+      ├─ ReducedMotionNarrative         complete static three-project story
+      └─ Vault Steward arrival          stable normal-flow destination
 ```
 
 `page.tsx` contains no animation logic. Presentational components do not read
@@ -75,6 +75,15 @@ type SettleDiffState =
   | "independent-proof"
   | "checks-complete"
   | "verified"
+  | "casezero-handoff";
+
+type CaseZeroState =
+  | "casezero-established"
+  | "public-docket"
+  | "evidence-typed"
+  | "finding-sealed"
+  | "blind-by-construction"
+  | "lock-ready"
   | "vault-handoff";
 ```
 
@@ -88,18 +97,17 @@ CSS, state mapping, tests, and GSAP labels cannot drift.
 
 ## Object continuity
 
-One transaction artifact persists from the origin request through the verified
-result. Evidence scenes are mutually exclusive foreground frames; a prior frame
-must exit before the next settles. At the end, the verified evidence compresses
-into one packet that crosses an explicit boundary into Vault Steward. The full
-SettleDiff interface does not relabel into the next product.
+SettleDiff ends in an abstract verified-evidence token. CaseZero begins as a
+new case file rather than reused transaction data, separates its generated
+assessment from the sealed official finding, and locks evidence/version state.
+The locked assessment then crosses Vault Steward's approval boundary.
 
 ## Responsive composition
 
 ### Desktop and tablet landscape
 
 - Pinned full-viewport stage.
-- `760vh` SettleDiff runway.
+- `680vh` SettleDiff and `360vh` CaseZero runways (`1040vh` combined ceiling).
 - Persistent artifact, reconstructed evidence layers, separated provider and
   independent proof records, compact checks, and evidence-packet handoff.
 - Critical text fits `1024×768` and `1280×720` without clipping.
@@ -107,7 +115,8 @@ SettleDiff interface does not relabel into the next product.
 ### Tablet portrait and mobile
 
 - Separate composition and timeline branch.
-- `580vh` SettleDiff runway inside a `680dvh` narrative container.
+- `520vh` SettleDiff and `340vh` CaseZero runways (`860vh` combined ceiling),
+  inside `620dvh` and `440dvh` chapter containers.
 - Vertical artifact travel, reconstruction layers, separated proof records,
   compact checks, and evidence-packet handoff.
 - Selective pinning only when the usable dynamic viewport can contain the

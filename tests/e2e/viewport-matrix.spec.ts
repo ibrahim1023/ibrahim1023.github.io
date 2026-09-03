@@ -10,7 +10,7 @@ for (const [width, height, layout] of VIEWPORTS) {
   test(`${width}×${height} keeps proof readable and overflow-free`, async ({ page }) => {
     const diagnostics = capturePageDiagnostics(page); await page.setViewportSize({ width, height }); await page.goto("/portfolio/");
     await expect(activeLayout(page, layout)).toBeVisible(); await expect(page.locator("[data-stage]:visible")).toHaveCount(1);
-    for (const [progress, selector] of [[.38, "[data-reconstruction]"], [.73, "[data-proof]"], [.93, "[data-verified]"], [.99, "[data-vault-transition]"]] as const) {
+    for (const [progress, selector] of [[.38, "[data-reconstruction]"], [.73, "[data-proof]"], [.93, "[data-verified]"], [.99, "[data-settle-case-transition]"]] as const) {
       await scrollNarrativeTo(page, layout, progress); await expectMostlyVisible(activeNarrativeLocator(page, layout, selector), { viewportRatio: .01 });
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     }

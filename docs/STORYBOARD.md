@@ -1,4 +1,4 @@
-# Storyboard — Phase 1 Target
+# Storyboard — Three-project trust relay
 
 The narrative is one reversible, Apple-like scroll-controlled composition. One
 transaction artifact persists through the SettleDiff story; surrounding scenes
@@ -77,12 +77,29 @@ requests`; it does not become a dense dashboard.
 language: SettleDiff turns payment evidence into a result that can be checked,
 not merely trusted. Reverse scrolling reconstructs every preceding state.
 
-## 10. Vault handoff (`0.96–1.00`)
+## 10. CaseZero handoff (`0.96–1.00`)
 
-The verified evidence compresses into one evidence packet. That packet crosses
-one explicit boundary into Vault Steward; the full SettleDiff interface does
-not morph into the next product. The palette warms and the workflow resolves
-to `FIND → PREVIEW → APPROVE → VERIFY` before the pin releases.
+The verified result compresses into `VERIFIED EVIDENCE`. SettleDiff clears and
+asks a new question: can an investigation stay blind to the answer? The new
+CaseZero file forms only after the SettleDiff UI exits; no project data is
+presented as literally flowing into another repository.
+
+## CaseZero chapter (`360vh` desktop / `340vh` mobile)
+
+1. `casezero-established` — title, source, qualifier, and the question `Can an
+   investigation reason without seeing the answer?`
+2. `public-docket` — a public case file opens; Context.dev appears only as
+   schema-constrained docket discovery.
+3. `evidence-typed` — `SOURCE → LOCATOR → EVIDENCE` resolves with the dated
+   CEN22FA375 validation counts.
+4. `finding-sealed` — generated assessment, visibility wall, and official NTSB
+   finding are separate objects.
+5. `blind-by-construction` — prior objects clear and `BLIND BY CONSTRUCTION`
+   owns a quiet canvas.
+6. `lock-ready` — assessment hash, evidence-set hash, model versions, and
+   prompt versions settle into one record.
+7. `vault-handoff` — the locked assessment and visibility wall warm into the
+   Vault approval boundary before normal flow resumes.
 
 ## Stable Vault Steward arrival (`100–140vh`, normal flow)
 
@@ -95,10 +112,11 @@ to `FIND → PREVIEW → APPROVE → VERIFY` before the pin releases.
 
 ## Mobile storyboard
 
-Use the same causal order in a purpose-built `580vh` vertical composition. The
+Use the same causal order in purpose-built `520vh` SettleDiff and `340vh`
+CaseZero vertical compositions. The
 artifact travels vertically; reconstruction layers stack; provider and
 independent proof records never overlap; the verification rail remains compact;
-and the evidence packet crosses the Vault boundary before the stable arrival
+and the locked assessment crosses the Vault boundary before the stable arrival
 returns to normal flow. Do not scale down the desktop composition.
 
 ## Reduced-motion and no-JavaScript storyboard
@@ -108,7 +126,8 @@ Render the complete story as normal-flow semantic panels:
 ```text
 Historical request → uncertain outcome → reconstructed evidence → UNVERIFIABLE
 → system evolved → provider record ≠ independent proof → 12 / 12 checks
-→ VERIFIED → evidence packet → Vault Steward approval preview
+→ VERIFIED → CaseZero public evidence → blind boundary → locked assessment
+→ Vault Steward approval preview
 ```
 
 No essential fact may depend on animation or JavaScript.

@@ -1,37 +1,45 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export const RUNWAY_MULTIPLIER = {
-  desktop: 7.6,
-  mobile: 5.8,
+  settlediff: { desktop: 6.8, mobile: 5.2 },
+  casezero: { desktop: 3.6, mobile: 3.4 },
 } as const;
 
-export type NarrativeLayout = keyof typeof RUNWAY_MULTIPLIER;
+export type NarrativeChapter = keyof typeof RUNWAY_MULTIPLIER;
+export type NarrativeLayout = keyof (typeof RUNWAY_MULTIPLIER)[NarrativeChapter];
 
-export function activeLayout(page: Page, layout: NarrativeLayout): Locator {
+export function activeLayout(page: Page, layout: NarrativeLayout, chapter: NarrativeChapter = "settlediff"): Locator {
   // The visible branch is part of this helper's contract. A caller that asks
   // for the inactive branch must fail its first assertion instead of silently
   // inspecting hidden duplicate markup.
-  return page.locator(`[data-animated-layout="${layout}"]:visible`);
+  return page.locator(`[data-narrative="${chapter}"] [data-animated-layout="${layout}"]:visible`);
 }
 
 export function activeNarrativeLocator(
   page: Page,
   layout: NarrativeLayout,
   selector: string,
+  chapter: NarrativeChapter = "settlediff",
 ): Locator {
-  return activeLayout(page, layout).locator(selector);
+  return activeLayout(page, layout, chapter).locator(selector);
 }
 
+export async function scrollNarrativeTo(page: Page, layout: NarrativeLayout, progress: number): Promise<void>;
+export async function scrollNarrativeTo(page: Page, chapter: NarrativeChapter, layout: NarrativeLayout, progress: number): Promise<void>;
 export async function scrollNarrativeTo(
   page: Page,
-  layout: NarrativeLayout,
-  progress: number,
+  chapterOrLayout: NarrativeChapter | NarrativeLayout,
+  layoutOrProgress: NarrativeLayout | number,
+  maybeProgress?: number,
 ) {
+  const chapter: NarrativeChapter = maybeProgress === undefined ? "settlediff" : chapterOrLayout as NarrativeChapter;
+  const layout: NarrativeLayout = maybeProgress === undefined ? chapterOrLayout as NarrativeLayout : layoutOrProgress as NarrativeLayout;
+  const progress = maybeProgress === undefined ? layoutOrProgress as number : maybeProgress;
   if (progress < 0 || progress > 1) {
     throw new Error(`Narrative progress must be between 0 and 1: ${progress}`);
   }
 
-  const top = await page.locator("[data-narrative]").evaluate((node) => {
+  const top = await page.locator(`[data-narrative="${chapter}"]`).evaluate((node) => {
     // ScrollTrigger pins the narrative itself, so use its spacer as the
     // document anchor once the pin is active.
     const anchor = node.parentElement?.classList.contains("pin-spacer")
@@ -43,7 +51,7 @@ export async function scrollNarrativeTo(
   const viewport = page.viewportSize();
   if (!viewport) throw new Error("Viewport is required for narrative tests");
 
-  const y = top + viewport.height * RUNWAY_MULTIPLIER[layout] * progress;
+  const y = top + viewport.height * RUNWAY_MULTIPLIER[chapter][layout] * progress;
   await page.evaluate((target) => window.scrollTo(0, target), y);
   await page.evaluate(
     () =>

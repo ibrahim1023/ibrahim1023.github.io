@@ -3,6 +3,7 @@ import styles from "./CaseZero.module.css";
 
 export function BlindBoundary({ layout }: { layout: "desktop" | "mobile" }) {
   return (
+    <>
     <section className={styles.blindScene} data-animatable data-blind-scene data-layout={layout}>
       <article className={styles.generatedEvidence} data-animatable data-generated-evidence data-foreground-object>
         <span>GENERATED ASSESSMENT</span>
@@ -16,9 +17,8 @@ export function BlindBoundary({ layout }: { layout: "desktop" | "mobile" }) {
         <span>OFFICIAL NTSB FINDING</span>
         <strong>SEALED UNTIL LOCK</strong>
       </aside>
-      <p className={styles.blindClimax} data-animatable data-blind-climax data-scene-primary>
-        {caseZero.climax}
-      </p>
     </section>
+    <p className={styles.blindClimax} data-animatable data-blind-climax data-scene-primary>{caseZero.climax}</p>
+    </>
   );
 }

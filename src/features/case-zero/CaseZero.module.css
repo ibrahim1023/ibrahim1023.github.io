@@ -67,7 +67,7 @@
 .officialFinding > span { color: #786e61; }
 .blindBoundary { align-self: stretch; display: grid; place-items: center; border-inline: 1px solid rgb(71 107 120 / 40%); background: linear-gradient(90deg, transparent, rgb(71 107 120 / 8%), transparent); }
 .blindBoundary span { writing-mode: vertical-rl; color: #476b78; font: var(--type-label)/1.2 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
-.blindClimax { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; color: #1f3f49; font-size: clamp(3rem, 8vw, 7.5rem); line-height: .86; letter-spacing: -.055em; text-align: center; }
+.blindClimax { position: relative; min-height: 28rem; display: grid; place-items: center; pointer-events: none; color: #1f3f49; font-size: clamp(3rem, 8vw, 7.5rem); line-height: .86; letter-spacing: -.055em; text-align: center; }
 
 .lockRecord { padding: var(--space-3); }
 .lockRecord header { display: grid; gap: .75rem; }
@@ -96,8 +96,8 @@
 .vaultTransition [data-lock-packet] span { color: #3d7566; font: var(--type-label)/1 var(--font-mono); letter-spacing: .13em; }
 .vaultTransition [data-vault-boundary] { position: absolute; width: min(52rem, 92%); height: 19rem; border: 1px solid #587762; }
 .vaultTransition h3 { font-size: clamp(2rem, 5vw, 4rem); }
-.vaultTransition p { max-width: 42rem; color: #5d635f; }
-.vaultTransition ol { list-style: none; padding: 0; display: flex; gap: var(--space-2); color: #476b55; font: var(--type-label)/1 var(--font-mono); letter-spacing: .12em; }
+.vaultTransition p { max-width: 42rem; color: #414744; }
+.vaultTransition ol { list-style: none; padding: 0; display: flex; gap: var(--space-2); color: #244d37; font: 600 max(.78rem, var(--type-label))/1 var(--font-mono); letter-spacing: .12em; }
 .vaultTransition li + li::before { content: "→"; margin-right: var(--space-2); color: #777b76; }
 
 :global([data-animated="ready"]) .stage { overflow: clip; }
@@ -105,6 +105,7 @@
 :global([data-animated="ready"]) .question,
 :global([data-animated="ready"]) .caseFile,
 :global([data-animated="ready"]) .blindScene,
+:global([data-animated="ready"]) .blindClimax,
 :global([data-animated="ready"]) .lockRecord {
   position: absolute;
   inset: 0;
@@ -117,6 +118,7 @@
 }
 :global([data-animated="ready"]) .caseFile { inset: 10vh 6vw 8vh; padding: 0; display: block; }
 :global([data-animated="ready"]) .blindScene { inset-inline: 5vw; }
+:global([data-animated="ready"]) .blindClimax { inset: 0; }
 :global([data-animated="ready"]) .lockRecord { inset: 16vh 10vw; }
 :global([data-animated="ready"]) .settleTransition,
 :global([data-animated="ready"]) .vaultTransition {
@@ -131,7 +133,7 @@
 @media (width < 768px), (orientation: portrait) and (max-width: 1024px) {
   .section { padding-inline: 0; }
   .desktopBranch { display: none; }
-  .mobileBranch { display: block; }
+  .mobileBranch { display: block; min-height: 440dvh; }
   .vaultTransition ol { gap: .45rem; font-size: .65rem; }
   .vaultTransition li + li::before { margin-right: .45rem; }
 }

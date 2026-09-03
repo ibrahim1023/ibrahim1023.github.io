@@ -11,7 +11,7 @@ procedure, and result.
 | Reviewed implementation commit | full Git commit SHA | pending final redesign commit |
 | Deployed commit | full Git commit SHA | pending |
 | Production URL | `https://ibrahim1023.github.io/portfolio/` | pending |
-| Review date | ISO date | `2026-09-02` redesign review in progress; final review pending |
+| Review date | ISO date | `2026-09-03` CaseZero review in progress; final review pending |
 | Reviewer | name/agent plus owner sign-off | Codex automated review; Ibrahim approved the local transition preview; final sign-off pending |
 
 The reviewed and deployed commits must match.
@@ -35,10 +35,10 @@ intentionally ignored by Git.
 | Frozen lockfile install | exit 0 | PASS — `pnpm install --frozen-lockfile`, 2026-09-01 |
 | Lint | exit 0 | PASS — `pnpm validate`, 2026-09-01 |
 | Strict types | exit 0 | PASS — `pnpm validate`, 2026-09-01 |
-| Unit/component tests | all pass | PASS — 16 files, 64 tests, 2026-09-02 redesign |
+| Unit/component tests | all pass | PASS — 19 files, 71 tests, 2026-09-03 |
 | Root export | `out/` produced | PASS — `pnpm build` |
 | `/portfolio` export | `out/` produced | PASS — clean production rebuild after E2E |
-| Chromium E2E | all pass | PASS — 29 tests, including the 8-viewport matrix, 2026-09-02 redesign |
+| Chromium E2E | all pass | PASS — 31 tests, including CaseZero forward/reverse and the 8-viewport matrix, 2026-09-03 |
 | Production console | no errors or hydration warnings | PASS — diagnostics assertions across E2E matrix |
 
 ## Narrative acceptance
@@ -58,7 +58,11 @@ Record a screen capture or timestamped reviewer notes for desktop and mobile.
 - [ ] `12 / 12`, `0 model requests`, and `VERIFIED` receive deliberate holds.
 - [ ] Reverse scrolling reconstructs every preceding state.
 - [ ] Fast forward/reverse scrolling leaves no orphaned or stale scene.
-- [ ] One evidence packet crosses an explicit Vault Steward boundary.
+- [ ] Verified evidence exits SettleDiff before the CaseZero file settles.
+- [ ] `SOURCE → LOCATOR → EVIDENCE` remains readable without becoming a dashboard.
+- [ ] The official finding remains visibly separate and sealed before lock.
+- [ ] `BLIND BY CONSTRUCTION` owns a clean, non-overlapping hold.
+- [ ] One locked assessment crosses an explicit Vault Steward boundary.
 - [ ] The Vault rail reads `FIND → PREVIEW → APPROVE → VERIFY`.
 - [ ] The pinned stage releases without a jump.
 - [ ] The stable Vault arrival remains legible in normal flow.
@@ -106,7 +110,8 @@ With operating-system reduced motion enabled:
 - [x] No long pin, path travel, parallax, scale sweep, or object reorganization
       initializes.
 - [x] The historical incident, current independent proof, verification result,
-      evidence-packet handoff, and Vault arrival are in normal reading order.
+      CaseZero blindness/lock sequence, locked-assessment handoff, and Vault
+      arrival are in normal reading order.
 
 With GSAP/ScrollTrigger initialization deliberately blocked:
 
@@ -163,10 +168,10 @@ version, commit, URL, viewport, device/browser, date, and raw report path.
 | Lighthouse Accessibility | ≥ 95 | PASS — 100 in all 3 runs |
 | Lighthouse Best Practices | ≥ 95 | PASS — 96 in all 3 runs |
 | Lighthouse SEO | ≥ 95 | PASS — 100 in all 3 runs |
-| LCP | ≤ 2.5 s | PASS — 896–901 ms |
+| LCP | ≤ 2.5 s | PASS — 937–938 ms |
 | CLS | ≤ 0.1 | PASS — 0 in all 3 runs |
 | INP | ≤ 200 ms | pending |
-| Route JS + animation dependencies | ≤ 180 KiB gzip | PASS — 180,599 bytes / 184,320-byte limit |
+| Route JS + animation dependencies | ≤ 180 KiB gzip | PASS — 181,694 bytes / 184,320-byte limit |
 
 Also record:
 
