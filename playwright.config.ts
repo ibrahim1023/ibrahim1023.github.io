@@ -16,8 +16,8 @@ export default defineConfig({
     viewport: { width: 1440, height: 900 },
   },
   webServer: {
-    command: `node scripts/serve-export.mjs --root ${exportRoot} --base-path /portfolio --port ${port}`,
-    url: `${baseURL}/portfolio/`,
+    command: `node scripts/serve-export.mjs --root ${exportRoot}  --port ${port}`,
+    url: `${baseURL}/`,
     reuseExistingServer: false,
     timeout: 120_000,
   },

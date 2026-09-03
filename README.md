@@ -42,13 +42,13 @@ pnpm validate      # all automated release gates, ending on a production export
 
 ```bash
 pnpm build          # root / custom-domain build (NEXT_PUBLIC_BASE_PATH="")
-pnpm build:pages    # GitHub project Pages build (NEXT_PUBLIC_BASE_PATH=/portfolio)
+pnpm build:pages    # GitHub user Pages build (NEXT_PUBLIC_BASE_PATH="")
 pnpm build:pages:e2e # instrumented Pages build used only by lifecycle tests
-pnpm serve:export   # serve out/ at http://127.0.0.1:4173/portfolio/
+pnpm serve:export   # serve out/ at http://127.0.0.1:4173/
 ```
 
-All build commands emit a static `out/` directory. The production commands differ by the
-`NEXT_PUBLIC_BASE_PATH` environment setting, which is applied to Next.js
+All build commands emit a static `out/` directory. The user-site deployment has
+an empty `NEXT_PUBLIC_BASE_PATH` environment setting, which is applied to Next.js
 `basePath` in `next.config.ts`. Raw files from `public/` go through
 `withBasePath()` in `src/lib/deployment/basePath.ts`; components never
 hard-code the repository name. The E2E build additionally enables lifecycle
@@ -70,17 +70,15 @@ If port `4173` is occupied, choose another with `LHCI_PORT=4174 pnpm lighthouse`
 2. In the repository: **Settings → Pages → Build and deployment → Source →
    GitHub Actions** (one-time setup).
 3. The deploy job publishes the validated `out/` artifact to
-   `https://ibrahim1023.github.io/portfolio/`.
+   `https://ibrahim1023.github.io/` from repository `ibrahim1023.github.io`.
 
 For a root (`username.github.io`) or custom-domain deployment, set
 `NEXT_PUBLIC_BASE_PATH=""` (the default) and adjust the workflow accordingly.
 
 ## Phase 1 scope
 
-The implemented page currently contains the Intro, SettleDiff cinematic
-sequence, and SettleDiff → Vault Steward transition. The next approved order is
-SettleDiff → CaseZero → Vault Steward; its design is documented but not yet
-implemented.
+The implemented page contains Intro → SettleDiff → CaseZero → Vault Steward,
+with independent cinematic chapters and a stable Vault Steward arrival.
 Factual copy combines the historical `failed-broadcast` regression fixture
 with the current public x402 verification evidence. The story uses a sanitized
 fixture identity, never claims that the failed attempt settled, and keeps the

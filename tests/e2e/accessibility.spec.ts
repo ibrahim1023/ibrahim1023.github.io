@@ -13,7 +13,7 @@ for (const mode of AXE_MODES) {
   test(`no serious axe violations (${mode.name})`, async ({ page }) => {
     await page.setViewportSize(mode.viewport);
     await page.emulateMedia({ reducedMotion: mode.reducedMotion });
-    await page.goto("/portfolio/");
+    await page.goto("/");
     const axe = () =>
       new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag22aa"]);
     const results = mode.name === "mobile"

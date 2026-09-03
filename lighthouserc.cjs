@@ -2,14 +2,14 @@
 const { chromium } = require("@playwright/test");
 
 const port = Number(process.env.LHCI_PORT ?? "4173");
-const previewUrl = `http://127.0.0.1:${port}/portfolio/`;
+const previewUrl = `http://127.0.0.1:${port}/`;
 
 module.exports = {
   ci: {
     collect: {
       chromePath: chromium.executablePath(),
       startServerCommand:
-        `node scripts/serve-export.mjs --root out --base-path /portfolio --port ${port}`,
+        `node scripts/serve-export.mjs --root out  --port ${port}`,
       startServerReadyPattern: previewUrl,
       url: [previewUrl],
       numberOfRuns: 3,

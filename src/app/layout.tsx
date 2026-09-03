@@ -11,10 +11,10 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://ibrahim1023.github.io"),
   title: "Ibrahim Arshad — AI Systems Engineer",
   description: identity.framing,
-  alternates: { canonical: "/portfolio/" },
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
-    url: "/portfolio/",
+    url: "/",
     title: "Ibrahim Arshad — AI Systems Engineer",
     description: identity.framing,
   },

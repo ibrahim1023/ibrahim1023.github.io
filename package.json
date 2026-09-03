@@ -10,8 +10,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:pages": "NEXT_PUBLIC_BASE_PATH=/portfolio next build",
-    "build:pages:e2e": "NEXT_PUBLIC_BASE_PATH=/portfolio NEXT_PUBLIC_E2E=true next build",
+    "build:pages": "NEXT_PUBLIC_BASE_PATH= next build",
+    "build:pages:e2e": "NEXT_PUBLIC_BASE_PATH= NEXT_PUBLIC_E2E=true next build",
     "serve:export": "node scripts/serve-export.mjs",
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",

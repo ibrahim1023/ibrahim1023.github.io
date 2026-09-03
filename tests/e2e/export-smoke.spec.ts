@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import { scrollNarrativeTo } from "./helpers/narrative";
 
-test("exported site loads under the repository subpath without errors", async ({
+test("exported site loads under the site root without errors", async ({
   page,
 }) => {
   const pageErrors: string[] = [];
@@ -21,16 +21,16 @@ test("exported site loads under the repository subpath without errors", async ({
     }
   });
 
-  await page.goto("/portfolio/");
+  await page.goto("/");
 
   await expect(page).toHaveTitle("Ibrahim Arshad — AI Systems Engineer");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
-    "https://ibrahim1023.github.io/portfolio/",
+    "https://ibrahim1023.github.io/",
   );
   await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
     "content",
-    "https://ibrahim1023.github.io/portfolio/",
+    "https://ibrahim1023.github.io/",
   );
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
     "content",

@@ -4,7 +4,7 @@ import { RUNWAY_MULTIPLIER, activeNarrativeLocator, expectMostlyVisible } from "
 for (const layout of ["desktop", "mobile"] as const) {
 test(`${layout} chapter seams have no excess runway or duplicate project introduction`, async ({ page }) => {
   await page.setViewportSize(layout === "desktop" ? { width: 1440, height: 900 } : { width: 390, height: 844 });
-  await page.goto("/portfolio/");
+  await page.goto("/");
   await expect(page.locator('[data-portfolio-experience][data-animated="ready"]')).toBeVisible();
 
   const geometry = await page.evaluate(() => {
