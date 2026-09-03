@@ -1,0 +1,14 @@
+.stage { padding: var(--space-4) var(--gutter) var(--space-6); overflow: clip; }
+.header h2 { font-size: clamp(3rem, 17vw, 5rem); }
+.question { margin-block: 8rem; font-size: clamp(2.3rem, 11vw, 4.25rem); }
+
+.stage :global([data-case-file]) { margin-block: 6rem; }
+.stage :global([data-case-file]) ol { grid-template-columns: 1fr; }
+.stage :global([data-case-file]) li { border-right: 0; border-bottom: 1px solid rgb(23 25 24 / 14%); }
+.stage :global([data-case-file]) li:last-child { border-bottom: 0; }
+.stage :global([data-blind-scene]) { min-height: 48rem; grid-template: auto 4rem auto / 1fr; }
+.stage :global([data-blind-boundary]) { min-height: 4rem; border-inline: 0; border-block: 1px solid rgb(71 107 120 / 40%); }
+.stage :global([data-blind-boundary]) span { writing-mode: horizontal-tb; text-align: center; }
+.stage :global([data-blind-climax]) { font-size: clamp(3rem, 16vw, 5.5rem); overflow-wrap: anywhere; }
+.stage :global([data-lock-record]) { margin-block: 7rem; }
+.stage :global([data-lock-record]) li { align-items: center; font-size: .85rem; }
