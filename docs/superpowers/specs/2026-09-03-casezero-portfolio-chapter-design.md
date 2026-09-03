@@ -1,7 +1,7 @@
 # CaseZero Portfolio Chapter Design
 
 **Date:** 2026-09-03  
-**Status:** Owner-approved direction; written-spec review pending  
+**Status:** Owner-approved design; implementation plan complete
 **Portfolio scope:** SettleDiff → CaseZero → Vault Steward  
 **CaseZero source:** `main` at `73755b19cb0fcf7cc58a43b7d4707c3ea19f4732`  
 **SettleDiff source:** `main` at `03d0bf4f5a652f33e90186e7fe2eaed819c3002e`
