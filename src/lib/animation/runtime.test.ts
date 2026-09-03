@@ -98,6 +98,11 @@ describe("portfolio animation runtime", () => {
     const root = buildRoot();
     const { create, gsapApi, mediaContext, scrollTriggerApi } = animationApis();
 
+    create.mockImplementationOnce(() => {
+      expect(root).toHaveAttribute("data-animated", "ready");
+      return { kill: vi.fn() };
+    });
+
     const cleanup = initializePortfolioAnimations({
       root,
       gsapApi,
@@ -110,7 +115,7 @@ describe("portfolio animation runtime", () => {
     expect(gsapApi.registerPlugin).toHaveBeenCalledOnce();
     expect(mediaContext.add).toHaveBeenCalledWith(NARRATIVE_MEDIA.desktop, expect.any(Function));
     expect(mediaContext.add).toHaveBeenCalledWith(NARRATIVE_MEDIA.mobile, expect.any(Function));
-    expect(root).not.toHaveAttribute("data-animated");
+    expect(root).toHaveAttribute("data-animated", "ready");
 
     vi.runAllTimers();
 

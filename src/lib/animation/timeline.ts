@@ -96,8 +96,10 @@ export function buildCaseZeroNarrativeTimeline(e: CaseZeroTimelineElements, layo
   const hidden = present([e.caseFile, e.blindScene, e.blindClimax, e.lockRecord, e.vaultTransition]);
   if (hidden.length) tl.set(hidden, { opacity: 0, visibility: "hidden" }, 0);
   const established = caseTiming("casezero-established");
-  if (e.header) tl.fromTo(e.header, { opacity: 0, y: 16 }, { id: "casezero-header", opacity: 1, y: 0, duration: established.duration * .3 }, established.start);
-  if (e.question) tl.fromTo(e.question, { opacity: 0, y: 18 }, { id: "casezero-question", opacity: 1, y: 0, duration: established.duration * .25 }, established.start + established.duration * .1);
+  // The chapter enters in document flow before its pin begins. Keep the
+  // opening readable during that approach, then settle it into position.
+  if (e.header) tl.fromTo(e.header, { opacity: 1, y: 16 }, { id: "casezero-header", opacity: 1, y: 0, duration: established.duration * .3 }, established.start);
+  if (e.question) tl.fromTo(e.question, { opacity: 1, y: 18 }, { id: "casezero-question", opacity: 1, y: 0, duration: established.duration * .25 }, established.start + established.duration * .1);
   const docket = caseTiming("public-docket");
   if (e.question) tl.to(e.question, { opacity: 0, visibility: "hidden", duration: docket.duration * .2 }, docket.start);
   if (e.header) tl.to(e.header, { opacity: 0, visibility: "hidden", duration: docket.duration * .2 }, docket.start);

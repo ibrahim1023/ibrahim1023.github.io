@@ -6,7 +6,7 @@
 @media (width < 768px), (orientation: portrait) and (max-width: 1024px) {
   .section { padding-inline: 0; }
   .desktopBranch { display: none; }
-  .mobileBranch { display: block; min-height: 680dvh; }
+  .mobileBranch { display: block; min-height: 620dvh; }
 }
 
 @media (prefers-reduced-motion: reduce) {

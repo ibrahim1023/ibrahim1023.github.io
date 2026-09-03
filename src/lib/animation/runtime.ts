@@ -141,6 +141,10 @@ export function initializePortfolioAnimations(
       const introTimeline = buildIntroTimeline(elements.intro);
       timelines.push(settleTimeline, caseZeroTimeline, introTimeline);
 
+      // Pin dimensions must come from the compact animated layout, not the
+      // tall normal-flow fallback. Setup is synchronous; failure restores it.
+      root.dataset.animated = "ready";
+
       triggers.push(
         scrollTriggerApi.create({
           id: "settlediff",
@@ -195,10 +199,6 @@ export function initializePortfolioAnimations(
         refreshFrame = window.requestAnimationFrame(() => {
           refreshFrame = undefined;
           scrollTriggerApi.refresh();
-          // A reload can restore scrollY before the pin spacer has its final
-          // geometry. Only expose the animated branch after refresh has
-          // reconciled that restored position with the rebuilt timeline.
-          root.dataset.animated = "ready";
         });
       });
 

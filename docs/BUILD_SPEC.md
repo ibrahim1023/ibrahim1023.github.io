@@ -101,6 +101,10 @@ SettleDiff ends in an abstract verified-evidence token. CaseZero begins as a
 new case file rather than reused transaction data, separates its generated
 assessment from the sealed official finding, and locks evidence/version state.
 The locked assessment then crosses Vault Steward's approval boundary.
+The closing transition does not repeat Vault's title or workflow; the stable
+arrival owns that introduction. Enable the compact animated CSS before creating
+ScrollTrigger pins, or fallback-flow heights become empty pin-space runways.
+CaseZero's opening remains readable as its section approaches the pin start.
 
 ## Responsive composition
 

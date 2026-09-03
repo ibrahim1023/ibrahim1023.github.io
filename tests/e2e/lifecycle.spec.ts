@@ -35,5 +35,5 @@ test("all timeline targets remain readable when animation styles are cleared", a
   await expect(desktop.getByRole("heading", { name: "SettleDiff" })).toBeVisible();
   await expect(desktop).toContainText("UNVERIFIABLE"); await expect(desktop).toContainText("VERIFIED"); await expect(desktop).toContainText("Can an investigation stay blind to the answer?");
   const caseZero = page.locator('[data-narrative="casezero"] [data-animated-layout="desktop"]');
-  await expect(caseZero).toContainText("BLIND BY CONSTRUCTION"); await expect(caseZero).toContainText("Vault Steward");
+  await expect(caseZero).toContainText("BLIND BY CONSTRUCTION"); await expect(caseZero).toContainText("LOCKED ASSESSMENT");
 });

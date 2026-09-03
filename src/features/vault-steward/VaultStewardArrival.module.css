@@ -101,13 +101,12 @@
   color: var(--color-text-secondary);
 }
 
-/* Successful animation hands ownership over spatially: the scrubbed Vault
-   composition scrolls out during this lead-in, then the stable section enters.
-   The fallback keeps the compact, immediately readable layout above. */
+/* The preceding chapter ends with the assessment, not a duplicate Vault
+   introduction. A short inset brings this sole introduction into view. */
 [data-animated="ready"] .section {
-  min-height: 179dvh;
+  min-height: 120dvh;
   justify-content: flex-start;
-  padding-block-start: 79dvh;
+  padding-block: 16dvh;
 }
 
 @media (max-width: 32rem) {

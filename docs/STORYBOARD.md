@@ -99,7 +99,9 @@ presented as literally flowing into another repository.
 6. `lock-ready` — assessment hash, evidence-set hash, model versions, and
    prompt versions settle into one record.
 7. `vault-handoff` — the locked assessment and visibility wall warm into the
-   Vault approval boundary before normal flow resumes.
+   approval boundary before normal flow resumes. Keep only the assessment and
+   transition thesis here; the Vault title and workflow appear once, in the
+   stable section below.
 
 ## Stable Vault Steward arrival (`100–140vh`, normal flow)
 
