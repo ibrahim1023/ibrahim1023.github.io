@@ -1,9 +1,10 @@
 # Ibrahim Arshad — Portfolio
 
-A scroll-directed portfolio: SettleDiff verifies payment evidence, CaseZero
-protects investigations from hindsight, and Vault Steward previews a note
-correction through explicit approval and verification. Project stories share
-a continuous light workspace after SettleDiff's verified result.
+A scroll-directed portfolio featuring SettleDiff, CaseZero, and Vault Steward.
+The homepage retains cinematic project transformations with tighter pacing and
+continuous chapter handoffs. Dedicated static pages at `/projects/settlediff/`,
+`/projects/casezero/`, and `/projects/vault-steward/` hold evidence, implementation
+details, limitations, and source links. There is no competing overview route.
 
 Built with Next.js (App Router, static export), TypeScript, and GSAP
 ScrollTrigger. No server features, no CMS, no external assets at runtime.
@@ -77,12 +78,23 @@ For a root (`username.github.io`) or custom-domain deployment, set
 
 ## Current scope
 
-The implemented page contains Intro → SettleDiff → CaseZero → Vault Steward,
+The homepage contains Intro → SettleDiff → CaseZero → Vault Steward → Stack & tools,
 with independent cinematic chapters and a stable Vault Steward arrival.
 Vault's compact correction workbench stays briefly in view for 320px of scroll
 using CSS sticky positioning, without another ScrollTrigger pin. Short landscape
 viewports use normal flow. The approval example is illustrative, not a live file
-edit. A compact footer links to GitHub, X, Medium, and LinkedIn.
+edit. The footer includes the owner-confirmed stack, solo-project credit, email,
+and GitHub, X, Medium, and LinkedIn links. No résumé link is shown until supplied.
+SettleDiff has three beats: receipt, independent comparison, checks/verdict.
+CaseZero has three: source lineage, evidence boundary, assessment lock. Standalone
+origin-history, slogan, and handoff scenes are omitted from the animated edit;
+the original visual components remain. `compactTimeline.ts` drives this edit.
+Desktop chapter runways total 360vh (formerly 1040vh); mobile totals 320vh
+(formerly 860vh). Mobile containing blocks include one additional viewport per
+chapter, preserving the seam geometry. Intro is 70vh rather than 120vh.
+Browser release checks target the compact sequences and detail pages; historical
+full-length story and rejected tour specs are not the current route contract.
+Reduced motion and no-JavaScript readers retain a complete linear narrative.
 
 “Phase 1” in historical planning documents names the original delivery
 milestone, not a product version. Portfolio Phases 2 and 3 have not been

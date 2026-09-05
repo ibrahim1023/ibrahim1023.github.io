@@ -59,7 +59,7 @@ describe("PortfolioExperience shell", () => {
       screen.getByRole("heading", { level: 1, name: "Ibrahim Arshad" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("I build and evaluate reliable agentic systems."),
+      screen.getByText(/I’m an AI systems engineer focused on verification/),
     ).toBeInTheDocument();
     expect(
       screen.getAllByText("Transaction forensics for agent purchases.").length,

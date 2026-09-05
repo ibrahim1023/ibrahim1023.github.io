@@ -1,8 +1,8 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export const RUNWAY_MULTIPLIER = {
-  settlediff: { desktop: 6.8, mobile: 5.2 },
-  casezero: { desktop: 3.6, mobile: 3.4 },
+  settlediff: { desktop: 1.8, mobile: 1.6 },
+  casezero: { desktop: 1.8, mobile: 1.6 },
 } as const;
 
 export type NarrativeChapter = keyof typeof RUNWAY_MULTIPLIER;

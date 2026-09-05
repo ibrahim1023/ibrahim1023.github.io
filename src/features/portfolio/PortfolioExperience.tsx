@@ -13,7 +13,7 @@ export function PortfolioExperience() {
     <div className={styles.root} data-portfolio-experience>
       <PortfolioAnimationController />
       <IntroSection />
-      <div className={styles.narrative} data-animatable data-project-root="settlediff" data-narrative="settlediff">
+      <div id="work" className={styles.narrative} data-animatable data-project-root="settlediff" data-narrative="settlediff">
         <SettleDiffSection />
       </div>
       <div className={styles.caseZeroNarrative} data-project-root="casezero" data-narrative="casezero">

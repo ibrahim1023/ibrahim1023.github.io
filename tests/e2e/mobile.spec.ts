@@ -30,7 +30,8 @@ test("orientation changes rebuild one active layout", async ({ page }) => {
 
 test("320px keeps the source focus ring and evidence packet in bounds", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 }); await page.goto("/");
-  await page.keyboard.press("Tab"); await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab"); await page.keyboard.press("Tab"); await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
   const source = page.getByRole("link", { name: "View SettleDiff source on GitHub" }); await expect(source).toBeFocused();
   const box = await source.boundingBox(); expect(box!.x).toBeGreaterThanOrEqual(3); expect(box!.x + box!.width).toBeLessThanOrEqual(317);
   await scrollNarrativeTo(page, "mobile", .99); await expect(activeNarrativeLocator(page, "mobile", "[data-verified-evidence-token]")).toBeInViewport({ ratio: .02 });
@@ -39,5 +40,7 @@ test("320px keeps the source focus ring and evidence packet in bounds", async ({
 
 test("mobile fast scroll reaches the stable Vault section", async ({ page }) => {
   await page.goto("/"); await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight)); await waitForAnimationFrames(page);
+  await expect(page.getByRole("heading", { name: "Stack & tools" })).toBeVisible();
+  await page.locator("[data-vault-arrival]").scrollIntoViewIfNeeded();
   await expect(page.locator("[data-vault-arrival]")).toBeInViewport();
 });

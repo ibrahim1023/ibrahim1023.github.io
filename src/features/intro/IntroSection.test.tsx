@@ -12,9 +12,13 @@ describe("IntroSection", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("AI Systems Engineer")).toBeInTheDocument();
     expect(
-      screen.getByText("I build and evaluate reliable agentic systems."),
+      screen.getByText("I’m an AI systems engineer focused on verification, evaluation, and human control. I build tools that check agent payments, trace findings to source evidence, and require approval before making changes."),
     ).toBeInTheDocument();
     expect(screen.getByText("Selected work")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "View résumé ↗" })).toHaveAttribute(
+      "href",
+      "/ibrahim-arshad-resume.pdf",
+    );
   });
 
   test("exposes a labelled semantic region", () => {

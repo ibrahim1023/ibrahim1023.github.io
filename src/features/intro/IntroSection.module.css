@@ -1,5 +1,5 @@
 .section {
-  min-height: 120dvh;
+  min-height: 70dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -8,6 +8,18 @@
   max-width: var(--content-max);
   margin-inline: auto;
 }
+
+.resume {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 44px;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  text-underline-offset: .3em;
+}
+
+.resume:hover { color: var(--color-text-primary); }
 
 .role {
   font-family: var(--font-mono);

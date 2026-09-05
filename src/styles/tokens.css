@@ -14,11 +14,12 @@
   --color-vault: #6fa889;
   --scene-bg-dark: #0a0a0b;
   --scene-bg-evidence: #181b1d;
-  --scene-bg-paper: #e9e7e1;
-  --scene-bg-vault: #dedfd7;
+  --scene-bg-paper: #eef0f3;
+  --scene-bg-vault: #eef0f3;
+  --scene-accent-primary: #3458db;
   --scene-ink-on-dark: #f2efe9;
-  --scene-ink-on-paper: #171918;
-  --scene-muted-on-paper: #5f645f;
+  --scene-ink-on-paper: #171a21;
+  --scene-muted-on-paper: #565e6c;
   --scene-accent-uncertain: #c9a25a;
   --scene-accent-verified: #39745d;
 

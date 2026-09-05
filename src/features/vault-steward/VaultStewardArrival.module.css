@@ -1,8 +1,9 @@
 .section {
-  --color-text-primary: #171918;
-  --color-text-secondary: #555d56;
-  --color-vault: #2f604a;
-  --color-line: #b4beb2;
+  --color-text-primary: #171a21;
+  --color-text-secondary: #565e6c;
+  --color-vault: #3458db;
+  --color-line: #bec5d0;
+  color: var(--color-text-primary);
   min-height: 120dvh;
   display: flex;
   flex-direction: column;
@@ -15,6 +16,7 @@
 
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-1);
 }
@@ -46,7 +48,7 @@
   margin: 0;
 }
 
-.workbench { display: flex; flex-direction: column; gap: var(--space-4); }
+.workbench { display: flex; flex-direction: column; gap: var(--space-4); max-width: 50rem; }
 [data-animated="ready"] .workflow::after { content: ""; display: block; height: 320px; }
 [data-animated="ready"] .workbench { position: sticky; top: 8svh; min-height: 76svh; justify-content: center; }
 

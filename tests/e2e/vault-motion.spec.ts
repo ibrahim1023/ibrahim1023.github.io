@@ -7,9 +7,9 @@ for (const layout of ["desktop", "mobile"] as const) {
     await page.goto("/");
     await expect(page.locator('[data-animated="ready"]')).toBeVisible();
     await scrollNarrativeTo(page, layout, .99);
-    await expectMostlyVisible(activeNarrativeLocator(page, layout, "[data-settle-case-transition]"));
-    await expect.poll(() => page.locator('[data-narrative="settlediff"]').evaluate(node => getComputedStyle(node).backgroundColor)).toBe("rgb(233, 231, 225)");
-    expect(await page.locator('[data-stable-vault]').evaluate(node => getComputedStyle(node).backgroundColor)).toBe("rgb(233, 231, 225)");
+    await expectMostlyVisible(activeNarrativeLocator(page, layout, "[data-verified]"));
+    await expect.poll(() => page.locator('[data-narrative="settlediff"]').evaluate(node => getComputedStyle(node).backgroundColor)).toBe("rgb(238, 240, 243)");
+    expect(await page.locator('[data-stable-vault]').evaluate(node => getComputedStyle(node).backgroundColor)).toBe("rgb(238, 240, 243)");
     const vault = page.locator('[data-stable-vault] [data-vault-arrival]');
     const geometry = await vault.locator('[data-vault-workflow]').evaluate(node => {
       const r = node.getBoundingClientRect();
@@ -30,6 +30,9 @@ for (const layout of ["desktop", "mobile"] as const) {
     await expectMostlyHidden(vault.locator('[data-vault-result]'));
     await seek(1);
     await expectMostlyVisible(vault.locator('[data-vault-result]'));
+    const details = vault.getByRole('link', { name: 'Explore project' });
+    await expect(details).toBeInViewport();
+    await expect(details).toHaveCSS('color', 'rgb(23, 26, 33)');
     await page.screenshot({ path: test.info().outputPath('vault-verified.png') });
     await seek(.05);
     await expectMostlyHidden(vault.locator('[data-vault-approved]'));

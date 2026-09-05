@@ -13,9 +13,9 @@ export function buildVaultTimeline(section: HTMLElement) {
   if (current) tl.fromTo(current, { y: 24 }, { y: 0, duration: .2 }, 0);
   if (proposal) tl.fromTo(proposal, { autoAlpha: 0, x: 48, y: 16 }, { autoAlpha: 1, x: 0, y: 0, duration: .2 }, .2);
   if (approved) tl.fromTo(approved, { autoAlpha: 0, scale: .92 }, { autoAlpha: 1, scale: 1, duration: .18 }, .45);
-  if (proposal) tl.to(proposal, { borderColor: "#39745d", backgroundColor: "#dce6d8", duration: .2 }, .63);
+  if (proposal) tl.to(proposal, { borderColor: "#3458db", backgroundColor: "#e1e7f5", duration: .2 }, .63);
   if (result) tl.fromTo(result, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: .2 }, .75);
   if (progress) tl.fromTo(progress, { scaleX: 0 }, { scaleX: 1, duration: .95 }, 0);
-  steps.forEach((step, index) => tl.to(step, { color: "#2f604a", duration: .15 }, index * .23));
+  steps.forEach((step, index) => tl.to(step, { color: "#3458db", duration: .15 }, index * .23));
   return tl;
 }

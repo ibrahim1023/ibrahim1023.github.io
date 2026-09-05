@@ -13,7 +13,7 @@ describe("CaseZero stages", () => {
     expect(container.querySelector("[data-official-finding]")).toHaveTextContent("OFFICIAL NTSB FINDING");
     expect(container.querySelector("[data-official-finding]")).toHaveTextContent("SEALED UNTIL LOCK");
     expect(container.querySelector("[data-blind-boundary]")).toBeInTheDocument();
-    expect(container.querySelector("[data-lock-record]")).toHaveTextContent("implemented lock infrastructure");
+    expect(container.querySelector("[data-lock-record]")).toHaveTextContent("Implemented lock infrastructure · outcome evaluation pending");
     expect(container.querySelector("[data-vault-transition]")).toBeInTheDocument();
     expect(container.querySelector("[data-lock-packet]")).toBeInTheDocument();
     expect(container).toHaveTextContent("not affiliated with the NTSB");

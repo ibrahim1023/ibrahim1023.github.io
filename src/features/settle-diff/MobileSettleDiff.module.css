@@ -1,5 +1,6 @@
 .stage { width: 100%; min-width: 0; min-height: 100svh; padding-inline: var(--gutter); }
 .header { padding-top: max(var(--space-4), env(safe-area-inset-top)); }
+:global([data-animated="ready"]) .stage .header { left: var(--gutter); right: var(--gutter); }
 
 @media (prefers-reduced-motion: no-preference) {
   .stage { position: sticky; top: 0; height: 100svh; max-height: 100dvh; overflow: hidden; }

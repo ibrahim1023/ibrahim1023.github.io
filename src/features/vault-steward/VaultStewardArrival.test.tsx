@@ -6,7 +6,7 @@ import { projectLinks, vaultSteward } from "@/content/portfolioContent";
 import { VaultStewardArrival } from "./VaultStewardArrival";
 
 describe("VaultStewardArrival", () => {
-  test("renders the title, approved copy, and continuation cue", () => {
+  test("renders the title and approved copy without an unfinished continuation", () => {
     render(<VaultStewardArrival />);
 
     expect(
@@ -18,7 +18,7 @@ describe("VaultStewardArrival", () => {
         "Local-first, evidence-backed vault maintenance with explicit approval before every edit.",
       ),
     ).toBeInTheDocument();
-    expect(screen.getByText("Case study continues")).toBeInTheDocument();
+    expect(screen.queryByText("Case study continues")).not.toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "View Vault Steward source on GitHub" }),
     ).toHaveAttribute("href", projectLinks.vaultSteward);
@@ -37,9 +37,9 @@ describe("VaultStewardArrival", () => {
   test("renders an approval preview with the expected result", () => {
     render(<VaultStewardArrival />);
 
-    expect(screen.getByText("Current")).toBeInTheDocument();
+    expect(screen.getByText("Broken link: target missing")).toBeInTheDocument();
     expect(screen.getByText(vaultSteward.preview.current)).toBeInTheDocument();
-    expect(screen.getByText("After")).toBeInTheDocument();
+    expect(screen.getByText("Repaired link: existing target")).toBeInTheDocument();
     expect(screen.getByText(vaultSteward.preview.after)).toBeInTheDocument();
     expect(screen.getByText(vaultSteward.preview.expectedResult)).toBeInTheDocument();
   });

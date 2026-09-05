@@ -5,7 +5,7 @@ export function CaseFile({ layout }: { layout: "desktop" | "mobile" }) {
   return (
     <article className={styles.caseFile} data-animatable data-case-file data-layout={layout} data-foreground-object>
       <header>
-        <span>PUBLIC NTSB DOCKET</span>
+        <span>CASEZERO · PUBLIC NTSB DOCKET</span>
         <strong>{caseZero.acquisition}</strong>
         <small>{caseZeroMetrics.caseId} · measured {caseZeroMetrics.measuredOn}</small>
         <a href={externalLinks.contextDev} target="_blank" rel="noreferrer">

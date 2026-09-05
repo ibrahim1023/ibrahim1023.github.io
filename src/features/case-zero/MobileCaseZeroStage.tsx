@@ -1,3 +1,4 @@
+import { ProjectDetailsLink } from "@/components/projects/ProjectDetailsLink";
 import { ProjectSourceLink } from "@/components/projects/ProjectSourceLink";
 import { caseZero, projectLinks } from "@/content/portfolioContent";
 import { BlindBoundary } from "./BlindBoundary";
@@ -12,7 +13,7 @@ export function MobileCaseZeroStage() {
     <div className={`${styles.stage} ${mobileStyles.stage}`} data-animatable data-casezero-stage data-layout="mobile">
       <div className={styles.surface} data-animatable data-casezero-surface />
       <header className={`${styles.header} ${mobileStyles.header}`} data-animatable data-casezero-header>
-        <div className={styles.titleRow}><h2>{caseZero.title}</h2><ProjectSourceLink href={projectLinks.caseZero} project={caseZero.title} /></div>
+        <div className={styles.titleRow}><h2>{caseZero.title}</h2><ProjectSourceLink href={projectLinks.caseZero} project={caseZero.title} /><ProjectDetailsLink slug="casezero" inline /></div>
         <p>{caseZero.descriptor}</p>
         <small>{caseZero.qualifier}</small>
       </header>

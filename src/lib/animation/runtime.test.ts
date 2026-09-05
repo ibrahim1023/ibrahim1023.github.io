@@ -136,8 +136,8 @@ describe("portfolio animation runtime", () => {
     expect(root).toHaveAttribute("data-animated", "ready");
     expect(create).toHaveBeenCalledTimes(3);
     const configs = create.mock.calls.map(([config]) => config as { id: string; end?: () => string });
-    expect(configs.find(({ id }) => id === "settlediff")?.end?.()).toBe("+=5440");
-    expect(configs.find(({ id }) => id === "casezero")?.end?.()).toBe("+=2880");
+    expect(configs.find(({ id }) => id === "settlediff")?.end?.()).toBe("+=1440");
+    expect(configs.find(({ id }) => id === "casezero")?.end?.()).toBe("+=1440");
     expect(configs.map(({ id }) => id).sort()).toEqual(["casezero", "intro", "settlediff"]);
 
     cleanup();
@@ -224,11 +224,11 @@ describe("portfolio animation runtime", () => {
 
     debugUpdate({ progress: 0.15 });
 
-    expect(debugStage).toHaveAttribute("data-state", "purchase-in-flight");
+    expect(debugStage).toHaveAttribute("data-state", "receipt");
     const debugCaseStage = debugRoot.querySelector('[data-casezero-stage][data-layout="desktop"]') as HTMLElement;
     const caseUpdate = (debugApis.create.mock.calls[1]![0] as { onUpdate: (trigger: { progress: number }) => void }).onUpdate;
     caseUpdate({ progress: 0.72 });
-    expect(debugCaseStage).toHaveAttribute("data-state", "blind-by-construction");
+    expect(debugCaseStage).toHaveAttribute("data-state", "lock");
     debugCleanup();
     expect(debugStage).toHaveAttribute("data-state", "project-established");
   });

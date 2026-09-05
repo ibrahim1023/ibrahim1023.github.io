@@ -24,12 +24,12 @@
 @media (width < 768px) and (prefers-reduced-motion: no-preference),
   (orientation: portrait) and (max-width: 1024px) and (prefers-reduced-motion: no-preference) {
   .narrative {
-    /* The scrub consumes 520vh. One additional viewport keeps the sticky
+    /* The scrub consumes 160vh. One additional viewport keeps the sticky
        stage contained until the scrub ends, so the stable arrival cannot
        enter underneath the final animated frames. */
-    min-height: 620dvh;
+    min-height: 260dvh;
   }
 
-  .caseZeroNarrative { min-height: 440dvh; }
+  .caseZeroNarrative { min-height: 260dvh; }
 
 }

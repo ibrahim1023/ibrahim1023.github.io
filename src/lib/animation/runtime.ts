@@ -2,16 +2,13 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { buildVaultTimeline } from "./vaultTimeline";
 
-import { progressToSettleDiffState } from "@/features/settle-diff/settleDiffState";
-import { progressToCaseZeroState } from "@/features/case-zero/caseZeroState";
 
 import { NARRATIVE_MEDIA, runwayPixels, type NarrativeLayout } from "./media";
 import {
   buildIntroTimeline,
-  buildCaseZeroNarrativeTimeline,
-  buildSettleDiffNarrativeTimeline,
   queryPortfolioTimelineElements,
 } from "./timeline";
+import { buildCompactCaseTimeline as buildCaseZeroNarrativeTimeline, buildCompactSettleTimeline as buildSettleDiffNarrativeTimeline } from "./compactTimeline";
 
 interface E2ELifecycleProbe {
   generation: number;
@@ -162,7 +159,7 @@ export function initializePortfolioAnimations(
           animation: settleTimeline,
           onUpdate: (self) => {
             if (exposeState) {
-              elements.settlediff.stage!.dataset.state = progressToSettleDiffState(self.progress);
+              elements.settlediff.stage!.dataset.state = self.progress < 1 / 3 ? "receipt" : self.progress < 2 / 3 ? "compare" : "verdict";
             }
           },
         }),
@@ -181,7 +178,7 @@ export function initializePortfolioAnimations(
           animation: caseZeroTimeline,
           onUpdate: (self) => {
             if (exposeState) {
-              elements.casezero.stage!.dataset.state = progressToCaseZeroState(self.progress);
+              elements.casezero.stage!.dataset.state = self.progress < 1 / 3 ? "evidence" : self.progress < 2 / 3 ? "boundary" : "lock";
             }
           },
         }),

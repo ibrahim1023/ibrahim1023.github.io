@@ -103,7 +103,6 @@ export const vaultSteward = {
   headline: "Keep your vault trustworthy",
   descriptor: "Local-first, evidence-backed vault maintenance with explicit approval before every edit.",
   rail: ["FIND", "PREVIEW", "APPROVE", "VERIFY"],
-  continuationCue: "Case study continues",
   preview: {
     current: "[[Guides/Partner Onboard Checklist]]",
     after: "[[Guides/Partner Onboarding Checklist]]",
