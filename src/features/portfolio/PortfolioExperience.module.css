@@ -23,6 +23,8 @@
 
 @media (width < 768px) and (prefers-reduced-motion: no-preference),
   (orientation: portrait) and (max-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .root { touch-action: pan-y; overscroll-behavior-x: none; }
+
   .narrative {
     /* The scrub consumes 160vh. One additional viewport keeps the sticky
        stage contained until the scrub ends, so the stable arrival cannot
