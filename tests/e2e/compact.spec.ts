@@ -26,19 +26,45 @@ for (const width of [390, 1440]) {
         scrollTo(0, scrollY + anchor.getBoundingClientRect().top);
       });
       await expect(scope.getByRole("heading", { level: 2, name: chapter === "casezero" ? "CaseZero" : "SettleDiff" })).toBeVisible();
+      if (width < 768) {
+        const headingBox = await scope.getByRole("heading", { level: 2, name: chapter === "casezero" ? "CaseZero" : "SettleDiff" }).boundingBox();
+        const detailsBox = await scope.getByRole("link", { name: "Case study ↗" }).boundingBox();
+        expect(headingBox).not.toBeNull();
+        expect(detailsBox).not.toBeNull();
+        expect(detailsBox!.y).toBeGreaterThanOrEqual(headingBox!.y + headingBox!.height - 2);
+      }
       await page.screenshot({ path: test.info().outputPath(`${chapter}-opening.png`) });
       for (const index of [0, 1, 2, 1, 0, 2]) {
         await page.locator(`[data-narrative="${chapter}"]`).evaluate((node, args) => {
           const anchor = node.parentElement?.classList.contains("pin-spacer") ? node.parentElement : node;
           scrollTo(0, scrollY + anchor.getBoundingClientRect().top + innerHeight * args.runway * args.progress);
-        }, { runway: width < 768 ? 1.6 : 1.8, progress: [.25, .57, .95][index] });
+        }, { runway: width < 768 ? 1.3 : 1.8, progress: [.25, .57, .95][index] });
         const active = scope.locator(selectors[index]);
         await expect(active).toBeVisible();
         await expect.poll(() => active.evaluate(node => Number(getComputedStyle(node).opacity))).toBeGreaterThan(.95);
+        if (width < 768 && chapter === "casezero" && index === 0) {
+          const caseBox = await active.boundingBox();
+          expect(caseBox).not.toBeNull();
+          expect(caseBox!.y).toBeGreaterThanOrEqual(0);
+          expect(caseBox!.y + caseBox!.height).toBeLessThanOrEqual(900);
+        }
         for (const [other, selector] of selectors.entries()) if (other !== index) await expect(scope.locator(selector)).toBeHidden();
       }
       await expect(scope.getByRole("link", { name: /Explore project/ })).toBeInViewport();
       await page.screenshot({ path: test.info().outputPath(`${chapter}-final.png`) });
+    }
+    if (width < 768) {
+      const vault = page.getByRole("region", { name: "Vault Steward", exact: true });
+      const workflow = vault.locator("[data-vault-workflow]");
+      await workflow.evaluate(node => scrollTo(0, scrollY + node.getBoundingClientRect().top + 220));
+      const workbenchBox = await vault.locator("[data-vault-workbench]").boundingBox();
+      expect(workbenchBox).not.toBeNull();
+      expect(workbenchBox!.y).toBeGreaterThanOrEqual(0);
+      expect(workbenchBox!.y + workbenchBox!.height).toBeLessThanOrEqual(900);
+      await expect(vault.getByRole("link", { name: /Explore project/ })).toBeInViewport();
+      await page.screenshot({ path: test.info().outputPath("vault-mobile.png") });
+      const skillColumns = await page.locator("dl").filter({ has: page.getByText("Languages", { exact: true }) }).evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length);
+      expect(skillColumns).toBe(2);
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.evaluate(() => scrollTo(0, 0));

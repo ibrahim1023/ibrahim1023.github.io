@@ -1,5 +1,7 @@
 .stage { width: 100%; min-width: 0; min-height: 100svh; padding-inline: var(--gutter); }
 .header { padding-top: max(var(--space-4), env(safe-area-inset-top)); }
+.titleRow { display: grid; grid-template-columns: auto 1fr; column-gap: .5rem; align-items: center; }
+.titleRow > :global([data-project-details]) { grid-column: 1 / -1; margin-top: .15rem !important; font-size: .9rem !important; min-height: 36px !important; }
 :global([data-animated="ready"]) .stage .header { left: var(--gutter); right: var(--gutter); }
 
 @media (prefers-reduced-motion: no-preference) {

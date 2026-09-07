@@ -16,11 +16,11 @@ for (const layout of ["desktop", "mobile"] as const) {
       return { top: r.top + scrollY, height: r.height, viewport: innerHeight };
     });
     const start = geometry.top - .08 * geometry.viewport;
-    const end = start + 320;
+    const end = start + (layout === "mobile" ? 240 : 320);
     const seek = async (progress: number) => {
       await page.evaluate(y => scrollTo(0, y), start + (end - start) * progress);
     };
-    await seek(.05);
+    await seek(layout === "mobile" ? .3 : .05);
     await expectMostlyHidden(vault.locator('[data-vault-approved]'));
     const initialTop = await vault.locator('[data-vault-workbench]').evaluate(node => node.getBoundingClientRect().top);
     await seek(.68);

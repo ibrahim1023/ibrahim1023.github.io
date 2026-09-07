@@ -13,7 +13,7 @@ export function MobileCaseZeroStage() {
     <div className={`${styles.stage} ${mobileStyles.stage}`} data-animatable data-casezero-stage data-layout="mobile">
       <div className={styles.surface} data-animatable data-casezero-surface />
       <header className={`${styles.header} ${mobileStyles.header}`} data-animatable data-casezero-header>
-        <div className={styles.titleRow}><h2>{caseZero.title}</h2><ProjectSourceLink href={projectLinks.caseZero} project={caseZero.title} /><ProjectDetailsLink slug="casezero" inline /></div>
+        <div className={`${styles.titleRow} ${mobileStyles.titleRow}`}><h2>{caseZero.title}</h2><ProjectSourceLink href={projectLinks.caseZero} project={caseZero.title} /><ProjectDetailsLink slug="casezero" inline /></div>
         <p>{caseZero.descriptor}</p>
         <small>{caseZero.qualifier}</small>
       </header>

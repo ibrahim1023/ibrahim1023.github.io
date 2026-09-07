@@ -11,7 +11,7 @@ export function VaultStewardArrival() {
       aria-label={vaultSteward.title}
       data-vault-arrival
     >
-      <header className={styles.header}>
+      <header className={styles.header} data-vault-header>
         <h2 className={styles.title}>{vaultSteward.title}</h2>
         <ProjectSourceLink href={projectLinks.vaultSteward} project={vaultSteward.title} />
         <ProjectDetailsLink slug="vault-steward" inline />
@@ -20,6 +20,7 @@ export function VaultStewardArrival() {
       <p className={styles.descriptor}>{vaultSteward.descriptor}</p>
       <div className={styles.workflow} data-vault-workflow>
       <div className={styles.workbench} data-vault-workbench>
+      <span className={styles.workbenchTitle} aria-hidden="true">Vault Steward · approval workflow</span>
       <dl className={styles.preview}>
         <div data-vault-current data-animatable>
           <dt>Broken link: target missing</dt>

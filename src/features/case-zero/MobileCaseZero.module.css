@@ -1,5 +1,7 @@
 .stage { padding: var(--space-4) var(--gutter) var(--space-6); overflow: clip; }
 .header h2 { font-size: var(--type-display); }
+.titleRow { display: grid; grid-template-columns: auto 1fr; column-gap: .5rem; align-items: center; }
+.titleRow > :global([data-project-details]) { grid-column: 1 / -1; margin-top: .15rem !important; font-size: .9rem !important; min-height: 36px !important; }
 :global([data-animated="ready"]) .stage .header { left: var(--gutter); right: var(--gutter); }
 .question { margin-block: 8rem; font-size: clamp(2.3rem, 11vw, 4.25rem); }
 
@@ -17,3 +19,30 @@
 :global([data-animated="ready"]) .stage :global([data-case-file]),
 :global([data-animated="ready"]) .stage :global([data-lock-record]) { margin: 0; }
 :global([data-animated="ready"]) .stage :global([data-blind-scene]) { min-height: 0; }
+
+@media (width < 768px) and (prefers-reduced-motion: no-preference) {
+  :global([data-animated="ready"]) .stage :global([data-case-file]) {
+    inset: max(5.75rem, 11svh) var(--gutter) max(1rem, 3svh);
+    display: grid;
+    grid-template-rows: auto auto auto;
+    align-content: center;
+    overflow: hidden;
+  }
+
+  .stage :global([data-case-file]) header { gap: .4rem; padding: .9rem; }
+  .stage :global([data-case-file]) header > strong { font-size: 1.35rem; }
+  .stage :global([data-case-file]) header small { font-size: .7rem; line-height: 1.35; }
+  .stage :global([data-case-file]) a { min-height: 36px; font-size: .72rem; }
+  .stage :global([data-case-file]) ol { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stage :global([data-case-file]) li {
+    gap: .35rem;
+    padding: .75rem .55rem;
+    border-right: 1px solid rgb(23 26 33 / 14%);
+    border-bottom: 0;
+  }
+  .stage :global([data-case-file]) li:last-child { border-right: 0; }
+  .stage :global([data-case-file]) li > span,
+  .stage :global([data-case-file]) li small { font-size: .63rem; line-height: 1.35; }
+  .stage :global([data-case-file]) li strong { font-size: .92rem; letter-spacing: .03em; }
+  .stage :global([data-case-file]) > p { padding: .85rem; font-size: .85rem; line-height: 1.4; }
+}

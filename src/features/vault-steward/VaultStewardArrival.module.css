@@ -49,6 +49,7 @@
 }
 
 .workbench { display: flex; flex-direction: column; gap: var(--space-4); max-width: 50rem; }
+.workbenchTitle { display: none; }
 [data-animated="ready"] .workflow::after { content: ""; display: block; height: 320px; }
 [data-animated="ready"] .workbench { position: sticky; top: 8svh; min-height: 76svh; justify-content: center; }
 
@@ -137,4 +138,61 @@
   .preview {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+@media (width < 768px) and (prefers-reduced-motion: no-preference) {
+  [data-animated="ready"] .section {
+    min-height: 0;
+    gap: .85rem;
+    padding-block: 10svh 8svh;
+  }
+
+  .header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: .5rem;
+    align-items: center;
+  }
+
+  .header > :global([data-project-details]) {
+    grid-column: 1 / -1;
+    margin-top: .15rem !important;
+    min-height: 36px !important;
+    font-size: .9rem !important;
+  }
+
+  .headline { font-size: 1.2rem; }
+  .descriptor { font-size: .95rem; line-height: 1.45; }
+  .workflow { margin-top: .5rem; }
+  [data-animated="ready"] .workflow::after { height: 240px; }
+
+  [data-animated="ready"] .workbench {
+    top: max(1rem, env(safe-area-inset-top));
+    width: 100%;
+    height: calc(100svh - max(2rem, env(safe-area-inset-top)));
+    min-height: 0;
+    gap: .75rem;
+    justify-content: center;
+  }
+
+  .workbenchTitle {
+    display: block;
+    color: var(--color-vault);
+    font: .67rem/1.35 var(--font-mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .preview { gap: .5rem; }
+  .preview div { padding: .85rem; }
+  .preview dt { font-size: .67rem; line-height: 1.35; }
+  .preview dd { margin-top: .35rem; font-size: .92rem; line-height: 1.4; }
+  .approval { gap: .5rem; }
+  .approval > span { font-size: .65rem; }
+  .approval strong { padding: .5rem .65rem; font-size: .78rem; }
+  .expectedResult { font-size: .88rem; line-height: 1.4; }
+  .rail { flex-wrap: nowrap; justify-content: flex-start; gap: .35rem; font-size: .65rem; letter-spacing: .09em; }
+  .railItem { gap: .35rem; }
+  .railItem + .railItem::before { margin-right: .35rem; }
+  .workbench > :global([data-project-details]) { margin-top: .15rem !important; min-height: 40px !important; font-size: .9rem !important; }
 }

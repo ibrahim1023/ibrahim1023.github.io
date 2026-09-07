@@ -15,8 +15,11 @@
 .skills dd { margin: 0; line-height: 1.6; }
 .skills [data-secondary] { border-top: 1px solid #bec5d0; padding-top: .75rem; font-size: .9rem; }
 .contact { max-width: var(--content-max); margin: 1rem auto 2rem; }
-@media (max-width: 760px) { .skills { grid-template-columns: 1fr 1fr; gap: 1rem; } }
-@media (max-width: 400px) { .skills { grid-template-columns: 1fr; } }
+@media (max-width: 760px) {
+  .skills { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem .8rem; }
+  .skills [data-secondary] { grid-column: 1 / -1; }
+  .skills dd { font-size: .92rem; line-height: 1.5; overflow-wrap: anywhere; }
+}
 .reelWrap { min-width: 0; }
 .reel { height: 5.5rem; overflow: hidden; border-block: 1px solid #bec5d0; }
 .reelTrack { display: flex; width: max-content; animation: stackRoll 55s linear infinite; }

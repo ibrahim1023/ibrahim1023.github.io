@@ -12,3 +12,17 @@ test("orders preview, approval, and verification and reverses to a pending previ
   expect((section.querySelector("[data-vault-approved]") as HTMLElement).style.visibility).toBe("hidden");
   timeline.kill();
 });
+
+test("uses a vertical mobile reveal while preserving the desktop horizontal reveal", () => {
+  const section = document.createElement("section");
+  section.innerHTML = `<div data-vault-current></div><div data-vault-proposal></div><strong data-vault-approved></strong><p data-vault-result></p>`;
+  const desktop = buildVaultTimeline(section, "desktop");
+  desktop.progress(.2);
+  expect((section.querySelector("[data-vault-proposal]") as HTMLElement).style.transform).toContain("48px");
+  desktop.kill();
+
+  const mobile = buildVaultTimeline(section, "mobile");
+  mobile.progress(.2);
+  expect((section.querySelector("[data-vault-proposal]") as HTMLElement).style.transform).not.toContain("48px");
+  mobile.kill();
+});

@@ -199,12 +199,12 @@ export function initializePortfolioAnimations(
 
       const vault = root.querySelector<HTMLElement>("[data-stable-vault] [data-vault-arrival]");
       if (vault) {
-        const vaultTimeline = buildVaultTimeline(vault);
+        const vaultTimeline = buildVaultTimeline(vault, layout);
         timelines.push(vaultTimeline);
         triggers.push(scrollTriggerApi.create({
           id: "vault", trigger: vault.querySelector("[data-vault-workflow]"),
           start: () => viewportHeight() > 650 ? "top 8%" : "top 85%",
-          end: "+=320",
+          end: layout === "mobile" ? "+=240" : "+=320",
           pin: false, pinSpacing: false, scrub: true, animation: vaultTimeline,
         }));
         registerProbeTrigger("vault");
