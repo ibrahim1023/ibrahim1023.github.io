@@ -6,7 +6,7 @@
 @media (width < 768px), (orientation: portrait) and (max-width: 1024px) {
   .section { padding-inline: 0; }
   .desktopBranch { display: none; }
-  .mobileBranch { display: block; min-height: 230dvh; }
+  .mobileBranch { display: block; min-height: 260dvh; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -44,7 +44,6 @@
 .artifactScene { position: relative; min-height: 30rem; display: grid; place-items: center; }
 .route { position: absolute; inset-inline: 0; top: 50%; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-2); font: var(--type-label)/1 var(--font-mono); letter-spacing: .15em; color: var(--color-text-secondary); }
 .routeLine { height: 1px; background: var(--color-line); transform-origin: left; }
-.pathOrigin { position: absolute; left: 0; top: 50%; width: 3rem; height: 2px; background: var(--color-accent); }
 .artifact { z-index: 2; min-width: 13rem; display: grid; gap: .3rem; padding: 1.25rem 1.5rem; border: 1px solid var(--color-accent); background: var(--scene-bg-dark); box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 35%); text-align: center; }
 .artifact > span:last-child { color: var(--color-text-secondary); font-variant-numeric: tabular-nums; }
 .artifactLabel, .reconstruction header span, .reconstruction li > span, .originIncident > span,

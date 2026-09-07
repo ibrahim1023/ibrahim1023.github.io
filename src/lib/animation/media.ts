@@ -10,8 +10,8 @@ export const NARRATIVE_MEDIA = {
 } as const;
 
 export const RUNWAY_VH: Record<NarrativeChapter, Record<NarrativeLayout, number>> = {
-  settlediff: { desktop: 180, mobile: 130 },
-  casezero: { desktop: 180, mobile: 130 },
+  settlediff: { desktop: 180, mobile: 160 },
+  casezero: { desktop: 180, mobile: 160 },
 };
 
 export function runwayPixels(chapter: NarrativeChapter, layout: NarrativeLayout, viewportHeight: number): number {

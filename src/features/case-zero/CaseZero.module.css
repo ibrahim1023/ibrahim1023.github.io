@@ -132,7 +132,7 @@
 @media (width < 768px), (orientation: portrait) and (max-width: 1024px) {
   .section { padding-inline: 0; }
   .desktopBranch { display: none; }
-  .mobileBranch { display: block; min-height: 230dvh; }
+  .mobileBranch { display: block; min-height: 260dvh; }
   .vaultTransition ol { gap: .45rem; font-size: .65rem; }
   .vaultTransition li + li::before { margin-right: .45rem; }
 }

@@ -16,7 +16,7 @@ for (const layout of ["desktop", "mobile"] as const) {
       return { top: r.top + scrollY, height: r.height, viewport: innerHeight };
     });
     const start = geometry.top - .08 * geometry.viewport;
-    const end = start + (layout === "mobile" ? 240 : 320);
+    const end = start + 320;
     const seek = async (progress: number) => {
       await page.evaluate(y => scrollTo(0, y), start + (end - start) * progress);
     };

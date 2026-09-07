@@ -4,7 +4,6 @@ import styles from "./SettleDiff.module.css";
 export function TransactionArtifact({ layout }: { layout: "desktop" | "mobile" }) {
   return (
     <div className={styles.artifactScene} data-animatable data-transaction data-artifact-scene>
-      <span className={styles.pathOrigin} aria-hidden="true" data-path-origin data-animatable />
       <div className={styles.route} aria-hidden="true">
         <span>{settleDiff.agentLabel}</span><span className={styles.routeLine} data-route-line data-animatable /><span>{settleDiff.serviceLabel}</span>
       </div>

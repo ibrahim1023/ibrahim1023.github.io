@@ -7,6 +7,7 @@ test("intro stays uncluttered, skills static, and contact not duplicated", async
   await expect(page.getByRole("link", { name: "View résumé" })).toHaveAttribute("href", "/ibrahim-arshad-resume.pdf");
   await expect(page.locator('a[href^="mailto:"]')).toHaveCount(1);
   await expect(page.locator('[data-stack-reel]')).toHaveCount(0);
+  await expect(page.locator('[data-path-origin]')).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Stack & tools" })).toContainText("Claude Code · Codex · Devin");
   await expect(page.getByRole("region", { name: "Vault Steward", exact: true })).toContainText("Broken link: target missing");
 });
@@ -38,7 +39,7 @@ for (const width of [390, 1440]) {
         await page.locator(`[data-narrative="${chapter}"]`).evaluate((node, args) => {
           const anchor = node.parentElement?.classList.contains("pin-spacer") ? node.parentElement : node;
           scrollTo(0, scrollY + anchor.getBoundingClientRect().top + innerHeight * args.runway * args.progress);
-        }, { runway: width < 768 ? 1.3 : 1.8, progress: [.25, .57, .95][index] });
+        }, { runway: width < 768 ? 1.6 : 1.8, progress: [.25, .57, .95][index] });
         const active = scope.locator(selectors[index]);
         await expect(active).toBeVisible();
         await expect.poll(() => active.evaluate(node => Number(getComputedStyle(node).opacity))).toBeGreaterThan(.95);
