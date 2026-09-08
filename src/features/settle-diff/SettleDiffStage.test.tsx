@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
-import { contextDevUsage, projectLinks, publicVerification, reconstructionLayers, settleDiff, verificationChecks } from "@/content/portfolioContent";
+import { contextDevUsage, externalLinks, laterValidation, originIncident, projectLinks, reconstructionLayers, settleDiff, verificationChecks } from "@/content/portfolioContent";
 import { SettleDiffStage } from "./SettleDiffStage";
 
 describe("SettleDiffStage", () => {
@@ -12,14 +12,16 @@ describe("SettleDiffStage", () => {
     expect(container.querySelectorAll("[data-reconstruction-layer]")).toHaveLength(reconstructionLayers.length);
     expect(container.querySelectorAll("[data-check]")).toHaveLength(verificationChecks.length);
   });
-  test("separates provider assertion from independent settlement evidence", () => {
+  test("separates the historical incident from the later live validation", () => {
     const { container } = render(<SettleDiffStage />);
-    expect(container.querySelector("[data-provider-record]")).toHaveTextContent(publicVerification.provider.provenance);
-    expect(container.querySelector("[data-independent-record]")).toHaveTextContent(publicVerification.independent.provenance);
+    expect(container.querySelector("[data-origin-validation]")).toHaveTextContent(originIncident.verdict);
+    expect(container.querySelector("[data-later-validation]")).toHaveTextContent(laterValidation.verdict);
+    expect(screen.getByRole("link", { name: /Read live report/ })).toHaveAttribute("href", externalLinks.settleDiffLiveReport);
+    expect(screen.getByText("EVIDENCE DECIDES")).toBeInTheDocument();
   });
   test("keeps technical detail secondary and source reachable", () => {
     const { container } = render(<SettleDiffStage />);
-    expect(screen.getByText(/Base Sepolia testnet/)).toBeInTheDocument();
+    expect(screen.getByText(laterValidation.warning)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "View SettleDiff source on GitHub" })).toHaveAttribute("href", projectLinks.settleDiff);
     expect(container.querySelector("[data-contextdev-attribution]")).toHaveTextContent(contextDevUsage.settleDiff);
   });

@@ -80,11 +80,18 @@
 .proof { padding: 4rem 0; color: var(--scene-ink-on-paper); }
 .proof header { text-align: center; }
 .proof header p { color: var(--scene-muted-on-paper); font: var(--type-label)/1.5 var(--font-mono); }
+.proofReport { color: inherit; text-underline-offset: .25rem; }
 .proofRecords { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
 .proof article { display: grid; gap: .6rem; min-height: 12rem; align-content: center; padding: var(--space-3); border: 1px solid rgb(23 25 24 / 22%); background: rgb(255 255 255 / 42%); }
 .proof article > span { color: var(--scene-accent-primary); }
 .proof article p, .proof article small { color: var(--scene-muted-on-paper); }
 .proof article small { font-family: var(--font-mono); }
+.validationRoute { font-size: clamp(1.35rem, 2.5vw, 2rem); letter-spacing: -.02em; }
+.validationEvidence { font-size: .95rem; }
+.validationVerdict { color: var(--scene-accent-primary) !important; font-weight: 700; letter-spacing: .08em; overflow-wrap: anywhere; }
+.originValidation .validationVerdict { color: var(--color-verdict) !important; }
+.laterValidation .validationVerdict { color: var(--scene-accent-verified) !important; }
+.validationWarning { max-width: 30rem; font-size: .72rem; line-height: 1.45; }
 .proofLink { color: var(--scene-accent-primary); font-size: 1.5rem; }
 
 .checks { padding: 3rem 0; color: var(--scene-ink-on-paper); text-align: center; }
@@ -98,6 +105,7 @@
 .verified > strong { display: block; margin-top: var(--space-2); color: var(--scene-accent-verified); font-size: clamp(3.5rem, 10vw, 8rem); line-height: .9; letter-spacing: -.045em; }
 .verified p { margin-top: var(--space-4); font-size: clamp(1.5rem, 3vw, 2.75rem); letter-spacing: -.025em; }
 .verified small { display: block; margin-top: var(--space-2); color: var(--scene-muted-on-paper); }
+.evidenceVerdict > strong { font-size: clamp(3rem, 8vw, 6.5rem); }
 
 .transition { position: relative; min-height: 28rem; display: grid; place-items: center; align-content: center; gap: var(--space-2); color: var(--scene-ink-on-paper); text-align: center; }
 .transition [data-evidence-packet] { z-index: 2; display: grid; gap: .35rem; min-width: 14rem; padding: var(--space-2); border: 1px solid var(--scene-accent-verified); background: var(--scene-bg-paper); }

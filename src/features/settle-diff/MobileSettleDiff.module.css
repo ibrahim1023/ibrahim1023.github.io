@@ -22,6 +22,7 @@
   .stage :global([data-proof]) header h3 { font-size: 1.7rem; }
   .stage :global([data-proof]) header p { font-size: .66rem; }
   .stage :global([data-provider-record]), .stage :global([data-independent-record]) { min-height: 0; padding: 1rem; }
+  .stage :global([data-later-validation]) { gap: .35rem; }
   .stage :global([data-proof]) > div { grid-template-columns: 1fr; gap: .6rem; align-content: center; margin-top: .75rem; }
   .stage :global([data-proof-link]) { text-align: center; transform: rotate(90deg); }
   .stage :global([data-checks]) ol { grid-template-columns: repeat(2, 1fr); gap: .2rem .5rem; margin-block: 1rem; }
@@ -29,4 +30,5 @@
   .stage :global([data-vault-transition]) ol { gap: .45rem; font-size: .65rem; }
   .stage :global([data-vault-transition]) li + li::before { margin-right: .45rem; }
   .stage :global([data-vault-boundary]) { width: 100%; height: 20rem; }
+  .stage :global([data-verified]) > strong { font-size: clamp(2.35rem, 13vw, 4rem); }
 }

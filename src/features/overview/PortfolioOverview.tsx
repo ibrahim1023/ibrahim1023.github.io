@@ -1,4 +1,5 @@
 import { profiles } from "@/features/portfolio/ProfileFooter";
+import { externalLinks } from "@/content/portfolioContent";
 import { withBasePath } from "@/lib/deployment/basePath";
 import styles from "./PortfolioOverview.module.css";
 function Flow({ steps }: { steps: string[] }) { return <ol className={styles.flow}>{steps.map(step => <li key={step}>{step}</li>)}</ol>; }
@@ -6,7 +7,7 @@ function Flow({ steps }: { steps: string[] }) { return <ol className={styles.flo
 const github = "https://github.com/ibrahim1023";
 const contact = "mailto:ibrahim_arshad@outlook.com";
 const projects = [
-  { id: "settlediff", title: "SettleDiff", status: "Testnet validated", problem: "Did the agent’s payment actually reach the intended recipient?", capability: "Compares authorized terms with independently observed settlement—not just a provider’s receipt.", repo: "SettleDiff", discipline: "Payment verification" },
+  { id: "settlediff", title: "SettleDiff", status: "Live evidence validated", problem: "Did the agent’s payment actually reach the intended recipient?", capability: "Compares authorized terms with independently observed settlement—not just a provider’s receipt.", repo: "SettleDiff", discipline: "Payment verification" },
   { id: "casezero", title: "CaseZero", status: "Experimental · evaluation pending", problem: "Can an AI investigation reason without access to the official finding?", capability: "Source-linked evidence extraction, access boundaries, and immutable assessment locking.", repo: "CaseZero", discipline: "Evidence & evaluation infrastructure" },
   { id: "vault-steward", title: "Vault Steward", status: "macOS desktop validated", problem: "How do you repair a growing knowledge base without silently changing someone’s notes?", capability: "Finds integrity issues, previews exact repairs, and requires approval before edits.", repo: "vault-steward", discipline: "Controlled agent actions" },
 ] as const;
@@ -45,10 +46,10 @@ export function PortfolioOverview({ project }: { project?: "settlediff" | "casez
           <Flow steps={["Authorize exact terms", "Capture provider response", "Check independent transfer", "Report evidence-backed verdict"]} />
           <div className={styles.caseGrid}>
             <div><h3>Problem</h3><p>Builders of paid agents need to distinguish a submitted request from money actually settling—and from the purchased service succeeding.</p><h3>My implementation</h3><p>A Python verifier compares payment terms, execution, settlement, and service outcome in one evidence model. Perflo and x402 adapters supply evidence; deterministic checks assign the verdict. An investigation agent can explain findings, not overrule them.</p></div>
-            <div><h3>Evidence</h3><p>In the documented public-endpoint test, an independent Base Sepolia transfer matched the payer, recipient, token, and <strong>0.001 test USDC</strong> amount. The service returned HTTP 200 and the verdict was <strong>VERIFIED</strong>.</p><h3>Status & limits</h3><p>This demonstrates one supported testnet path, not production adoption or broad payment reliability. A separate failed-broadcast regression returns UNVERIFIABLE when settlement cannot be established.</p></div>
+            <div><h3>Historical incident</h3><p>The original live run recorded Base advertised, Tempo executed, HTTP 402, and <code>broadcast_failed</code> without confirmed settlement. SettleDiff returned <strong>UNVERIFIABLE</strong> and preserved the run as regression coverage.</p><h3>Later validation</h3><p>On September 8 the same endpoint advertised Tempo. Contract, execution, and confirmed <strong>$0.01</strong> Activity aligned on Tempo; the service succeeded and SettleDiff returned <strong>VERIFIED_WITH_WARNINGS</strong> while retaining a recipient-representation warning.</p><h3>Additional validation</h3><p>A separate x402 Base Sepolia test matched the payer, recipient, token, and <strong>0.001 test USDC</strong> amount, returned HTTP 200, and produced <strong>VERIFIED</strong>.</p><h3>Status & limits</h3><p>These are supported validation paths, not evidence of production adoption or broad payment reliability. The historical disagreement no longer reproduced after the advertised contract changed to Tempo; its root cause remains unassigned.</p></div>
           </div>
           <p className={styles.technology}>Python · PydanticAI · FastAPI · SQLite · x402<br />Context.dev retrieves conditional supporting status-page evidence; it cannot change financial findings.</p>
-          <div className={styles.sourceLinks}><a href={`${github}/SettleDiff`}>View SettleDiff source ↗</a><a href={`${github}/SettleDiff/blob/main/docs/testing/x402-public-endpoint-validation.md`}>Read testnet validation ↗</a><a href={`${github}/SettleDiff/tree/main/fixtures/failed-broadcast`}>Inspect failure fixture ↗</a></div>
+          <div className={styles.sourceLinks}><a href={`${github}/SettleDiff`}>View SettleDiff source ↗</a><a href={externalLinks.settleDiffLiveReport}>Read live-validation report ↗</a><a href={`${github}/SettleDiff/blob/main/docs/testing/x402-public-endpoint-validation.md`}>Read testnet validation ↗</a></div>
         </section>}
 
         {(!project || project === "casezero") && <section id="casezero" className={styles.caseStudy} aria-labelledby="casezero-title">

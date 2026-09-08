@@ -12,5 +12,7 @@ describe("portfolio reduced-motion narrative", () => {
     expect(container).toHaveTextContent("Context.dev · schema-constrained docket discovery");
     expect(container).toHaveTextContent("Independent experimental project · not affiliated with the NTSB");
     expect(container).toHaveTextContent("CEN22FA375 · measured 2026-09-01");
+    expect(container).toHaveTextContent("VERIFIED_WITH_WARNINGS");
+    expect(container.querySelector('a[href="https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/live-run-report-2026-08-21.md"]')).not.toBeNull();
   });
 });

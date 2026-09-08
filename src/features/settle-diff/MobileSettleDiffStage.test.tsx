@@ -1,5 +1,6 @@
 import { render } from "@testing-library/react";
 import { expect, test } from "vitest";
+import { laterValidation, originIncident } from "@/content/portfolioContent";
 import { MobileSettleDiffStage } from "./MobileSettleDiffStage";
 
 test("mobile uses one vertical story with the complete evidence path", () => {
@@ -9,6 +10,8 @@ test("mobile uses one vertical story with the complete evidence path", () => {
   expect(container.querySelectorAll("[data-reconstruction-layer]")).toHaveLength(3);
   expect(container.querySelector("[data-provider-record]")).not.toBeNull();
   expect(container.querySelector("[data-independent-record]")).not.toBeNull();
+  expect(container.querySelector("[data-origin-validation]")).toHaveTextContent(originIncident.verdict);
+  expect(container.querySelector("[data-later-validation]")).toHaveTextContent(laterValidation.verdict);
   expect(container.querySelectorAll("[data-check]")).toHaveLength(12);
   expect(container.querySelector("[data-evidence-item]")).toBeNull();
 });

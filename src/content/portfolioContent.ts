@@ -13,6 +13,7 @@ export const projectLinks = {
 
 export const externalLinks = {
   contextDev: "https://context.dev/",
+  settleDiffLiveReport: "https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/live-run-report-2026-08-21.md",
 } as const;
 
 export const contextDevUsage = {
@@ -45,6 +46,14 @@ export const originIncident = {
   verdict: "UNVERIFIABLE",
   amount: "0.01 USDC",
   maxBudget: "0.02 USDC",
+} as const;
+
+export const laterValidation = {
+  eyebrow: "LATER VALIDATION · 2026-09-08",
+  route: "tempo → tempo",
+  evidence: "$0.01 confirmed · service success",
+  verdict: "VERIFIED_WITH_WARNINGS",
+  warning: "Recipient representations differed; no provider defect was inferred.",
 } as const;
 
 export const verificationSystem = {
