@@ -13,14 +13,24 @@ test("intro stays uncluttered, skills static, and contact not duplicated", async
 });
 
 for (const width of [390, 1440]) {
-  test(`original visual stages retain three compact beats at ${width}px`, async ({ page }) => {
+  test(`visual stages retain a compact evidence sequence at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     await expect(page.locator('[data-portfolio-experience]')).toHaveAttribute("data-animated", "ready");
     await expect(page.locator('[data-scroll-ready="true"]')).toBeVisible();
     await expect(page.locator('[data-intro] a[href*="/projects/"]')).toHaveCount(0);
     const layout = width < 768 ? "mobile" : "desktop";
-    for (const [chapter, selectors] of [["settlediff", ["[data-artifact-scene]", "[data-proof]", "[data-verified]"]], ["casezero", ["[data-case-file]", "[data-blind-scene]", "[data-lock-record]"]]] as const) {
+    const chapters = [
+      ["settlediff", [
+        ["[data-origin-incident]", .25],
+        ["[data-system-boundary]", .42],
+        ["[data-proof]", .62],
+        ["[data-checks]", .80],
+        ["[data-verified]", .96],
+      ]],
+      ["casezero", [["[data-case-file]", .25], ["[data-blind-scene]", .57], ["[data-lock-record]", .95]]],
+    ] as const;
+    for (const [chapter, scenes] of chapters) {
       const scope = page.locator(`[data-narrative="${chapter}"] [data-animated-layout="${layout}"]`);
       await page.locator(`[data-narrative="${chapter}"]`).evaluate(node => {
         const anchor = node.parentElement?.classList.contains("pin-spacer") ? node.parentElement : node;
@@ -35,12 +45,14 @@ for (const width of [390, 1440]) {
         expect(detailsBox!.y).toBeGreaterThanOrEqual(headingBox!.y + headingBox!.height - 2);
       }
       await page.screenshot({ path: test.info().outputPath(`${chapter}-opening.png`) });
-      for (const index of [0, 1, 2, 1, 0, 2]) {
+      const sequence = chapter === "settlediff" ? [0, 1, 2, 3, 4, 2, 0, 4] : [0, 1, 2, 1, 0, 2];
+      for (const index of sequence) {
+        const [selector, progress] = scenes[index]!;
         await page.locator(`[data-narrative="${chapter}"]`).evaluate((node, args) => {
           const anchor = node.parentElement?.classList.contains("pin-spacer") ? node.parentElement : node;
           scrollTo(0, scrollY + anchor.getBoundingClientRect().top + innerHeight * args.runway * args.progress);
-        }, { runway: width < 768 ? 1.6 : 1.8, progress: [.25, .57, .95][index] });
-        const active = scope.locator(selectors[index]);
+        }, { runway: width < 768 ? 1.6 : 1.8, progress });
+        const active = scope.locator(selector);
         await expect(active).toBeVisible();
         await expect.poll(() => active.evaluate(node => Number(getComputedStyle(node).opacity))).toBeGreaterThan(.95);
         if (width < 768 && chapter === "casezero" && index === 0) {
@@ -49,7 +61,7 @@ for (const width of [390, 1440]) {
           expect(caseBox!.y).toBeGreaterThanOrEqual(0);
           expect(caseBox!.y + caseBox!.height).toBeLessThanOrEqual(900);
         }
-        for (const [other, selector] of selectors.entries()) if (other !== index) await expect(scope.locator(selector)).toBeHidden();
+        for (const [other, [otherSelector]] of scenes.entries()) if (other !== index) await expect(scope.locator(otherSelector)).toBeHidden();
       }
       await expect(scope.getByRole("link", { name: /Explore project/ })).toBeInViewport();
       await page.screenshot({ path: test.info().outputPath(`${chapter}-final.png`) });
@@ -64,7 +76,7 @@ for (const width of [390, 1440]) {
       expect(workbenchBox!.y + workbenchBox!.height).toBeLessThanOrEqual(900);
       await expect(vault.getByRole("link", { name: /Explore project/ })).toBeInViewport();
       await page.screenshot({ path: test.info().outputPath("vault-mobile.png") });
-      const skillColumns = await page.locator("dl").filter({ has: page.getByText("Languages", { exact: true }) }).evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length);
+      const skillColumns = await page.locator("dl").filter({ has: page.getByText("Core engineering", { exact: true }) }).evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length);
       expect(skillColumns).toBe(2);
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);

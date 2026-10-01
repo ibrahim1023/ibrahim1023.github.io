@@ -14,6 +14,8 @@ export const projectLinks = {
 export const externalLinks = {
   contextDev: "https://context.dev/",
   settleDiffLiveReport: "https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/live-run-report-2026-08-21.md",
+  settleDiffCurrentValidation: "https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/pr2-live-validation-2026-09-28.md",
+  settleDiffAssuranceReport: "https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/assurance-real-world-validation-2026-09-22.md",
 } as const;
 
 export const contextDevUsage = {
@@ -26,16 +28,16 @@ export const settleDiff = {
   descriptor: "Transaction forensics for agent purchases.",
   agentLabel: "AGENT",
   serviceLabel: "SERVICE",
-  openingAmount: "0.001 USDC",
+  openingAmount: "0.001 test USDC",
   openingPrompt: "A service returns a payment receipt.",
   uncertainty: "But a receipt is not proof that money moved.",
   closingThesis: "Don’t trust the receipt. Verify the settlement.",
 } as const;
 
 export const reconstructionLayers = [
-  { id: "promised", label: "PROMISED", title: "Exact terms", detail: "Price, recipient, asset, network, method, and resource are bound before execution." },
+  { id: "promised", label: "PROMISED", title: "Rail-specific terms", detail: "SettleDiff binds the exact terms each rail exposes. x402 also binds payer, recipient, asset, amount, and network for independent checks." },
   { id: "executed", label: "EXECUTED", title: "One authorized attempt", detail: "Any term drift requires fresh authorization. Ambiguous failures are never retried blindly." },
-  { id: "recorded", label: "RECORDED", title: "Independent evidence", detail: "Provider claims remain separate from independently observed settlement." },
+  { id: "recorded", label: "RECORDED", title: "Evidence roles", detail: "Provider claims stay separate from external settlement observations when the rail exposes enough information." },
 ] as const;
 
 export const originIncident = {
@@ -49,11 +51,20 @@ export const originIncident = {
 } as const;
 
 export const laterValidation = {
-  eyebrow: "LATER VALIDATION · 2026-09-08",
+  eyebrow: "SEPTEMBER 8 · HISTORICAL SCHEMA-2 RESULT",
+  title: "Historical provider correlation",
   route: "tempo → tempo",
-  evidence: "$0.01 confirmed · service success",
+  evidence: "Perflo contract, execution, and Activity aligned.",
   verdict: "VERIFIED_WITH_WARNINGS",
-  warning: "Recipient representations differed; no provider defect was inferred.",
+  warning: "Earlier schema-2 rules let provider Activity fill the settlement role. The same provider-only evidence does not meet today’s independent-settlement standard.",
+} as const;
+
+export const currentPerfloValidation = {
+  eyebrow: "PERFLO V8 · SEPTEMBER 28",
+  title: "Provider records aligned",
+  evidence: "Contract, execution, charge, Activity, and provider settlement agreed.",
+  verdict: "UNVERIFIABLE",
+  warning: "The customer debit remained provider-ledger evidence. A successful vendor-side Base receipt did not establish the customer’s debit.",
 } as const;
 
 export const verificationSystem = {
@@ -64,22 +75,30 @@ export const verificationSystem = {
 } as const;
 
 export const publicVerification = {
-  eyebrow: "PUBLIC TESTNET VALIDATION",
-  headline: "One purchase. Two records.",
-  amount: "0.001 USDC",
-  provider: { label: "PROVIDER RECEIPT", title: "Settlement reported", detail: "HTTP 200 · transaction reference returned", provenance: "provider PAYMENT-RESPONSE" },
-  independent: { label: "INDEPENDENT RECORD", title: "Exact transfer confirmed", detail: "payer · recipient · token · amount matched", provenance: "Base Sepolia USDC Transfer" },
+  eyebrow: "X402 · BASE SEPOLIA TESTNET",
+  headline: "One purchase. Two trust domains.",
+  amount: "0.001 test USDC",
+  provider: { label: "PROVIDER RECEIPT", title: "Settlement reported", detail: "HTTP 200 · transaction reference returned", provenance: "x402 facilitator response" },
+  independent: { label: "READ-ONLY RPC OBSERVATION", title: "Exact transfer confirmed", detail: "Authorized payer, recipient, token, 0.001 test USDC, and Base Sepolia network matched", provenance: "Base Sepolia receipt + Transfer log" },
   verdict: "VERIFIED",
-  checkSummary: "12 / 12 deterministic checks",
+  checkSummary: "13 / 13 checks passed · September 28, 2026",
   modelSummary: "0 model requests for the fallback explanation",
   scope: "x402 v2 · exact · Base Sepolia testnet · EIP-3009",
 } as const;
 
 export const verificationChecks = [
-  "budget", "price", "asset", "asset identity", "protocol", "network",
-  "recipient", "settlement", "service execution", "paid failure",
-  "ledger outcome", "activity persistence",
+  "payer", "recipient", "token", "amount", "network",
 ] as const;
+
+export const paidDeliveryFailure = {
+  eyebrow: "SEPARATE AUTHORIZED X402 REQUEST · SEPTEMBER 28",
+  headline: "Payment confirmed · delivery failed",
+  settlement: "Exact 0.001 test-USDC transfer independently confirmed.",
+  delivery: "Advertised application/json · returned HTTP 200 text/plain",
+  verdict: "PAID_FAILURE",
+  retry: "DO_NOT_RETRY",
+  caveat: "The earlier HTTP-500 request still has unresolved settlement and remains UNVERIFIABLE. It was not retried.",
+} as const;
 
 export const caseZero = {
   title: "CaseZero",

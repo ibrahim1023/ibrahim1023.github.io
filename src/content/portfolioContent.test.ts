@@ -1,23 +1,36 @@
 import { describe, expect, test } from "vitest";
-import { caseZero, caseZeroMetrics, contextDevUsage, externalLinks, laterValidation, originIncident, projectLinks, publicVerification, settleDiff, verificationChecks, verificationSystem, vaultSteward } from "./portfolioContent";
+import { caseZero, caseZeroMetrics, contextDevUsage, currentPerfloValidation, externalLinks, laterValidation, originIncident, paidDeliveryFailure, projectLinks, publicVerification, settleDiff, verificationChecks, verificationSystem, vaultSteward } from "./portfolioContent";
 
 describe("portfolio factual contract", () => {
   test("keeps the failed incident as the factual origin example", () => {
     expect(originIncident).toMatchObject({ amount: "0.01 USDC", maxBudget: "0.02 USDC", verdict: "UNVERIFIABLE" });
     expect(originIncident.technical).toEqual(["base → tempo", "HTTP 402", "broadcast_failed", "transaction hash absent"]);
   });
-  test("pairs the historical incident with the bounded September follow-up", () => {
-    expect(laterValidation).toMatchObject({ route: "tempo → tempo", evidence: "$0.01 confirmed · service success", verdict: "VERIFIED_WITH_WARNINGS" });
-    expect(laterValidation.warning).toContain("no provider defect was inferred");
+  test("labels the September 8 result as historical provider correlation", () => {
+    expect(laterValidation).toMatchObject({ title: "Historical provider correlation", verdict: "VERIFIED_WITH_WARNINGS" });
+    expect(laterValidation.eyebrow).toContain("HISTORICAL SCHEMA-2 RESULT");
+    expect(laterValidation.warning).toContain("does not meet today’s independent-settlement standard");
     expect(externalLinks.settleDiffLiveReport).toBe("https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/live-run-report-2026-08-21.md");
   });
+  test("keeps current Perflo provider evidence conservative", () => {
+    expect(currentPerfloValidation).toMatchObject({ title: "Provider records aligned", verdict: "UNVERIFIABLE" });
+    expect(currentPerfloValidation.warning).toContain("vendor-side Base receipt");
+    expect(externalLinks.settleDiffCurrentValidation).toContain("pr2-live-validation-2026-09-28.md");
+  });
   test("presents the public success as bounded independent testnet proof", () => {
-    expect(publicVerification).toMatchObject({ amount: "0.001 USDC", verdict: "VERIFIED", checkSummary: "12 / 12 deterministic checks" });
+    expect(publicVerification).toMatchObject({ amount: "0.001 test USDC", verdict: "VERIFIED", checkSummary: "13 / 13 checks passed · September 28, 2026" });
     expect(publicVerification.scope).toContain("Base Sepolia testnet");
-    expect(publicVerification.provider.provenance).toBe("provider PAYMENT-RESPONSE");
-    expect(publicVerification.independent.provenance).toBe("Base Sepolia USDC Transfer");
+    expect(publicVerification.provider.provenance).toBe("x402 facilitator response");
+    expect(publicVerification.independent.provenance).toBe("Base Sepolia receipt + Transfer log");
+    expect(publicVerification.independent.detail).toContain("payer, recipient, token, 0.001 test USDC, and Base Sepolia network matched");
     expect(publicVerification.modelSummary).toContain("0 model requests");
-    expect(verificationChecks).toHaveLength(12);
+    expect(verificationChecks).toEqual(["payer", "recipient", "token", "amount", "network"]);
+  });
+  test("keeps the confirmed paid-delivery failure separate from the unresolved HTTP-500 request", () => {
+    expect(paidDeliveryFailure).toMatchObject({ verdict: "PAID_FAILURE", retry: "DO_NOT_RETRY" });
+    expect(paidDeliveryFailure.delivery).toContain("HTTP 200 text/plain");
+    expect(paidDeliveryFailure.caveat).toContain("HTTP-500 request still has unresolved settlement");
+    expect(externalLinks.settleDiffAssuranceReport).toContain("assurance-real-world-validation-2026-09-22.md");
   });
   test("keeps plain foreground copy and implemented rail names", () => {
     expect(settleDiff.closingThesis).toBe("Don’t trust the receipt. Verify the settlement.");

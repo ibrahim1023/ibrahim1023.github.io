@@ -13,6 +13,10 @@ describe("portfolio reduced-motion narrative", () => {
     expect(container).toHaveTextContent("Independent experimental project · not affiliated with the NTSB");
     expect(container).toHaveTextContent("CEN22FA375 · measured 2026-09-01");
     expect(container).toHaveTextContent("VERIFIED_WITH_WARNINGS");
+    expect(container).toHaveTextContent("Historical provider correlation");
+    expect(container).toHaveTextContent("Provider records aligned");
+    expect(container).toHaveTextContent("PAID_FAILURE · DO_NOT_RETRY");
+    expect(container).toHaveTextContent("HTTP-500 request still has unresolved settlement");
     expect(container.querySelector('a[href="https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/live-run-report-2026-08-21.md"]')).not.toBeNull();
   });
 });

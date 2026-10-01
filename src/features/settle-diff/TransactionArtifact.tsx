@@ -10,7 +10,7 @@ export function TransactionArtifact({ layout }: { layout: "desktop" | "mobile" }
       <article className={styles.artifact} data-artifact data-animatable data-layout={layout} data-meaningful-object>
         <span className={styles.artifactLabel}>PURCHASE</span>
         <strong data-artifact-status>Authorized request</strong>
-        <span>{publicVerification.amount}</span>
+        <span>{publicVerification.amount} · Base Sepolia</span>
       </article>
       <p className={styles.openingPrompt} data-opening-prompt data-animatable>{settleDiff.openingPrompt}</p>
     </div>

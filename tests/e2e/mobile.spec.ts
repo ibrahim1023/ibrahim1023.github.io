@@ -12,7 +12,7 @@ test("iPhone composition is exclusive and overflow-free", async ({ page }) => {
 });
 
 test("iPhone stacks proof records and keeps them inside the usable viewport", async ({ page }) => {
-  await page.goto("/"); await scrollNarrativeTo(page, "mobile", .75);
+  await page.goto("/"); await scrollNarrativeTo(page, "mobile", .62);
   const records = activeNarrativeLocator(page, "mobile", "[data-provider-record], [data-independent-record]");
   await expect(records).toHaveCount(2);
   const boxes = await records.evaluateAll((items) => items.map((item) => item.getBoundingClientRect().toJSON()));
@@ -30,9 +30,9 @@ test("orientation changes rebuild one active layout", async ({ page }) => {
 
 test("320px keeps the source focus ring and evidence packet in bounds", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 }); await page.goto("/");
-  await page.keyboard.press("Tab"); await page.keyboard.press("Tab"); await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  const source = page.getByRole("link", { name: "View SettleDiff source on GitHub" }); await expect(source).toBeFocused();
+  const source = page.getByRole("link", { name: "View SettleDiff source on GitHub" });
+  for (let index = 0; index < 10 && !(await source.evaluate(node => node === document.activeElement)); index += 1) await page.keyboard.press("Tab");
+  await expect(source).toBeFocused();
   const box = await source.boundingBox(); expect(box!.x).toBeGreaterThanOrEqual(3); expect(box!.x + box!.width).toBeLessThanOrEqual(317);
   await scrollNarrativeTo(page, "mobile", .99); await expect(activeNarrativeLocator(page, "mobile", "[data-verified-evidence-token]")).toBeInViewport({ ratio: .02 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

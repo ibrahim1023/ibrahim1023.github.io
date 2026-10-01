@@ -18,15 +18,26 @@
   .stage :global([data-reconstruction]) ol { grid-template-columns: 1fr; gap: .6rem; margin-top: var(--space-2); }
   .stage :global([data-reconstruction]) li { padding: .75rem 1rem; }
   .stage :global([data-reconstruction]) li small { font-size: .72rem; line-height: 1.35; }
+  .stage :global([data-system-boundary]) { padding-top: max(6.5rem, 15svh); padding-bottom: 1rem; }
+  .stage :global([data-system-boundary]) h3 { font-size: 1.5rem; }
+  .stage :global([data-system-boundary]) > p { font-size: .78rem; }
+  .stage :global([data-system-boundary]) > div { grid-template-columns: 1fr; gap: .55rem; margin-top: .75rem; }
+  .stage :global([data-system-boundary]) article { gap: .25rem; padding: .65rem .8rem; }
+  .stage :global([data-system-boundary]) article p,
+  .stage :global([data-system-boundary]) article em { font-size: .66rem; line-height: 1.3; }
+  .stage :global([data-system-boundary]) article > a { min-height: 0; font-size: .65rem; }
   .stage :global([data-proof]) { grid-template-rows: auto 1fr; padding-top: max(7rem, 17svh); padding-bottom: max(2rem, 6svh); }
   .stage :global([data-proof]) header h3 { font-size: 1.7rem; }
   .stage :global([data-proof]) header p { font-size: .66rem; }
   .stage :global([data-provider-record]), .stage :global([data-independent-record]) { min-height: 0; padding: 1rem; }
-  .stage :global([data-later-validation]) { gap: .35rem; }
   .stage :global([data-proof]) > div { grid-template-columns: 1fr; gap: .6rem; align-content: center; margin-top: .75rem; }
   .stage :global([data-proof-link]) { text-align: center; transform: rotate(90deg); }
-  .stage :global([data-checks]) ol { grid-template-columns: repeat(2, 1fr); gap: .2rem .5rem; margin-block: 1rem; }
-  .stage :global([data-checks]) li { padding: .35rem; font-size: .62rem; }
+  .stage :global([data-proof]) > p:last-child { margin-top: .35rem; font-size: .63rem; }
+  .stage :global([data-checks]) { padding-top: max(6rem, 14svh); }
+  .stage :global([data-checks]) h3 { font-size: 1.7rem; }
+  .stage :global([data-checks]) > div:first-of-type { grid-template-columns: 1fr; gap: .5rem; margin-block: .75rem; }
+  .stage :global([data-checks]) > div:first-of-type p { padding: .75rem; font-size: .72rem; }
+  .stage :global([data-checks]) > small { font-size: .66rem; }
   .stage :global([data-vault-transition]) ol { gap: .45rem; font-size: .65rem; }
   .stage :global([data-vault-transition]) li + li::before { margin-right: .45rem; }
   .stage :global([data-vault-boundary]) { width: 100%; height: 20rem; }

@@ -1,5 +1,5 @@
 import { ProjectSourceLink } from "@/components/projects/ProjectSourceLink";
-import { caseZero, caseZeroMetrics, contextDevUsage, externalLinks, laterValidation, originIncident, projectLinks, publicVerification, reconstructionLayers, settleDiff, vaultSteward, verificationChecks, verificationSystem } from "@/content/portfolioContent";
+import { caseZero, caseZeroMetrics, contextDevUsage, currentPerfloValidation, externalLinks, laterValidation, originIncident, paidDeliveryFailure, projectLinks, publicVerification, reconstructionLayers, settleDiff, vaultSteward, verificationChecks, verificationSystem } from "@/content/portfolioContent";
 import styles from "./ReducedMotionNarrative.module.css";
 
 export function ReducedMotionNarrative() {
@@ -9,11 +9,12 @@ export function ReducedMotionNarrative() {
       <div className={styles.panel}><h3>Purchase</h3><p>{settleDiff.openingPrompt} {settleDiff.uncertainty}</p></div>
       <div className={styles.panel}><h3>Promised, executed, recorded</h3><ol>{reconstructionLayers.map((layer) => <li key={layer.id}><strong>{layer.label}</strong> — {layer.detail}</li>)}</ol></div>
       <div className={styles.panel}><h3>Original incident</h3><p>{originIncident.headline} {originIncident.decisiveFinding}</p><p><strong>{originIncident.verdict}</strong> · {originIncident.technical.join(" · ")}</p></div>
-      <div className={styles.panel}><h3>Later validation</h3><p>{laterValidation.route} · {laterValidation.evidence}</p><p><strong>{laterValidation.verdict}</strong> · {laterValidation.warning}</p><a href={externalLinks.settleDiffLiveReport}>Read the September 7–8 live-validation report ↗</a></div>
+      <div className={styles.panel}><h3>{laterValidation.title}</h3><p>{laterValidation.eyebrow} · {laterValidation.evidence}</p><p><strong>{laterValidation.verdict}</strong> · {laterValidation.warning}</p><a href={externalLinks.settleDiffLiveReport}>Read the historical validation report ↗</a></div>
+      <div className={styles.panel}><h3>{currentPerfloValidation.title}</h3><p>{currentPerfloValidation.evidence}</p><p><strong>{currentPerfloValidation.verdict}</strong> · {currentPerfloValidation.warning}</p><a href={externalLinks.settleDiffCurrentValidation}>Read the September 28 validation ↗</a></div>
       <div className={styles.panel}><h3>One verification system</h3><p>{verificationSystem.headline} {verificationSystem.detail}</p><a href={externalLinks.contextDev}>{contextDevUsage.settleDiff}</a></div>
-      <div className={styles.panel}><h3>Provider receipt and independent record</h3><p><strong>{publicVerification.provider.label}</strong> — {publicVerification.provider.detail}</p><p><strong>{publicVerification.independent.label}</strong> — {publicVerification.independent.detail}</p><p>{publicVerification.scope}</p></div>
-      <div className={styles.panel}><h3>Deterministic checks</h3><p>{verificationChecks.join(" · ")}</p><p>{publicVerification.checkSummary}</p></div>
-      <div className={styles.verdict}><h3>{publicVerification.verdict}</h3><p>{settleDiff.closingThesis}</p></div>
+      <div className={styles.panel}><h3>x402 provider receipt and independent observation</h3><p><strong>{publicVerification.provider.label}</strong> — {publicVerification.provider.detail}</p><p><strong>{publicVerification.independent.label}</strong> — {publicVerification.independent.detail}</p><p>{publicVerification.amount} · {publicVerification.scope} · matched {verificationChecks.join(", ")}</p><p><strong>{publicVerification.verdict}</strong> · {publicVerification.checkSummary}</p></div>
+      <div className={styles.panel}><h3>{paidDeliveryFailure.headline}</h3><p>{paidDeliveryFailure.settlement} {paidDeliveryFailure.delivery}.</p><p><strong>{paidDeliveryFailure.verdict}</strong> · {paidDeliveryFailure.retry}</p><p>{paidDeliveryFailure.caveat}</p><a href={externalLinks.settleDiffCurrentValidation}>Read the confirmed paid-delivery result ↗</a></div>
+      <div className={styles.verdict}><h3>EVIDENCE DECIDES</h3><p>{settleDiff.closingThesis}</p></div>
     </section>
 
     <section className={`${styles.chapter} ${styles.caseZero}`} aria-label="CaseZero reduced narrative">

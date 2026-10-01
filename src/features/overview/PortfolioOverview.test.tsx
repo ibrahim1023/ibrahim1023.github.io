@@ -12,7 +12,9 @@ test("offers readable projects, evidence and contact without narrative progress"
   }
   expect(screen.getByText(/I’ve implemented extraction and assessment locking/)).toBeInTheDocument();
   expect(screen.getByText(/VERIFIED_WITH_WARNINGS/)).toBeInTheDocument();
-  expect(screen.getByRole("link", { name: /Read live-validation report/ })).toHaveAttribute("href", "https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/live-run-report-2026-08-21.md");
+  expect(screen.getByText(/PAID_FAILURE/)).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: /September 28 validation/ })).toHaveAttribute("href", "https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/pr2-live-validation-2026-09-28.md");
+  expect(screen.getByRole("link", { name: /Historical validation context/ })).toHaveAttribute("href", "https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/live-run-report-2026-08-21.md");
   expect(screen.queryByText("Case study continues")).not.toBeInTheDocument();
   expect(screen.getByRole("link", { name: /ibrahim_arshad@outlook.com/ })).toHaveAttribute("href", "mailto:ibrahim_arshad@outlook.com");
   expect(container.querySelector("[data-animatable]")).toBeNull();
