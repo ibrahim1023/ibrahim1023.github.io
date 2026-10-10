@@ -8,7 +8,7 @@ import {
   buildIntroTimeline,
   queryPortfolioTimelineElements,
 } from "./timeline";
-import { buildCompactCaseTimeline as buildCaseZeroNarrativeTimeline, buildCompactSettleTimeline as buildSettleDiffNarrativeTimeline } from "./compactTimeline";
+import { buildCompactCaseTimeline as buildCaseZeroNarrativeTimeline } from "./compactTimeline";
 
 interface E2ELifecycleProbe {
   generation: number;
@@ -130,41 +130,20 @@ export function initializePortfolioAnimations(
       // changes the fallback layout or its overflow bounds.
       const restoredScrollY = window.scrollY;
       const elements = queryPortfolioTimelineElements(root, layout);
-      if (!elements.settlediff.narrative || !elements.casezero.narrative || !elements.intro.section || !elements.settlediff.stage || !elements.casezero.stage) {
+      if (!elements.casezero.narrative || !elements.intro.section || !elements.casezero.stage) {
         throw new Error("Portfolio animation targets are unavailable.");
       }
       if (exposeState) {
-        stageStates.set(elements.settlediff.stage, elements.settlediff.stage.getAttribute("data-state"));
         stageStates.set(elements.casezero.stage, elements.casezero.stage.getAttribute("data-state"));
       }
 
-      const settleTimeline = buildSettleDiffNarrativeTimeline(elements.settlediff, layout);
       const caseZeroTimeline = buildCaseZeroNarrativeTimeline(elements.casezero, layout);
       const introTimeline = buildIntroTimeline(elements.intro);
-      timelines.push(settleTimeline, caseZeroTimeline, introTimeline);
+      timelines.push(caseZeroTimeline, introTimeline);
 
       // Pin dimensions must come from the compact animated layout, not the
       // tall normal-flow fallback. Setup is synchronous; failure restores it.
       root.dataset.animated = "ready";
-
-      triggers.push(
-        scrollTriggerApi.create({
-          id: "settlediff",
-          trigger: elements.settlediff.narrative,
-          start: "top top",
-          end: () => `+=${runwayPixels("settlediff", layout, viewportHeight())}`,
-          pin: layout === "desktop",
-          pinSpacing: layout === "desktop",
-          scrub: layout === "mobile" ? true : 0.5,
-          animation: settleTimeline,
-          onUpdate: (self) => {
-            if (exposeState) {
-              elements.settlediff.stage!.dataset.state = self.progress < 1 / 3 ? "receipt" : self.progress < 2 / 3 ? "compare" : "verdict";
-            }
-          },
-        }),
-      );
-      registerProbeTrigger("settlediff");
 
       triggers.push(
         scrollTriggerApi.create({

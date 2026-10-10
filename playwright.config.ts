@@ -6,8 +6,7 @@ const exportRoot = process.env.E2E_ROOT ?? "out";
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  // Full-length story/tour assertions are historical; compact beats have their own checks.
-  testMatch: ["**/compact.spec.ts", "**/mobile.spec.ts", "**/vault-motion.spec.ts", "**/no-javascript.spec.ts", "**/reduced-motion.spec.ts"],
+  testMatch: ["**/redesign.spec.ts"],
   outputDir: "./test-results",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

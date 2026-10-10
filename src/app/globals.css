@@ -10,14 +10,11 @@
 
 html {
   scroll-behavior: auto;
-  /* Disable browser anchor compensation at the scrolling element, including
-     measurements inserted outside the portfolio during pin initialization. */
-  overflow-anchor: none;
 }
 
 body {
-  background: var(--color-canvas);
-  color: var(--color-text-primary);
+  background: var(--page-bg);
+  color: var(--page-ink);
   font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.5;
@@ -25,7 +22,7 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--page-accent);
   outline-offset: 3px;
 }
 

@@ -1,22 +1,20 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
+
 import { PortfolioOverview } from "./PortfolioOverview";
 
-test("offers readable projects, evidence and contact without narrative progress", () => {
-  const { container } = render(<PortfolioOverview />);
-  expect(screen.getByRole("heading", { level: 1, name: "Ibrahim Arshad" })).toBeInTheDocument();
-  const work = screen.getByRole("region", { name: "Selected work" });
-  for (const name of ["SettleDiff", "CaseZero", "Vault Steward"]) {
-    expect(within(work).getByRole("link", { name: `Read ${name} case study` })).toHaveAttribute("href");
-    expect(screen.getByRole("region", { name })).toBeInTheDocument();
-  }
-  expect(screen.getByText(/I’ve implemented extraction and assessment locking/)).toBeInTheDocument();
-  expect(screen.getByText(/VERIFIED_WITH_WARNINGS/)).toBeInTheDocument();
+test("SettleDiff detail page keeps dated evidence and honest limits", () => {
+  render(<PortfolioOverview project="settlediff" />);
+  expect(screen.getByRole("heading", { level: 1, name: "SettleDiff" })).toBeInTheDocument();
+  expect(screen.getByText(/historical schema-2 rules/)).toBeInTheDocument();
   expect(screen.getByText(/PAID_FAILURE/)).toBeInTheDocument();
   expect(screen.getByRole("link", { name: /September 28 validation/ })).toHaveAttribute("href", "https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/pr2-live-validation-2026-09-28.md");
-  expect(screen.getByRole("link", { name: /Historical validation context/ })).toHaveAttribute("href", "https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/live-run-report-2026-08-21.md");
-  expect(screen.queryByText("Case study continues")).not.toBeInTheDocument();
-  expect(screen.getByRole("link", { name: /ibrahim_arshad@outlook.com/ })).toHaveAttribute("href", "mailto:ibrahim_arshad@outlook.com");
-  expect(container.querySelector("[data-animatable]")).toBeNull();
-  expect(screen.getByRole("link", { name: /Back to selected work/ })).toHaveAttribute("href", "/");
+  expect(screen.queryByText("CaseZero")).not.toBeInTheDocument();
+});
+
+test("Vault detail page explains the approval boundary without a second title", () => {
+  render(<PortfolioOverview project="vault-steward" />);
+  expect(screen.getAllByRole("heading", { name: "Vault Steward" })).toHaveLength(1);
+  expect(screen.getByText(/No note changed/)).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: /Back to projects/ })).toHaveAttribute("href", "/#work");
 });

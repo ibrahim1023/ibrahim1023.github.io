@@ -3,6 +3,7 @@ product-spec.md
 
 # Dependencies
 node_modules/
+.pnpm-store/
 
 # Next.js
 .next/

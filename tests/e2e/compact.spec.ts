@@ -20,14 +20,21 @@ for (const width of [390, 1440]) {
     await expect(page.locator('[data-scroll-ready="true"]')).toBeVisible();
     await expect(page.locator('[data-intro] a[href*="/projects/"]')).toHaveCount(0);
     const layout = width < 768 ? "mobile" : "desktop";
+    const preview = page.locator("[data-settlediff-preview]");
+    await preview.scrollIntoViewIfNeeded();
+    await expect(preview.getByRole("heading", { level: 2, name: "SettleDiff" })).toBeVisible();
+    await expect(preview.locator("[data-preview-claim]")).toBeVisible();
+    await expect(preview.locator("[data-preview-observation]")).toBeVisible();
+    await expect(preview.locator("[data-preview-matches] span")).toHaveCount(5);
+    await expect(preview.locator("[data-outcome='verified']")).toHaveAttribute("data-phase", "3");
+    await preview.getByRole("button", { name: /Provider records/ }).click();
+    await expect(preview.locator("[data-preview-result]")).toContainText("UNVERIFIABLE");
+    await preview.getByRole("button", { name: /Paid delivery/ }).click();
+    await expect(preview.locator("[data-preview-result]")).toContainText("PAID_FAILURE");
+    await preview.getByRole("button", { name: /Independent transfer/ }).click();
+    await expect(preview.locator("[data-preview-result]")).toContainText("VERIFIED");
+    await page.screenshot({ path: test.info().outputPath("settlediff-preview.png") });
     const chapters = [
-      ["settlediff", [
-        ["[data-origin-incident]", .25],
-        ["[data-system-boundary]", .42],
-        ["[data-proof]", .62],
-        ["[data-checks]", .80],
-        ["[data-verified]", .96],
-      ]],
       ["casezero", [["[data-case-file]", .25], ["[data-blind-scene]", .57], ["[data-lock-record]", .95]]],
     ] as const;
     for (const [chapter, scenes] of chapters) {
@@ -36,16 +43,16 @@ for (const width of [390, 1440]) {
         const anchor = node.parentElement?.classList.contains("pin-spacer") ? node.parentElement : node;
         scrollTo(0, scrollY + anchor.getBoundingClientRect().top);
       });
-      await expect(scope.getByRole("heading", { level: 2, name: chapter === "casezero" ? "CaseZero" : "SettleDiff" })).toBeVisible();
+      await expect(scope.getByRole("heading", { level: 2, name: "CaseZero" })).toBeVisible();
       if (width < 768) {
-        const headingBox = await scope.getByRole("heading", { level: 2, name: chapter === "casezero" ? "CaseZero" : "SettleDiff" }).boundingBox();
+        const headingBox = await scope.getByRole("heading", { level: 2, name: "CaseZero" }).boundingBox();
         const detailsBox = await scope.getByRole("link", { name: "Case study ↗" }).boundingBox();
         expect(headingBox).not.toBeNull();
         expect(detailsBox).not.toBeNull();
         expect(detailsBox!.y).toBeGreaterThanOrEqual(headingBox!.y + headingBox!.height - 2);
       }
       await page.screenshot({ path: test.info().outputPath(`${chapter}-opening.png`) });
-      const sequence = chapter === "settlediff" ? [0, 1, 2, 3, 4, 2, 0, 4] : [0, 1, 2, 1, 0, 2];
+      const sequence = [0, 1, 2, 1, 0, 2];
       for (const index of sequence) {
         const [selector, progress] = scenes[index]!;
         await page.locator(`[data-narrative="${chapter}"]`).evaluate((node, args) => {
@@ -82,7 +89,6 @@ for (const width of [390, 1440]) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.evaluate(() => scrollTo(0, 0));
     await expect.poll(() => page.locator('[data-intro-name]').evaluate(node => Number(getComputedStyle(node).opacity))).toBe(1);
-    await expect.poll(() => page.locator(`[data-animated-layout="${layout}"] [data-opening-prompt]`).evaluate(node => Number(getComputedStyle(node).opacity))).toBe(0);
     const audit = await new AxeBuilder({ page }).analyze();
     expect(audit.violations.filter(v => ["serious", "critical"].includes(v.impact ?? ""))).toEqual([]);
   });

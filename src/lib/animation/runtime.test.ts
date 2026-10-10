@@ -81,7 +81,7 @@ describe("portfolio animation runtime", () => {
     expect(create).toHaveBeenCalledWith(expect.objectContaining({ id: "vault", pin: false, pinSpacing: false, scrub: true }));
     vi.runAllTimers();
     cleanup();
-    expect(triggerKills).toHaveLength(4);
+    expect(triggerKills).toHaveLength(3);
     triggerKills.forEach(kill => expect(kill).toHaveBeenCalledOnce());
     expect(root).not.toHaveAttribute("data-animated");
     vi.useRealTimers();
@@ -134,11 +134,10 @@ describe("portfolio animation runtime", () => {
     vi.runAllTimers();
 
     expect(root).toHaveAttribute("data-animated", "ready");
-    expect(create).toHaveBeenCalledTimes(3);
+    expect(create).toHaveBeenCalledTimes(2);
     const configs = create.mock.calls.map(([config]) => config as { id: string; end?: () => string });
-    expect(configs.find(({ id }) => id === "settlediff")?.end?.()).toBe("+=1440");
     expect(configs.find(({ id }) => id === "casezero")?.end?.()).toBe("+=1440");
-    expect(configs.map(({ id }) => id).sort()).toEqual(["casezero", "intro", "settlediff"]);
+    expect(configs.map(({ id }) => id).sort()).toEqual(["casezero", "intro"]);
 
     cleanup();
     cleanup();
@@ -172,7 +171,7 @@ describe("portfolio animation runtime", () => {
 
     desktopCleanup?.();
     const mobileCleanup = callbacks.get(NARRATIVE_MEDIA.mobile)!();
-    const mobileNarrativeTrigger = create.mock.calls[3]![0] as {
+    const mobileNarrativeTrigger = create.mock.calls[2]![0] as {
       pin: boolean;
       pinSpacing: boolean;
       scrub: boolean | number;
@@ -200,14 +199,14 @@ describe("portfolio animation runtime", () => {
 
     hiddenUpdate({ progress: 0.15 });
 
-    expect(hiddenRoot.querySelector('[data-stage][data-layout="desktop"]')).not.toHaveAttribute(
+    expect(hiddenRoot.querySelector('[data-casezero-stage][data-layout="desktop"]')).not.toHaveAttribute(
       "data-state",
     );
     hiddenCleanup();
 
     const debugRoot = buildRoot();
     const debugStage = debugRoot.querySelector(
-      '[data-stage][data-layout="desktop"]',
+      '[data-casezero-stage][data-layout="desktop"]',
     ) as HTMLElement;
     debugStage.dataset.state = "project-established";
     const debugApis = animationApis();
@@ -224,11 +223,9 @@ describe("portfolio animation runtime", () => {
 
     debugUpdate({ progress: 0.15 });
 
-    expect(debugStage).toHaveAttribute("data-state", "receipt");
-    const debugCaseStage = debugRoot.querySelector('[data-casezero-stage][data-layout="desktop"]') as HTMLElement;
-    const caseUpdate = (debugApis.create.mock.calls[1]![0] as { onUpdate: (trigger: { progress: number }) => void }).onUpdate;
-    caseUpdate({ progress: 0.72 });
-    expect(debugCaseStage).toHaveAttribute("data-state", "lock");
+    expect(debugStage).toHaveAttribute("data-state", "evidence");
+    debugUpdate({ progress: 0.72 });
+    expect(debugStage).toHaveAttribute("data-state", "lock");
     debugCleanup();
     expect(debugStage).toHaveAttribute("data-state", "project-established");
   });
@@ -249,10 +246,9 @@ describe("portfolio animation runtime", () => {
 
     expect(cleanup).toEqual(expect.any(Function));
     expect(mediaContext.revert).toHaveBeenCalledOnce();
-    expect(triggerKills).toHaveLength(3);
+    expect(triggerKills).toHaveLength(2);
     expect(triggerKills[0]).toHaveBeenCalledOnce();
     expect(triggerKills[1]).toHaveBeenCalledOnce();
-    expect(triggerKills[2]).toHaveBeenCalledOnce();
     expect(root).not.toHaveAttribute("data-animated");
   });
 
@@ -273,7 +269,7 @@ describe("portfolio animation runtime", () => {
     const mobileCleanup = callbacks.get(NARRATIVE_MEDIA.mobile)!();
 
     expect(mobileCleanup).toEqual(expect.any(Function));
-    expect(create).toHaveBeenCalledTimes(3);
+    expect(create).toHaveBeenCalledTimes(2);
     expect((scrollTriggerApi.refresh as unknown as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled();
 
     vi.runAllTimers();
@@ -367,7 +363,7 @@ describe("portfolio animation runtime", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     try {
       const root = buildRoot();
-      root.querySelector("[data-narrative]")?.remove();
+      root.querySelector('[data-narrative="casezero"]')?.remove();
       const apis = animationApis({
         activeQueries: [NARRATIVE_MEDIA.desktop, NARRATIVE_MEDIA.mobile],
       });

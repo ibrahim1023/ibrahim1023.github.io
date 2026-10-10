@@ -11,8 +11,9 @@ export function ProfileFooter() {
   return (
     <footer className={styles.footer} id="contact">
       <section className={styles.stack} aria-labelledby="stack-title">
-        <h2 id="stack-title">Stack & tools</h2>
-        <dl className={styles.skills}>{stack.map(([label, items]) => <div key={label} data-secondary={label === "AI-assisted development" || undefined}><dt>{label}</dt><dd>{items}</dd></div>)}</dl>
+        <p className={styles.kicker}>THE TOOLKIT</p>
+        <h2 id="stack-title">Tools behind the work.</h2>
+        <dl className={styles.skills}>{stack.map(([label, items], index) => <div key={label} data-secondary={index > 2 || undefined}><dt>{label}</dt><dd>{items}</dd></div>)}</dl>
       </section>
       <div className={styles.contact}><p>Interested in reliable AI systems, agent payments, or evidence-driven tools? I’d be glad to talk.</p><a className={styles.email} href="mailto:ibrahim_arshad@outlook.com">ibrahim_arshad@outlook.com ↗</a></div>
       <div className={styles.inner}>
@@ -26,10 +27,10 @@ export function ProfileFooter() {
 }
 
 export const stack = [
-  ["Core engineering", "Python · TypeScript · React · Next.js · FastAPI"],
-  ["Data", "PostgreSQL · SQLite · Supabase"],
-  ["Agent systems & verification", "Pydantic · PydanticAI · evidence tracing · x402"],
-  ["Infrastructure", "Docker · AWS · Vercel · GitHub Actions"],
-  ["Context & observability", "Context.dev · LangSmith"],
+  ["Core engineering", "Python · TypeScript · React · Next.js · FastAPI · Pydantic"],
+  ["Agents & verification", "PydanticAI · LangGraph · Context.dev · MCP · x402 · LangSmith"],
+  ["Data & delivery", "PostgreSQL · SQLite · Supabase · Convex · Docker · AWS · Vercel"],
+  ["Other platforms", "Clerk · GitHub Actions"],
+  ["Model & voice", "OpenAI · Ollama · Cerebras · ElevenLabs"],
   ["AI-assisted development", "Claude Code · Codex · Devin"],
 ] as const;

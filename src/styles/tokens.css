@@ -1,4 +1,12 @@
 :root {
+  color-scheme: light dark;
+  --page-bg: #fafbfc;
+  --page-ink: #161b24;
+  --page-muted: #596171;
+  --page-line: #dce1e8;
+  --page-accent: #2855a8;
+  --panel-bg: #f1f4f8;
+  --panel-raised: #ffffff;
   /* Color */
   --color-canvas: #0a0a0b;
   --color-text-primary: #f2efe9;
@@ -44,6 +52,18 @@
   /* Layout */
   --gutter: 48px;
   --content-max: 80rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page-bg: #11151d;
+    --page-ink: #f1f4f8;
+    --page-muted: #a9b3c3;
+    --page-line: #343c49;
+    --page-accent: #94b8ff;
+    --panel-bg: #1a202b;
+    --panel-raised: #202836;
+  }
 }
 
 @media (max-width: 768px) {

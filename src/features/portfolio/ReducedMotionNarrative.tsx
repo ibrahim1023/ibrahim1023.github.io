@@ -4,7 +4,7 @@ import styles from "./ReducedMotionNarrative.module.css";
 
 export function ReducedMotionNarrative() {
   return <div className={styles.narrative}>
-    <section className={styles.chapter} aria-label="SettleDiff reduced narrative">
+    <section className={styles.chapter} aria-label="SettleDiff reduced narrative" data-settlediff-reduced>
       <header className={styles.projectHeader}><h2>{settleDiff.title}</h2><ProjectSourceLink href={projectLinks.settleDiff} project={settleDiff.title} /><p>{settleDiff.descriptor}</p></header>
       <div className={styles.panel}><h3>Purchase</h3><p>{settleDiff.openingPrompt} {settleDiff.uncertainty}</p></div>
       <div className={styles.panel}><h3>Promised, executed, recorded</h3><ol>{reconstructionLayers.map((layer) => <li key={layer.id}><strong>{layer.label}</strong> — {layer.detail}</li>)}</ol></div>

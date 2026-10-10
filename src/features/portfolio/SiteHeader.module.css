@@ -1,0 +1,5 @@
+.header { width: min(var(--content-max), calc(100% - 2 * var(--gutter))); margin-inline: auto; min-height: 5.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--page-line); }
+.header a { color: var(--page-ink); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+.name { font-size: .94rem; font-weight: 650; letter-spacing: -.025em; }
+.resume { font-size: .9rem; }
+.header a:hover { color: var(--page-accent); }

@@ -12,5 +12,7 @@ export default defineConfig([
     "coverage/**",
     "playwright-report/**",
     "test-results/**",
+    ".worktrees/**",
+    ".pnpm-store/**",
   ]),
 ]);

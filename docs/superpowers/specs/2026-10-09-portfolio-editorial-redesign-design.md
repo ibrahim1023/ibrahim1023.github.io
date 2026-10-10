@@ -1,7 +1,7 @@
 # Editorial portfolio redesign
 
 Date: 2026-10-09
-Status: Proposed for owner review; do not implement or deploy until approved.
+Status: Implementation and publication approved by the owner on October 10, 2026.
 
 ## Intent and boundaries
 
@@ -29,11 +29,13 @@ Desktop project sections are two-column, with the explanation and links on the l
 
 ## SettleDiff section
 
-The left column uses the approved short identity: **SettleDiff — Verification for agent payments.** A brief sentence explains the difference between a provider's payment claim and independent settlement proof. The right column is a receipt-versus-observed-transfer composition, not a dashboard or generic line. A one-shot, in-place sequence begins when visible:
+The left column uses the approved short identity: **SettleDiff — Verification for agent payments.** A brief sentence explains the difference between a provider's payment claim and independent settlement proof. The right column uses **both approved visual mockups as successive beats in the same compact panel**. The two-path flowchart is not an alternative to the paper records, and neither is a separate scroll chapter. A one-shot, in-place sequence begins when visible:
 
-1. A provider receipt reports payment for an **0.001 test-USDC purchase on Base Sepolia testnet**.
-2. A visibly separate read-only transfer observation appears; payer, recipient, token, amount, and network match the authorized terms.
-3. The deterministic outcome resolves to **VERIFIED** for that specific x402 purchase. A replay control is available; the final state remains visible rather than cycling forever.
+1. A small two-path flowchart shows **provider claim** and **independent observation** as distinct sources, converging on an evidence-backed verdict.
+2. That diagram dissolves into the two floating paper records: the provider receipt for an **0.001 test-USDC purchase on Base Sepolia testnet**, and the separately observed read-only transfer. Payer, recipient, token, amount, and network visibly match the authorized terms.
+3. The paper rows compare in order, with matched fields highlighted and checkmarks revealed. A compact verification badge appears centred beneath both records only after the comparison and resolves to **VERIFIED** for that specific x402 purchase. The dated check count and validation link sit beneath the badge. A replay control is available; the paper comparison remains visible rather than cycling forever.
+
+Start this sequence when the visual panel enters view, rather than when the section's explanation appears. This preserves the demonstration on phones, where the text comes before the visual. Receipt cards use aligned fields and source footers; on phones they stack with a clear gap and reserve room for the final verdict.
 
 Concise secondary controls expose the two other current outcomes without extending the page: **Perflo v8 — UNVERIFIABLE** because provider records align but independent customer debit proof is absent; and a **separate authorized x402 request — PAID_FAILURE / DO_NOT_RETRY** because payment was confirmed but delivery broke the advertised content type. The historic September 8 Perflo schema-2 result belongs only in the case study as dated historical context and must not be shown as independent proof. The unresolved HTTP-500 request must never be conflated with the confirmed paid failure. Keep the September 28 validation as the primary evidence link, with the historical and assurance reports near the case-study claims they support.
 
@@ -43,7 +45,7 @@ Reduced motion and no JavaScript show the same final facts, source distinctions,
 
 The left column uses **Vault Steward — A safer way to care for your Obsidian vault.** It briefly says: find broken references, preview exact repairs, approve every change. Link the case study and the Obsidian plugin listing. A small linked download proof point appears beneath the description; it is not a large animated ticker.
 
-The right visual is deliberately different from SettleDiff: **one Obsidian-like note workspace**, not two floating receipt cards. A broken internal link is highlighted in place, an inline Current → After replacement preview appears beneath the affected line, and the animation stops at **Preview only · awaiting approval**. The portfolio must not imply Vault Steward autonomously edits notes or that a portfolio animation actually applies a change. A replay control may restart the short demonstration. The detailed page explains selection, explicit Apply fixes, revision re-check, and post-apply verification. The homepage example is labeled illustrative.
+The right visual is deliberately different from SettleDiff: **one Obsidian-like note workspace**, not two floating receipt cards. A visible scan sweeps through the note, the missing-target link is highlighted, and a repair panel slides into view beneath the affected line. The suggested existing target reveals next, followed by the approval indicator. The Find → Preview → Your approval rail follows these stages, and the animation stops at **Preview only · awaiting approval**. Start the sequence when the workspace enters view. The portfolio must not imply Vault Steward autonomously edits notes or that a portfolio animation actually applies a change. A replay control may restart the short demonstration. The detailed page explains selection, explicit Apply fixes, revision re-check, and post-apply verification. The homepage example is illustrative.
 
 Reduced motion and no JavaScript show a complete, readable preview with the approval boundary already visible.
 
