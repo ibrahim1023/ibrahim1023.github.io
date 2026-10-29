@@ -1,2 +1,7 @@
 .root { min-height: 100svh; background: var(--page-bg); color: var(--page-ink); }
 .project { border-top: 1px solid var(--page-line); }
+.exploring { border-top: 1px solid var(--page-line); padding: clamp(2rem, 4vw, 3rem) var(--gutter); }
+.exploringInner { width: min(100%, var(--content-max)); margin-inline: auto; display: grid; grid-template-columns: minmax(12rem, .72fr) minmax(0, 1.28fr); gap: clamp(1rem, 5vw, 6rem); align-items: baseline; }
+.exploring h2 { color: var(--page-ink); font-size: 1.2rem; font-weight: 560; line-height: 1.4; letter-spacing: -.025em; }
+.exploring p { max-width: 72ch; color: var(--page-muted); font-size: .95rem; line-height: 1.7; }
+@media (max-width: 760px) { .exploringInner { grid-template-columns: 1fr; gap: .7rem; } }
