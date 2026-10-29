@@ -15,7 +15,7 @@ export function ProfileFooter() {
         <h2 id="stack-title">Tools behind the work.</h2>
         <dl className={styles.skills}>{stack.map(([label, items], index) => <div key={label} data-secondary={index > 2 || undefined}><dt>{label}</dt><dd>{items}</dd></div>)}</dl>
       </section>
-      <div className={styles.contact}><p>Interested in reliable AI systems, agent payments, or evidence-driven tools? I’d be glad to talk.</p><a className={styles.email} href="mailto:ibrahim_arshad@outlook.com">ibrahim_arshad@outlook.com ↗</a></div>
+      <div className={styles.contact}><p>Let’s talk.</p><a className={styles.email} href="mailto:ibrahim_arshad@outlook.com">ibrahim_arshad@outlook.com ↗</a></div>
       <div className={styles.inner}>
         <h2>Find me elsewhere</h2>
         <nav aria-label="Social profiles">
@@ -32,5 +32,5 @@ export const stack = [
   ["Data & delivery", "PostgreSQL · SQLite · Supabase · Convex · Docker · AWS · Vercel"],
   ["Other platforms", "Clerk · GitHub Actions"],
   ["Model & voice", "OpenAI · Ollama · Cerebras · ElevenLabs"],
-  ["AI-assisted development", "Claude Code · Codex · Devin"],
+  ["AI-assisted development", "Claude Code · Codex · Cursor · Devin"],
 ] as const;
