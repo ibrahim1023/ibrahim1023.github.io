@@ -50,7 +50,7 @@ export function VaultStewardPreview() {
   return <section className={styles.section} aria-labelledby="vault-title" data-vault-preview>
     <div className={styles.inner}>
       <div className={styles.copy}>
-        <p className={styles.kicker}>02 / CONTROLLED REPAIRS</p>
+        <p className={styles.kicker}>03 / CONTROLLED REPAIRS</p>
         <h2 id="vault-title">Vault Steward</h2>
         <p className={styles.descriptor}>A safer way to care for your Obsidian vault.</p>
         <p className={styles.summary}>Find broken references. Preview exact repairs. Approve every change.</p>

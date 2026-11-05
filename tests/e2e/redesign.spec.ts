@@ -1,10 +1,30 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-test("homepage has two concise projects and accessible evidence controls", async ({ page }) => {
+test("runtime lab replays recorded effects and keeps unavailable evidence unknown", async ({ page }) => {
+  await page.goto("/#work");
+  const lab = page.locator("[data-runtime-preview]");
+  const stage = lab.locator("[data-phase]");
+  await stage.scrollIntoViewIfNeeded();
+  await lab.getByRole("button", { name: /Replay Agent Runtime/ }).click();
+  await expect(stage).toHaveAttribute("data-phase", "0");
+  await expect(stage).toHaveAttribute("data-phase", "4");
+  await expect(stage).toContainText("Two attempts. One protected effect.");
+  await lab.getByRole("button", { name: /Unprotected recovery/ }).click();
+  await expect(stage).toHaveAttribute("data-phase", "4");
+  await expect(stage).toContainText("Two attempts. Two committed effects.");
+  await lab.getByRole("button", { name: /Unavailable evidence/ }).click();
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(stage).toHaveAttribute("data-phase", "4");
+  await expect(stage).toContainText("Committed effects · unknown");
+  await expect(stage).toContainText("Separate reporting experiment");
+  await expect(lab.getByRole("link", { name: "Case study ↗" })).toHaveAttribute("href", "/projects/agent-runtime-lab/");
+});
+
+test("homepage has three concise projects and accessible evidence controls", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("link", { name: "Résumé ↗" })).toHaveAttribute("href", "/ibrahim-arshad-resume.pdf");
-  await expect(page.locator("[data-project-root]")).toHaveCount(2);
+  await expect(page.locator("[data-project-root]")).toHaveCount(3);
   await expect(page.locator(".pin-spacer")).toHaveCount(0);
   const settle = page.locator("[data-settlediff-preview]");
   await settle.scrollIntoViewIfNeeded();
@@ -107,7 +127,7 @@ for (const width of [320, 390, 1440]) {
   test(`project previews fit at ${width}px without horizontal overflow`, async ({ page }) => {
     await page.setViewportSize({ width, height: width === 1440 ? 900 : 844 });
     await page.goto("/");
-    for (const selector of ["[data-settlediff-preview]", "[data-vault-preview]"]) {
+    for (const selector of ["[data-runtime-preview]", "[data-settlediff-preview]", "[data-vault-preview]"]) {
       const section = page.locator(selector);
       await section.scrollIntoViewIfNeeded();
       await expect(section).toBeVisible();
@@ -145,13 +165,15 @@ test("reduced motion and no JavaScript retain the final evidence", async ({ brow
   const page = await context.newPage();
   await page.goto("/");
   await expect(page.locator("[data-preview-result]")).toContainText("VERIFIED");
+  await expect(page.locator("[data-runtime-preview]")).toContainText("Two attempts. One protected effect.");
+  await expect(page.locator("[data-runtime-preview] [data-phase]")).toHaveAttribute("data-phase", "4");
   await expect(page.locator("[data-vault-status]")).toContainText("awaiting approval");
   await expect(page.locator(".pin-spacer")).toHaveCount(0);
   await context.close();
 });
 
-test("both case studies are direct-entry pages and CaseZero route is absent", async ({ page }) => {
-  for (const [slug, name] of [["settlediff", "SettleDiff"], ["vault-steward", "Vault Steward"]] as const) {
+test("all case studies are direct-entry pages and CaseZero route is absent", async ({ page }) => {
+  for (const [slug, name] of [["agent-runtime-lab", "Agent Runtime Lab"], ["settlediff", "SettleDiff"], ["vault-steward", "Vault Steward"]] as const) {
     await page.goto(`/projects/${slug}/`);
     await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
     await expect(page.getByRole("link", { name: "Résumé ↗" })).toBeVisible();

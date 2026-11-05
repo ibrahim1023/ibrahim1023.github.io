@@ -6,7 +6,7 @@ export function SettleDiffCaseStudy() {
   return <>
     <section className={styles.hero} aria-labelledby="case-title">
       <div className={styles.heroCopy}>
-        <p className={styles.eyebrow}>01 / PAYMENT VERIFICATION</p>
+        <p className={styles.eyebrow}>02 / PAYMENT VERIFICATION</p>
         <h1 id="case-title">SettleDiff</h1>
         <p className={styles.lead}>A payment receipt is a claim. SettleDiff checks what was authorized, what the provider reported, and—when available—what an independent observer can verify.</p>
         <div className={styles.links}><a href={projectLinks.settleDiff}>GitHub ↗</a><a href={externalLinks.settleDiffCurrentValidation}>Current validation ↗</a></div>

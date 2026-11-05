@@ -1,6 +1,6 @@
 # Ibrahim Arshad — Portfolio
 
-A concise portfolio for reliable AI systems. SettleDiff and Vault Steward each have a short, in-place explanation on the homepage, with a separate evidence-led case study. The site follows the visitor's light/dark setting and has no pinned scroll chapters. CaseZero has been removed; the future voice-and-vision project is not represented yet.
+A concise portfolio for reliable AI systems. Agent Runtime Lab, SettleDiff, and Vault Steward each have a short, in-place explanation on the homepage, with a separate evidence-led case study. The site follows the visitor's light/dark setting and has no pinned scroll chapters. CaseZero has been removed; the future voice-and-vision project is not represented yet.
 
 Built with Next.js App Router, TypeScript, CSS Modules, Vitest, and Playwright. The résumé is served from `public/ibrahim-arshad-resume.pdf`.
 
@@ -36,7 +36,7 @@ pnpm build:pages
 pnpm bundle:check
 ```
 
-The browser suite covers two natural-flow projects, outcome controls, 320/390px mobile widths, automatic color scheme, reduced motion, no JavaScript, direct-entry case studies, and removal of the CaseZero route. Owner review in Mac Safari and on an iPhone remains a separate release check.
+The browser suite covers three natural-flow projects, outcome controls, 320/390px mobile widths, automatic color scheme, reduced motion, no JavaScript, direct-entry case studies, and removal of the CaseZero route. Owner review in Mac Safari and on an iPhone remains a separate release check.
 
 ## Vault Steward download count
 
@@ -51,3 +51,5 @@ Pushing to `main` starts the GitHub Pages validation and deployment workflow for
 Start with [`docs/superpowers/specs/2026-10-09-portfolio-editorial-redesign-design.md`](docs/superpowers/specs/2026-10-09-portfolio-editorial-redesign-design.md) and [`docs/superpowers/plans/2026-10-09-portfolio-editorial-redesign.md`](docs/superpowers/plans/2026-10-09-portfolio-editorial-redesign.md). Earlier Phase 1 storyboard/build documents describe the historical three-project scroll version; they are retained for context, not the current route contract.
 
 SettleDiff copy must preserve the distinction between a provider receipt, independent settlement, and paid delivery failure. The [September 28 validation](https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/pr2-live-validation-2026-09-28.md) is the primary current evidence; the [older live report](https://github.com/ibrahim1023/SettleDiff/blob/main/docs/testing/live-run-report-2026-08-21.md) is historical context. Vault Steward's repair preview is illustrative and stops before owner approval.
+
+Agent Runtime Lab replaces the former “Currently exploring” paragraph. Its illustration compares saved crash/replay experiments (two attempts, two unprotected effects versus one protected effect) and a separate unavailable-evidence reporting observation. It does not run a live agent. Keep claims bounded to scripted runtime executions and local SQLite receiver safeguards; Deep Agents, LangChain, and LangGraph supply the runtime. Start with the lab's [report](https://github.com/ibrahim1023/agent-runtime-reliability-lab/blob/main/REPORT.md), [demo](https://github.com/ibrahim1023/agent-runtime-reliability-lab/blob/main/docs/demo.md), and [claim map](https://github.com/ibrahim1023/agent-runtime-reliability-lab/blob/main/docs/claim-evidence.md) before changing this story. No general exactly-once or production deployment claim is supported.

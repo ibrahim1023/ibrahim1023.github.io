@@ -112,7 +112,7 @@ export function SettleDiffPreview() {
     `}</style></noscript>
     <div className={styles.inner}>
       <div className={styles.copy}>
-        <p className={styles.kicker}>01 / PAYMENT VERIFICATION</p>
+        <p className={styles.kicker}>02 / PAYMENT VERIFICATION</p>
         <h2 id="settlediff-title">SettleDiff</h2>
         <p className={styles.descriptor}>Verification for agent payments.</p>
         <p className={styles.summary}>A provider can say “paid.” SettleDiff asks what the evidence can actually prove.</p>

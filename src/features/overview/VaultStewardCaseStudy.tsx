@@ -8,7 +8,7 @@ export function VaultStewardCaseStudy() {
   return <>
     <section className={styles.hero} aria-labelledby="case-title">
       <div className={styles.heroCopy}>
-        <p className={styles.eyebrow}>02 / CONTROLLED REPAIRS</p>
+        <p className={styles.eyebrow}>03 / CONTROLLED REPAIRS</p>
         <h1 id="case-title">Vault Steward</h1>
         <p className={styles.lead}>Find broken references in an Obsidian vault, preview the exact repair, and keep every edit behind explicit approval.</p>
         <div className={styles.links}><a href={github}>GitHub ↗</a><a href="https://community.obsidian.md/plugins/vault-steward">Obsidian plugin ↗</a></div>
