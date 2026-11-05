@@ -28,7 +28,7 @@ export function ProfileFooter() {
 
 export const stack = [
   ["Core engineering", "Python · TypeScript · React · Next.js · FastAPI · Pydantic"],
-  ["Agents & verification", "PydanticAI · LangGraph · Context.dev · MCP · x402 · LangSmith"],
+  ["Agents & verification", "Deep Agents · LangChain · LangGraph · PydanticAI · Context.dev · MCP · x402 · LangSmith"],
   ["Data & delivery", "PostgreSQL · SQLite · Supabase · Convex · Docker · AWS · Vercel"],
   ["Other platforms", "Clerk · GitHub Actions"],
   ["Model & voice", "OpenAI · Ollama · Cerebras · ElevenLabs"],
