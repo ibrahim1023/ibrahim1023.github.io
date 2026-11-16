@@ -4,7 +4,7 @@ export const profiles = [
   { label: "GitHub", href: "https://github.com/ibrahim1023" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/ibrahim-arshad-23355a166/" },
   { label: "Medium", href: "https://medium.com/@ibrahim.a.motiwala" },
-  { label: "X", href: "https://x.com/Ibrahim__Arshad" },
+  { label: "X", href: "https://x.com/ibrahim__" },
 ] as const;
 
 export function ProfileFooter() {
